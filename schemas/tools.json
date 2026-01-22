@@ -1,0 +1,432 @@
+{
+  "assets.list": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "params": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "asset": { "type": "string" },
+          "network": { "type": "string" },
+          "sort_order": { "type": "string" }
+        }
+      }
+    },
+    "required": ["customer_id"]
+  },
+  "customer.create_tos_link": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "request": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "redirect_url": { "type": "string" }
+        }
+      }
+    }
+  },
+  "customer.sign_tos_agreement": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "session_token": { "type": "string" }
+    },
+    "required": ["session_token"]
+  },
+  "customer.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "request": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "required": ["request"]
+  },
+  "customer.list": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "params": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "page_size": { "type": "integer", "minimum": 1 },
+          "page_num": { "type": "integer", "minimum": 0 },
+          "kyb_status": { "type": "string" }
+        }
+      }
+    }
+  },
+  "customer.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" }
+    },
+    "required": ["customer_id"]
+  },
+  "customer.update": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "request": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "required": ["customer_id", "request"]
+  },
+  "customer.associated_persons.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "request": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "required": ["customer_id", "request"]
+  },
+  "customer.associated_persons.list": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" }
+    },
+    "required": ["customer_id"]
+  },
+  "customer.associated_persons.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "associated_person_id": { "type": "string" }
+    },
+    "required": ["customer_id", "associated_person_id"]
+  },
+  "customer.associated_persons.update": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "associated_person_id": { "type": "string" },
+      "request": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "required": ["customer_id", "associated_person_id", "request"]
+  },
+  "customer.associated_persons.delete": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "associated_person_id": { "type": "string" }
+    },
+    "required": ["customer_id", "associated_person_id"]
+  },
+  "external_accounts.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "request": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "required": ["customer_id", "request"]
+  },
+  "external_accounts.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "external_account_id": { "type": "string" }
+    },
+    "required": ["customer_id", "external_account_id"]
+  },
+  "external_accounts.get_by_idempotency_key": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "idempotency_key": { "type": "string" }
+    },
+    "required": ["customer_id", "idempotency_key"]
+  },
+  "external_accounts.list": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "params": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "currency": { "type": "string" },
+          "network": { "type": "string" }
+        }
+      }
+    },
+    "required": ["customer_id"]
+  },
+  "external_accounts.remove": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "external_account_id": { "type": "string" }
+    },
+    "required": ["customer_id", "external_account_id"]
+  },
+  "instructions.get_deposit_instruction": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "params": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "asset": { "type": "string" },
+          "network": { "type": "string" }
+        },
+        "required": ["asset", "network"]
+      }
+    },
+    "required": ["customer_id", "params"]
+  },
+  "conversions.create_quote": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "request": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "from_asset": { "type": "object", "additionalProperties": true },
+          "to_asset": { "type": "object", "additionalProperties": true }
+        },
+        "required": ["from_asset", "to_asset"]
+      }
+    },
+    "required": ["customer_id", "request"]
+  },
+  "conversions.create_hedge": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "request": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "quote_id": { "type": "string" }
+        },
+        "required": ["quote_id"]
+      }
+    },
+    "required": ["customer_id", "request"]
+  },
+  "conversions.get_order": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "order_id": { "type": "string" }
+    },
+    "required": ["customer_id", "order_id"]
+  },
+  "auto_conversion_rules.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "request": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "required": ["customer_id", "request"]
+  },
+  "auto_conversion_rules.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "rule_id": { "type": "string" }
+    },
+    "required": ["customer_id", "rule_id"]
+  },
+  "auto_conversion_rules.get_by_idempotency_key": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "idempotency_key": { "type": "string" }
+    },
+    "required": ["customer_id", "idempotency_key"]
+  },
+  "auto_conversion_rules.list": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "params": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "page": { "type": "integer", "minimum": 1 },
+          "size": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "required": ["customer_id"]
+  },
+  "auto_conversion_rules.delete": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "rule_id": { "type": "string" }
+    },
+    "required": ["customer_id", "rule_id"]
+  },
+  "auto_conversion_rules.list_orders": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "rule_id": { "type": "string" },
+      "params": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "status": { "type": "string" },
+          "page": { "type": "integer", "minimum": 1 },
+          "size": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "required": ["customer_id", "rule_id"]
+  },
+  "auto_conversion_rules.get_order": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "rule_id": { "type": "string" },
+      "order_id": { "type": "string" }
+    },
+    "required": ["customer_id", "rule_id", "order_id"]
+  },
+  "withdrawals.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "request": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "required": ["customer_id", "request"]
+  },
+  "withdrawals.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "withdrawal_id": { "type": "string" }
+    },
+    "required": ["customer_id", "withdrawal_id"]
+  },
+  "withdrawals.get_by_idempotency_key": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "idempotency_key": { "type": "string" }
+    },
+    "required": ["customer_id", "idempotency_key"]
+  },
+  "transactions.list": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "params": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "transaction_id": { "type": "string" },
+          "asset": { "type": "string" },
+          "created_after": { "type": "string" },
+          "created_before": { "type": "string" },
+          "page": { "type": "integer", "minimum": 1 },
+          "size": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "required": ["customer_id"]
+  },
+  "transactions.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "transaction_id": { "type": "string" }
+    },
+    "required": ["customer_id", "transaction_id"]
+  },
+  "simulations.simulate_deposit": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": { "type": "string" },
+      "request": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "asset": { "type": "string" },
+          "network": { "type": "string" },
+          "amount": { "type": "string" },
+          "reference_code": { "type": "string" }
+        },
+        "required": ["asset", "amount"]
+      }
+    },
+    "required": ["customer_id", "request"]
+  },
+  "echo.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  },
+  "echo.post": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "request": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "message": { "type": "string" }
+        },
+        "required": ["message"]
+      }
+    },
+    "required": ["request"]
+  }
+}
