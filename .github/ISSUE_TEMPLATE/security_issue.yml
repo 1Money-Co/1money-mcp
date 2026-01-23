@@ -1,0 +1,48 @@
+name: Security Issue
+description: Report a security vulnerability or risk (avoid sharing sensitive details in public repos)
+title: "[Security] Short title (e.g., Insecure direct object access)"
+labels:
+  - security
+  - high-priority
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Avoid disclosing sensitive details publicly. If this repo is public, please use the private security contact in `config.yml` to report.
+
+  - type: dropdown
+    id: vuln_type
+    attributes:
+      label: Vulnerability Type
+      options:
+        - AuthN/AuthZ (IDOR/Authorization issues)
+        - XSS (Cross-Site Scripting)
+        - SQL Injection
+        - SSRF (Server-Side Request Forgery)
+        - RCE (Remote Code Execution)
+        - Information Disclosure/Sensitive Data Exposure
+        - Misconfiguration/Security Baseline
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - Critical
+        - High
+        - Medium
+        - Low
+        - None/Info
+    validations:
+      required: true
+
+  - type: textarea
+    id: poc
+    attributes:
+      label: Reproduction Steps / PoC
+      description: Provide minimal steps to reproduce; redact sensitive data if needed
+    validations:
+      required: true

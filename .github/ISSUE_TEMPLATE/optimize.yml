@@ -1,0 +1,27 @@
+name: Optimization
+description: Propose an optimization to improve performance or efficiency
+title: "[Optimize] "
+labels:
+  - optimization
+body:
+  - type: textarea
+    id: current_issue
+    attributes:
+      label: Current Issue
+      placeholder: What needs to be optimized?
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      placeholder: How do you plan to optimize it?
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Expected Impact
+      placeholder: Performance improvements, bundle size reduction, etc.

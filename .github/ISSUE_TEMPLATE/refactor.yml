@@ -1,0 +1,31 @@
+name: Code Refactor
+description: Propose a refactor to improve maintainability/readability/performance without changing external behavior
+title: "[Refactor] Short title (e.g., Extract reporting core library)"
+labels:
+  - refactor
+  - maintenance
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Refactors should not change externally visible behavior. Please clarify scope, risks, rollback, and acceptance.
+
+  - type: textarea
+    id: current_pain
+    attributes:
+      label: Current State & Pain Points
+      placeholder: Design issues, maintenance cost, performance bottlenecks, duplication, etc.
+    validations:
+      required: true
+
+
+  - type: textarea
+    id: design
+    attributes:
+      label: Technical Approach
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      placeholder: Affected modules, upstream/downstream interfaces, backward compatibility

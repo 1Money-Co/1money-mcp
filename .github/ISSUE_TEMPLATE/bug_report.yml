@@ -1,0 +1,35 @@
+name: Bug Report
+description: Report a reproducible defect with clear steps and environment details
+title: "[Bug] Short title (e.g., Export button unresponsive)"
+labels:
+  - bug
+  - triage
+body:
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - Blocker
+        - Critical
+        - Major
+        - Minor
+        - Trivial
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Detailed Description
+      placeholder: What’s happening, when it occurs, and how often
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - P0 - Critical
+        - P1 - High
+        - P2 - Medium
+        - P3 - Low
