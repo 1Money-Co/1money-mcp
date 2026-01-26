@@ -68,14 +68,7 @@ Windows: `%APPDATA%\\Claude\\claude_desktop_config.json`
 }
 ```
 
-### Local command
-
-- Production: `node dist/index.js`
-- Development: `npm run dev`
-
-Pass credentials via environment variables (see below).
-
-## Codex Integration
+### Codex
 
 Add the MCP server to your Codex config file, then restart Codex:
 
@@ -85,6 +78,14 @@ command = "npx"
 args = ["-y", "@1money/mcp"]
 env = { ONEMONEY_ACCESS_KEY = "your-access-key", ONEMONEY_SECRET_KEY = "your-secret-key", ONEMONEY_SANDBOX = "1" }
 ```
+
+### Local command
+
+- Production: `node dist/index.js`
+- Development: `npm run dev`
+
+Pass credentials via environment variables (see below).
+
 
 Note: `ONEMONEY_SECRET_KEY` is required for non-sandbox use. When `ONEMONEY_SANDBOX=1`, the access key is sufficient.
 
@@ -132,7 +133,8 @@ The server also reads `~/.onemoney/credentials` with lower priority than env var
 
 ### Schema
 
-`schemas/tools.json` is the source JSON Schema for all tools.
+- `schemas/tools.json` is the source JSON Schema for tool inputs.
+- `schemas/tool-responses.json` is the source JSON Schema for tool responses.
 
 ## Examples
 
@@ -167,7 +169,7 @@ The server also reads `~/.onemoney/credentials` with lower priority than env var
 
 ## Schema generation
 
-`schemas/tools.json` is the JSON Schema source. Use `json-schema-to-zod` to regenerate `src/schemas/zod.ts`:
+`schemas/tools.json` and `schemas/tool-responses.json` are the JSON Schema sources. Use `json-schema-to-zod` to regenerate `src/schemas/zod.ts`:
 
 ```bash
 npm run generate-schemas
