@@ -12,6 +12,10 @@
     "dev": "tsx src/index.ts",
     "generate-schemas": "node scripts/generate-schemas.mjs"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/1Money-Co/1money-mcp"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.10.0",
     "dotenv": "^17.2.3",
