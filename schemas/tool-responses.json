@@ -1,0 +1,3460 @@
+{
+  "assets.list": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "customer_id": {
+          "type": "string"
+        },
+        "asset": {
+          "type": "string"
+        },
+        "network": {
+          "type": "string"
+        },
+        "available_amount": {
+          "type": "string"
+        },
+        "unavailable_amount": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "modified_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "customer_id",
+        "asset",
+        "available_amount",
+        "unavailable_amount",
+        "created_at",
+        "modified_at"
+      ]
+    }
+  },
+  "customer.create_tos_link": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "url": {
+        "type": "string"
+      },
+      "session_token": {
+        "type": "string"
+      },
+      "expires_in": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "url",
+      "session_token",
+      "expires_in"
+    ]
+  },
+  "customer.sign_tos_agreement": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "signed_agreement_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "signed_agreement_id"
+    ]
+  },
+  "customer.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      },
+      "business_legal_name": {
+        "type": "string"
+      },
+      "business_description": {
+        "type": "string"
+      },
+      "business_type": {
+        "type": "string",
+        "enum": [
+          "cooperative",
+          "corporation",
+          "llc",
+          "partnership",
+          "sole_proprietorship"
+        ]
+      },
+      "business_industry": {
+        "type": "string"
+      },
+      "business_registration_number": {
+        "type": "string"
+      },
+      "date_of_incorporation": {
+        "type": "string"
+      },
+      "incorporation_country": {
+        "type": "string"
+      },
+      "incorporation_state": {
+        "type": "string"
+      },
+      "registered_address": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "street_line_1": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "postal_code": {
+            "type": "string"
+          },
+          "street_line_2": {
+            "type": "string"
+          },
+          "subdivision": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "street_line_1",
+          "city",
+          "country",
+          "state",
+          "postal_code"
+        ]
+      },
+      "physical_address": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "street_line_1": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "postal_code": {
+            "type": "string"
+          },
+          "street_line_2": {
+            "type": "string"
+          },
+          "subdivision": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "street_line_1",
+          "city",
+          "country",
+          "state",
+          "postal_code"
+        ]
+      },
+      "primary_website": {
+        "type": "string"
+      },
+      "publicly_traded": {
+        "type": "boolean"
+      },
+      "tax_id": {
+        "type": "string"
+      },
+      "tax_type": {
+        "type": "string",
+        "enum": [
+          "SSN",
+          "EIN",
+          "TFN",
+          "ABN",
+          "ACN",
+          "UTR",
+          "NINO",
+          "NRIC",
+          "FIN",
+          "ASDG",
+          "ITR",
+          "NIF",
+          "TIN",
+          "VAT",
+          "CUIL",
+          "CUIT",
+          "DNI",
+          "BIN",
+          "UNP",
+          "RNPM",
+          "NIT",
+          "CPF",
+          "CNPJ",
+          "NIRE",
+          "UCN",
+          "UIC",
+          "SIN",
+          "BN",
+          "RUT",
+          "IIN",
+          "USCC",
+          "CNOC",
+          "USCN",
+          "ITIN",
+          "CPJ",
+          "OIB",
+          "DIC",
+          "CPR",
+          "CVR",
+          "CN",
+          "RNC",
+          "RUC",
+          "TN",
+          "HETU",
+          "YT",
+          "ALV",
+          "SIREN",
+          "IDNR",
+          "STNR",
+          "VTA",
+          "HKID",
+          "AJ",
+          "EN",
+          "KN",
+          "VSK",
+          "PAN",
+          "GSTN",
+          "NIK",
+          "NPWP",
+          "PPS",
+          "TRN",
+          "CRO",
+          "CHY",
+          "CF",
+          "IVA",
+          "IN",
+          "JCT",
+          "EDRPOU",
+          "EID"
+        ]
+      },
+      "tax_country": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "init",
+          "pending_review",
+          "under_review",
+          "pending_response",
+          "escalated",
+          "pending_approval",
+          "rejected",
+          "approved"
+        ]
+      },
+      "submitted_at": {
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "email",
+      "business_legal_name",
+      "business_type",
+      "status",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "customer.list": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customers": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "customer_id": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "business_legal_name": {
+              "type": "string"
+            },
+            "business_type": {
+              "type": "string",
+              "enum": [
+                "cooperative",
+                "corporation",
+                "llc",
+                "partnership",
+                "sole_proprietorship"
+              ]
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "init",
+                "pending_review",
+                "under_review",
+                "pending_response",
+                "escalated",
+                "pending_approval",
+                "rejected",
+                "approved"
+              ]
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "updated_at": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "customer_id",
+            "email",
+            "business_legal_name",
+            "business_type",
+            "status",
+            "created_at",
+            "updated_at"
+          ]
+        }
+      },
+      "total": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "customers",
+      "total"
+    ]
+  },
+  "customer.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      },
+      "business_legal_name": {
+        "type": "string"
+      },
+      "business_description": {
+        "type": "string"
+      },
+      "business_type": {
+        "type": "string",
+        "enum": [
+          "cooperative",
+          "corporation",
+          "llc",
+          "partnership",
+          "sole_proprietorship"
+        ]
+      },
+      "business_industry": {
+        "type": "string"
+      },
+      "business_registration_number": {
+        "type": "string"
+      },
+      "date_of_incorporation": {
+        "type": "string"
+      },
+      "incorporation_country": {
+        "type": "string"
+      },
+      "incorporation_state": {
+        "type": "string"
+      },
+      "registered_address": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "street_line_1": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "postal_code": {
+            "type": "string"
+          },
+          "street_line_2": {
+            "type": "string"
+          },
+          "subdivision": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "street_line_1",
+          "city",
+          "country",
+          "state",
+          "postal_code"
+        ]
+      },
+      "physical_address": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "street_line_1": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "postal_code": {
+            "type": "string"
+          },
+          "street_line_2": {
+            "type": "string"
+          },
+          "subdivision": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "street_line_1",
+          "city",
+          "country",
+          "state",
+          "postal_code"
+        ]
+      },
+      "primary_website": {
+        "type": "string"
+      },
+      "publicly_traded": {
+        "type": "boolean"
+      },
+      "tax_id": {
+        "type": "string"
+      },
+      "tax_type": {
+        "type": "string",
+        "enum": [
+          "SSN",
+          "EIN",
+          "TFN",
+          "ABN",
+          "ACN",
+          "UTR",
+          "NINO",
+          "NRIC",
+          "FIN",
+          "ASDG",
+          "ITR",
+          "NIF",
+          "TIN",
+          "VAT",
+          "CUIL",
+          "CUIT",
+          "DNI",
+          "BIN",
+          "UNP",
+          "RNPM",
+          "NIT",
+          "CPF",
+          "CNPJ",
+          "NIRE",
+          "UCN",
+          "UIC",
+          "SIN",
+          "BN",
+          "RUT",
+          "IIN",
+          "USCC",
+          "CNOC",
+          "USCN",
+          "ITIN",
+          "CPJ",
+          "OIB",
+          "DIC",
+          "CPR",
+          "CVR",
+          "CN",
+          "RNC",
+          "RUC",
+          "TN",
+          "HETU",
+          "YT",
+          "ALV",
+          "SIREN",
+          "IDNR",
+          "STNR",
+          "VTA",
+          "HKID",
+          "AJ",
+          "EN",
+          "KN",
+          "VSK",
+          "PAN",
+          "GSTN",
+          "NIK",
+          "NPWP",
+          "PPS",
+          "TRN",
+          "CRO",
+          "CHY",
+          "CF",
+          "IVA",
+          "IN",
+          "JCT",
+          "EDRPOU",
+          "EID"
+        ]
+      },
+      "tax_country": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "init",
+          "pending_review",
+          "under_review",
+          "pending_response",
+          "escalated",
+          "pending_approval",
+          "rejected",
+          "approved"
+        ]
+      },
+      "submitted_at": {
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "email",
+      "business_legal_name",
+      "business_type",
+      "status",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "customer.update": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      },
+      "business_legal_name": {
+        "type": "string"
+      },
+      "business_description": {
+        "type": "string"
+      },
+      "business_type": {
+        "type": "string",
+        "enum": [
+          "cooperative",
+          "corporation",
+          "llc",
+          "partnership",
+          "sole_proprietorship"
+        ]
+      },
+      "business_industry": {
+        "type": "string"
+      },
+      "business_registration_number": {
+        "type": "string"
+      },
+      "date_of_incorporation": {
+        "type": "string"
+      },
+      "incorporation_country": {
+        "type": "string"
+      },
+      "incorporation_state": {
+        "type": "string"
+      },
+      "registered_address": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "street_line_1": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "postal_code": {
+            "type": "string"
+          },
+          "street_line_2": {
+            "type": "string"
+          },
+          "subdivision": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "street_line_1",
+          "city",
+          "country",
+          "state",
+          "postal_code"
+        ]
+      },
+      "physical_address": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "street_line_1": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "postal_code": {
+            "type": "string"
+          },
+          "street_line_2": {
+            "type": "string"
+          },
+          "subdivision": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "street_line_1",
+          "city",
+          "country",
+          "state",
+          "postal_code"
+        ]
+      },
+      "primary_website": {
+        "type": "string"
+      },
+      "publicly_traded": {
+        "type": "boolean"
+      },
+      "tax_id": {
+        "type": "string"
+      },
+      "tax_type": {
+        "type": "string",
+        "enum": [
+          "SSN",
+          "EIN",
+          "TFN",
+          "ABN",
+          "ACN",
+          "UTR",
+          "NINO",
+          "NRIC",
+          "FIN",
+          "ASDG",
+          "ITR",
+          "NIF",
+          "TIN",
+          "VAT",
+          "CUIL",
+          "CUIT",
+          "DNI",
+          "BIN",
+          "UNP",
+          "RNPM",
+          "NIT",
+          "CPF",
+          "CNPJ",
+          "NIRE",
+          "UCN",
+          "UIC",
+          "SIN",
+          "BN",
+          "RUT",
+          "IIN",
+          "USCC",
+          "CNOC",
+          "USCN",
+          "ITIN",
+          "CPJ",
+          "OIB",
+          "DIC",
+          "CPR",
+          "CVR",
+          "CN",
+          "RNC",
+          "RUC",
+          "TN",
+          "HETU",
+          "YT",
+          "ALV",
+          "SIREN",
+          "IDNR",
+          "STNR",
+          "VTA",
+          "HKID",
+          "AJ",
+          "EN",
+          "KN",
+          "VSK",
+          "PAN",
+          "GSTN",
+          "NIK",
+          "NPWP",
+          "PPS",
+          "TRN",
+          "CRO",
+          "CHY",
+          "CF",
+          "IVA",
+          "IN",
+          "JCT",
+          "EDRPOU",
+          "EID"
+        ]
+      },
+      "tax_country": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "init",
+          "pending_review",
+          "under_review",
+          "pending_response",
+          "escalated",
+          "pending_approval",
+          "rejected",
+          "approved"
+        ]
+      },
+      "submitted_at": {
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "email",
+      "business_legal_name",
+      "business_type",
+      "status",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "customer.associated_persons.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "associated_person_id": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      },
+      "first_name": {
+        "type": "string"
+      },
+      "middle_name": {
+        "type": "string"
+      },
+      "last_name": {
+        "type": "string"
+      },
+      "birth_date": {
+        "type": "string"
+      },
+      "primary_nationality": {
+        "type": "string"
+      },
+      "residential_address": {
+        "anyOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "street_line_1": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "country": {
+                "type": "string"
+              },
+              "state": {
+                "type": "string"
+              },
+              "postal_code": {
+                "type": "string"
+              },
+              "street_line_2": {
+                "type": "string"
+              },
+              "subdivision": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "street_line_1",
+              "city",
+              "country",
+              "state",
+              "postal_code"
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "applicant_type": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "has_ownership": {
+        "type": "boolean"
+      },
+      "ownership_percentage": {
+        "type": "number"
+      },
+      "has_control": {
+        "type": "boolean"
+      },
+      "is_signer": {
+        "type": "boolean"
+      },
+      "is_director": {
+        "type": "boolean"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "associated_person_id",
+      "email",
+      "first_name",
+      "last_name",
+      "birth_date",
+      "primary_nationality",
+      "residential_address",
+      "applicant_type",
+      "title",
+      "has_ownership",
+      "has_control",
+      "is_signer",
+      "is_director",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "customer.associated_persons.list": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "associated_person_id": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "middle_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "birth_date": {
+          "type": "string"
+        },
+        "primary_nationality": {
+          "type": "string"
+        },
+        "residential_address": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "street_line_1": {
+                  "type": "string"
+                },
+                "city": {
+                  "type": "string"
+                },
+                "country": {
+                  "type": "string"
+                },
+                "state": {
+                  "type": "string"
+                },
+                "postal_code": {
+                  "type": "string"
+                },
+                "street_line_2": {
+                  "type": "string"
+                },
+                "subdivision": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "street_line_1",
+                "city",
+                "country",
+                "state",
+                "postal_code"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "applicant_type": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "has_ownership": {
+          "type": "boolean"
+        },
+        "ownership_percentage": {
+          "type": "number"
+        },
+        "has_control": {
+          "type": "boolean"
+        },
+        "is_signer": {
+          "type": "boolean"
+        },
+        "is_director": {
+          "type": "boolean"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "associated_person_id",
+        "email",
+        "first_name",
+        "last_name",
+        "birth_date",
+        "primary_nationality",
+        "residential_address",
+        "applicant_type",
+        "title",
+        "has_ownership",
+        "has_control",
+        "is_signer",
+        "is_director",
+        "created_at",
+        "updated_at"
+      ]
+    }
+  },
+  "customer.associated_persons.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "associated_person_id": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      },
+      "first_name": {
+        "type": "string"
+      },
+      "middle_name": {
+        "type": "string"
+      },
+      "last_name": {
+        "type": "string"
+      },
+      "birth_date": {
+        "type": "string"
+      },
+      "primary_nationality": {
+        "type": "string"
+      },
+      "residential_address": {
+        "anyOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "street_line_1": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "country": {
+                "type": "string"
+              },
+              "state": {
+                "type": "string"
+              },
+              "postal_code": {
+                "type": "string"
+              },
+              "street_line_2": {
+                "type": "string"
+              },
+              "subdivision": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "street_line_1",
+              "city",
+              "country",
+              "state",
+              "postal_code"
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "applicant_type": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "has_ownership": {
+        "type": "boolean"
+      },
+      "ownership_percentage": {
+        "type": "number"
+      },
+      "has_control": {
+        "type": "boolean"
+      },
+      "is_signer": {
+        "type": "boolean"
+      },
+      "is_director": {
+        "type": "boolean"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "associated_person_id",
+      "email",
+      "first_name",
+      "last_name",
+      "birth_date",
+      "primary_nationality",
+      "residential_address",
+      "applicant_type",
+      "title",
+      "has_ownership",
+      "has_control",
+      "is_signer",
+      "is_director",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "customer.associated_persons.update": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "associated_person_id": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      },
+      "first_name": {
+        "type": "string"
+      },
+      "middle_name": {
+        "type": "string"
+      },
+      "last_name": {
+        "type": "string"
+      },
+      "birth_date": {
+        "type": "string"
+      },
+      "primary_nationality": {
+        "type": "string"
+      },
+      "residential_address": {
+        "anyOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "street_line_1": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "country": {
+                "type": "string"
+              },
+              "state": {
+                "type": "string"
+              },
+              "postal_code": {
+                "type": "string"
+              },
+              "street_line_2": {
+                "type": "string"
+              },
+              "subdivision": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "street_line_1",
+              "city",
+              "country",
+              "state",
+              "postal_code"
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "applicant_type": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "has_ownership": {
+        "type": "boolean"
+      },
+      "ownership_percentage": {
+        "type": "number"
+      },
+      "has_control": {
+        "type": "boolean"
+      },
+      "is_signer": {
+        "type": "boolean"
+      },
+      "is_director": {
+        "type": "boolean"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "associated_person_id",
+      "email",
+      "first_name",
+      "last_name",
+      "birth_date",
+      "primary_nationality",
+      "residential_address",
+      "applicant_type",
+      "title",
+      "has_ownership",
+      "has_control",
+      "is_signer",
+      "is_director",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "customer.associated_persons.delete": {
+    "anyOf": [
+      {
+        "type": "null"
+      },
+      {
+        "type": "object",
+        "additionalProperties": true
+      }
+    ]
+  },
+  "external_accounts.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "external_account_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      },
+      "customer_id": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "network": {
+        "type": "string"
+      },
+      "nickname": {
+        "type": "string"
+      },
+      "account_holder_name": {
+        "type": "string"
+      },
+      "currency": {
+        "type": "string"
+      },
+      "country_code": {
+        "type": "string"
+      },
+      "account_number": {
+        "type": "string"
+      },
+      "institution_id": {
+        "type": "string"
+      },
+      "institution_name": {
+        "type": "string"
+      },
+      "institution_clearing_code": {
+        "type": "string"
+      },
+      "intermediary_bank": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "institution_id": {
+            "type": "string"
+          },
+          "institution_name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "institution_id"
+        ]
+      },
+      "reference_code": {
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "modified_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "external_account_id",
+      "idempotency_key",
+      "customer_id",
+      "status",
+      "network",
+      "account_holder_name",
+      "currency",
+      "country_code",
+      "account_number",
+      "institution_id",
+      "institution_name",
+      "created_at",
+      "modified_at"
+    ]
+  },
+  "external_accounts.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "external_account_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      },
+      "customer_id": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "network": {
+        "type": "string"
+      },
+      "nickname": {
+        "type": "string"
+      },
+      "account_holder_name": {
+        "type": "string"
+      },
+      "currency": {
+        "type": "string"
+      },
+      "country_code": {
+        "type": "string"
+      },
+      "account_number": {
+        "type": "string"
+      },
+      "institution_id": {
+        "type": "string"
+      },
+      "institution_name": {
+        "type": "string"
+      },
+      "institution_clearing_code": {
+        "type": "string"
+      },
+      "intermediary_bank": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "institution_id": {
+            "type": "string"
+          },
+          "institution_name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "institution_id"
+        ]
+      },
+      "reference_code": {
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "modified_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "external_account_id",
+      "idempotency_key",
+      "customer_id",
+      "status",
+      "network",
+      "account_holder_name",
+      "currency",
+      "country_code",
+      "account_number",
+      "institution_id",
+      "institution_name",
+      "created_at",
+      "modified_at"
+    ]
+  },
+  "external_accounts.get_by_idempotency_key": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "external_account_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      },
+      "customer_id": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "network": {
+        "type": "string"
+      },
+      "nickname": {
+        "type": "string"
+      },
+      "account_holder_name": {
+        "type": "string"
+      },
+      "currency": {
+        "type": "string"
+      },
+      "country_code": {
+        "type": "string"
+      },
+      "account_number": {
+        "type": "string"
+      },
+      "institution_id": {
+        "type": "string"
+      },
+      "institution_name": {
+        "type": "string"
+      },
+      "institution_clearing_code": {
+        "type": "string"
+      },
+      "intermediary_bank": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "institution_id": {
+            "type": "string"
+          },
+          "institution_name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "institution_id"
+        ]
+      },
+      "reference_code": {
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "modified_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "external_account_id",
+      "idempotency_key",
+      "customer_id",
+      "status",
+      "network",
+      "account_holder_name",
+      "currency",
+      "country_code",
+      "account_number",
+      "institution_id",
+      "institution_name",
+      "created_at",
+      "modified_at"
+    ]
+  },
+  "external_accounts.list": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "external_account_id": {
+          "type": "string"
+        },
+        "idempotency_key": {
+          "type": "string"
+        },
+        "customer_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "network": {
+          "type": "string"
+        },
+        "nickname": {
+          "type": "string"
+        },
+        "account_holder_name": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "country_code": {
+          "type": "string"
+        },
+        "account_number": {
+          "type": "string"
+        },
+        "institution_id": {
+          "type": "string"
+        },
+        "institution_name": {
+          "type": "string"
+        },
+        "institution_clearing_code": {
+          "type": "string"
+        },
+        "intermediary_bank": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "institution_id": {
+              "type": "string"
+            },
+            "institution_name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "institution_id"
+          ]
+        },
+        "reference_code": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "modified_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "external_account_id",
+        "idempotency_key",
+        "customer_id",
+        "status",
+        "network",
+        "account_holder_name",
+        "currency",
+        "country_code",
+        "account_number",
+        "institution_id",
+        "institution_name",
+        "created_at",
+        "modified_at"
+      ]
+    }
+  },
+  "external_accounts.remove": {
+    "anyOf": [
+      {
+        "type": "null"
+      },
+      {
+        "type": "object",
+        "additionalProperties": true
+      }
+    ]
+  },
+  "instructions.get_deposit_instruction": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "asset": {
+        "type": "string"
+      },
+      "network": {
+        "type": "string"
+      },
+      "bank_instruction": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "bank_name": {
+            "type": "string"
+          },
+          "routing_number": {
+            "type": "string"
+          },
+          "account_holder": {
+            "type": "string"
+          },
+          "account_number": {
+            "type": "string"
+          },
+          "account_identifier": {
+            "type": "string"
+          },
+          "bic_code": {
+            "type": "string"
+          },
+          "address": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "street_line_1": {
+                "type": "string"
+              },
+              "street_line_2": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "state": {
+                "type": "string"
+              },
+              "country": {
+                "type": "string"
+              },
+              "postal_code": {
+                "type": "string"
+              }
+            }
+          },
+          "transaction_fee": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "value": {
+                "type": "string"
+              },
+              "asset": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "value",
+              "asset"
+            ]
+          }
+        },
+        "required": [
+          "transaction_fee"
+        ]
+      },
+      "wallet_instruction": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "wallet_address": {
+            "type": "string"
+          },
+          "transaction_fee": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "value": {
+                "type": "string"
+              },
+              "asset": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "value",
+              "asset"
+            ]
+          }
+        },
+        "required": [
+          "transaction_fee"
+        ]
+      },
+      "transaction_action": {
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "modified_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "asset",
+      "network",
+      "transaction_action",
+      "created_at",
+      "modified_at"
+    ]
+  },
+  "conversions.create_quote": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "quote_id": {
+        "type": "string"
+      },
+      "user_pay_amount": {
+        "type": "string"
+      },
+      "user_pay_asset": {
+        "type": "string"
+      },
+      "user_pay_network": {
+        "type": "string"
+      },
+      "user_obtain_amount": {
+        "type": "string"
+      },
+      "user_obtain_asset": {
+        "type": "string"
+      },
+      "user_obtain_network": {
+        "type": "string"
+      },
+      "rate": {
+        "type": "string"
+      },
+      "expire_time": {
+        "type": "integer"
+      },
+      "valid_until_timestamp": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "quote_id",
+      "user_pay_amount",
+      "user_pay_asset",
+      "user_pay_network",
+      "user_obtain_amount",
+      "user_obtain_asset",
+      "user_obtain_network",
+      "rate",
+      "expire_time",
+      "valid_until_timestamp"
+    ]
+  },
+  "conversions.create_hedge": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "order_id": {
+        "type": "string"
+      },
+      "order_status": {
+        "type": "string"
+      },
+      "quote_id": {
+        "type": "string"
+      },
+      "user_pay_amount": {
+        "type": "string"
+      },
+      "user_pay_asset": {
+        "type": "string"
+      },
+      "user_pay_network": {
+        "type": "string"
+      },
+      "user_obtain_amount": {
+        "type": "string"
+      },
+      "user_obtain_asset": {
+        "type": "string"
+      },
+      "user_obtain_network": {
+        "type": "string"
+      },
+      "rate": {
+        "type": "string"
+      },
+      "fee": {
+        "type": "string"
+      },
+      "fee_currency": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "order_id",
+      "order_status",
+      "quote_id",
+      "user_pay_amount",
+      "user_pay_asset",
+      "user_pay_network",
+      "user_obtain_amount",
+      "user_obtain_asset",
+      "user_obtain_network",
+      "rate",
+      "fee",
+      "fee_currency"
+    ]
+  },
+  "conversions.get_order": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "order_id": {
+        "type": "string"
+      },
+      "order_status": {
+        "type": "string"
+      },
+      "quote_id": {
+        "type": "string"
+      },
+      "user_pay_amount": {
+        "type": "string"
+      },
+      "user_pay_asset": {
+        "type": "string"
+      },
+      "user_pay_network": {
+        "type": "string"
+      },
+      "user_obtain_amount": {
+        "type": "string"
+      },
+      "user_obtain_asset": {
+        "type": "string"
+      },
+      "user_obtain_network": {
+        "type": "string"
+      },
+      "rate": {
+        "type": "string"
+      },
+      "fee": {
+        "type": "string"
+      },
+      "fee_currency": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "order_id",
+      "order_status",
+      "quote_id",
+      "user_pay_amount",
+      "user_pay_asset",
+      "user_pay_network",
+      "user_obtain_amount",
+      "user_obtain_asset",
+      "user_obtain_network",
+      "rate",
+      "fee",
+      "fee_currency"
+    ]
+  },
+  "auto_conversion_rules.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "auto_conversion_rule_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      },
+      "nickname": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "PENDING",
+          "ACTIVE",
+          "INACTIVE"
+        ]
+      },
+      "source": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "asset": {
+            "type": "string"
+          },
+          "network": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "asset",
+          "network"
+        ]
+      },
+      "destination": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "asset": {
+            "type": "string"
+          },
+          "network": {
+            "type": "string"
+          },
+          "wallet_address": {
+            "type": "string"
+          },
+          "external_account_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "asset"
+        ]
+      },
+      "deposit_info_status": {
+        "type": "string",
+        "enum": [
+          "PENDING",
+          "ACTIVE",
+          "INACTIVE"
+        ]
+      },
+      "source_deposit_info": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "network": {
+                "type": "string"
+              },
+              "reference_code": {
+                "type": "string"
+              },
+              "minimum_deposit_amount": {
+                "type": "string"
+              },
+              "recipient_name": {
+                "type": "string"
+              },
+              "bank_name": {
+                "type": "string"
+              },
+              "routing_number": {
+                "type": "string"
+              },
+              "account_holder_name": {
+                "type": "string"
+              },
+              "account_number": {
+                "type": "string"
+              },
+              "country_code": {
+                "type": "string"
+              },
+              "street": {
+                "type": "string"
+              },
+              "additional": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "region": {
+                "type": "string"
+              },
+              "postal_code": {
+                "type": "string"
+              },
+              "bic_code": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "network",
+              "reference_code",
+              "minimum_deposit_amount"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "wallet_address": {
+                "type": "string"
+              },
+              "minimum_deposit_amount": {
+                "type": "string"
+              },
+              "contract_address": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "wallet_address",
+              "minimum_deposit_amount",
+              "contract_address"
+            ]
+          }
+        ]
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "modified_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "auto_conversion_rule_id",
+      "idempotency_key",
+      "nickname",
+      "status",
+      "source",
+      "destination",
+      "created_at",
+      "modified_at"
+    ]
+  },
+  "auto_conversion_rules.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "auto_conversion_rule_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      },
+      "nickname": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "PENDING",
+          "ACTIVE",
+          "INACTIVE"
+        ]
+      },
+      "source": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "asset": {
+            "type": "string"
+          },
+          "network": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "asset",
+          "network"
+        ]
+      },
+      "destination": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "asset": {
+            "type": "string"
+          },
+          "network": {
+            "type": "string"
+          },
+          "wallet_address": {
+            "type": "string"
+          },
+          "external_account_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "asset"
+        ]
+      },
+      "deposit_info_status": {
+        "type": "string",
+        "enum": [
+          "PENDING",
+          "ACTIVE",
+          "INACTIVE"
+        ]
+      },
+      "source_deposit_info": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "network": {
+                "type": "string"
+              },
+              "reference_code": {
+                "type": "string"
+              },
+              "minimum_deposit_amount": {
+                "type": "string"
+              },
+              "recipient_name": {
+                "type": "string"
+              },
+              "bank_name": {
+                "type": "string"
+              },
+              "routing_number": {
+                "type": "string"
+              },
+              "account_holder_name": {
+                "type": "string"
+              },
+              "account_number": {
+                "type": "string"
+              },
+              "country_code": {
+                "type": "string"
+              },
+              "street": {
+                "type": "string"
+              },
+              "additional": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "region": {
+                "type": "string"
+              },
+              "postal_code": {
+                "type": "string"
+              },
+              "bic_code": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "network",
+              "reference_code",
+              "minimum_deposit_amount"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "wallet_address": {
+                "type": "string"
+              },
+              "minimum_deposit_amount": {
+                "type": "string"
+              },
+              "contract_address": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "wallet_address",
+              "minimum_deposit_amount",
+              "contract_address"
+            ]
+          }
+        ]
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "modified_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "auto_conversion_rule_id",
+      "idempotency_key",
+      "nickname",
+      "status",
+      "source",
+      "destination",
+      "created_at",
+      "modified_at"
+    ]
+  },
+  "auto_conversion_rules.get_by_idempotency_key": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "auto_conversion_rule_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      },
+      "nickname": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "PENDING",
+          "ACTIVE",
+          "INACTIVE"
+        ]
+      },
+      "source": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "asset": {
+            "type": "string"
+          },
+          "network": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "asset",
+          "network"
+        ]
+      },
+      "destination": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "asset": {
+            "type": "string"
+          },
+          "network": {
+            "type": "string"
+          },
+          "wallet_address": {
+            "type": "string"
+          },
+          "external_account_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "asset"
+        ]
+      },
+      "deposit_info_status": {
+        "type": "string",
+        "enum": [
+          "PENDING",
+          "ACTIVE",
+          "INACTIVE"
+        ]
+      },
+      "source_deposit_info": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "network": {
+                "type": "string"
+              },
+              "reference_code": {
+                "type": "string"
+              },
+              "minimum_deposit_amount": {
+                "type": "string"
+              },
+              "recipient_name": {
+                "type": "string"
+              },
+              "bank_name": {
+                "type": "string"
+              },
+              "routing_number": {
+                "type": "string"
+              },
+              "account_holder_name": {
+                "type": "string"
+              },
+              "account_number": {
+                "type": "string"
+              },
+              "country_code": {
+                "type": "string"
+              },
+              "street": {
+                "type": "string"
+              },
+              "additional": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "region": {
+                "type": "string"
+              },
+              "postal_code": {
+                "type": "string"
+              },
+              "bic_code": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "network",
+              "reference_code",
+              "minimum_deposit_amount"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "wallet_address": {
+                "type": "string"
+              },
+              "minimum_deposit_amount": {
+                "type": "string"
+              },
+              "contract_address": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "wallet_address",
+              "minimum_deposit_amount",
+              "contract_address"
+            ]
+          }
+        ]
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "modified_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "auto_conversion_rule_id",
+      "idempotency_key",
+      "nickname",
+      "status",
+      "source",
+      "destination",
+      "created_at",
+      "modified_at"
+    ]
+  },
+  "auto_conversion_rules.list": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "total": {
+        "type": "integer"
+      },
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "auto_conversion_rule_id": {
+              "type": "string"
+            },
+            "idempotency_key": {
+              "type": "string"
+            },
+            "nickname": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "ACTIVE",
+                "INACTIVE"
+              ]
+            },
+            "source": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "asset": {
+                  "type": "string"
+                },
+                "network": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "asset",
+                "network"
+              ]
+            },
+            "destination": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "asset": {
+                  "type": "string"
+                },
+                "network": {
+                  "type": "string"
+                },
+                "wallet_address": {
+                  "type": "string"
+                },
+                "external_account_id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "asset"
+              ]
+            },
+            "deposit_info_status": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "ACTIVE",
+                "INACTIVE"
+              ]
+            },
+            "source_deposit_info": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "network": {
+                      "type": "string"
+                    },
+                    "reference_code": {
+                      "type": "string"
+                    },
+                    "minimum_deposit_amount": {
+                      "type": "string"
+                    },
+                    "recipient_name": {
+                      "type": "string"
+                    },
+                    "bank_name": {
+                      "type": "string"
+                    },
+                    "routing_number": {
+                      "type": "string"
+                    },
+                    "account_holder_name": {
+                      "type": "string"
+                    },
+                    "account_number": {
+                      "type": "string"
+                    },
+                    "country_code": {
+                      "type": "string"
+                    },
+                    "street": {
+                      "type": "string"
+                    },
+                    "additional": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "region": {
+                      "type": "string"
+                    },
+                    "postal_code": {
+                      "type": "string"
+                    },
+                    "bic_code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "network",
+                    "reference_code",
+                    "minimum_deposit_amount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "wallet_address": {
+                      "type": "string"
+                    },
+                    "minimum_deposit_amount": {
+                      "type": "string"
+                    },
+                    "contract_address": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "wallet_address",
+                    "minimum_deposit_amount",
+                    "contract_address"
+                  ]
+                }
+              ]
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "modified_at": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "auto_conversion_rule_id",
+            "idempotency_key",
+            "nickname",
+            "status",
+            "source",
+            "destination",
+            "created_at",
+            "modified_at"
+          ]
+        }
+      }
+    },
+    "required": [
+      "total",
+      "items"
+    ]
+  },
+  "auto_conversion_rules.delete": {
+    "anyOf": [
+      {
+        "type": "null"
+      },
+      {
+        "type": "object",
+        "additionalProperties": true
+      }
+    ]
+  },
+  "auto_conversion_rules.list_orders": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "total": {
+        "type": "integer"
+      },
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "auto_conversion_order_id": {
+              "type": "string"
+            },
+            "auto_conversion_rule_id": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "source": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "asset": {
+                  "type": "string"
+                },
+                "network": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "asset",
+                "network"
+              ]
+            },
+            "destination": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "asset": {
+                  "type": "string"
+                },
+                "network": {
+                  "type": "string"
+                },
+                "wallet_address": {
+                  "type": "string"
+                },
+                "external_account_id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "asset"
+              ]
+            },
+            "receipt": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "initial": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "amount": {
+                      "type": "string"
+                    },
+                    "asset": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "amount",
+                    "asset"
+                  ]
+                },
+                "developer_fee": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "amount": {
+                      "type": "string"
+                    },
+                    "asset": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "amount",
+                    "asset"
+                  ]
+                },
+                "deposit_fee": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "amount": {
+                      "type": "string"
+                    },
+                    "asset": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "amount",
+                    "asset"
+                  ]
+                },
+                "conversion_fee": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "amount": {
+                      "type": "string"
+                    },
+                    "asset": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "amount",
+                    "asset"
+                  ]
+                },
+                "withdrawal_fee": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "amount": {
+                      "type": "string"
+                    },
+                    "asset": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "amount",
+                    "asset"
+                  ]
+                }
+              },
+              "required": [
+                "initial",
+                "developer_fee",
+                "deposit_fee",
+                "conversion_fee"
+              ]
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "updated_at": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "auto_conversion_order_id",
+            "auto_conversion_rule_id",
+            "status",
+            "source",
+            "destination",
+            "receipt",
+            "created_at",
+            "updated_at"
+          ]
+        }
+      }
+    },
+    "required": [
+      "total",
+      "items"
+    ]
+  },
+  "auto_conversion_rules.get_order": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "auto_conversion_order_id": {
+        "type": "string"
+      },
+      "auto_conversion_rule_id": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "source": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "asset": {
+            "type": "string"
+          },
+          "network": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "asset",
+          "network"
+        ]
+      },
+      "destination": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "asset": {
+            "type": "string"
+          },
+          "network": {
+            "type": "string"
+          },
+          "wallet_address": {
+            "type": "string"
+          },
+          "external_account_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "asset"
+        ]
+      },
+      "receipt": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "initial": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "amount": {
+                "type": "string"
+              },
+              "asset": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "amount",
+              "asset"
+            ]
+          },
+          "developer_fee": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "amount": {
+                "type": "string"
+              },
+              "asset": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "amount",
+              "asset"
+            ]
+          },
+          "deposit_fee": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "amount": {
+                "type": "string"
+              },
+              "asset": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "amount",
+              "asset"
+            ]
+          },
+          "conversion_fee": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "amount": {
+                "type": "string"
+              },
+              "asset": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "amount",
+              "asset"
+            ]
+          },
+          "withdrawal_fee": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "amount": {
+                "type": "string"
+              },
+              "asset": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "amount",
+              "asset"
+            ]
+          }
+        },
+        "required": [
+          "initial",
+          "developer_fee",
+          "deposit_fee",
+          "conversion_fee"
+        ]
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "auto_conversion_order_id",
+      "auto_conversion_rule_id",
+      "status",
+      "source",
+      "destination",
+      "receipt",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "withdrawals.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "transaction_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      },
+      "amount": {
+        "type": "string"
+      },
+      "asset": {
+        "type": "string"
+      },
+      "network": {
+        "type": "string"
+      },
+      "wallet_address": {
+        "type": "string"
+      },
+      "external_account_id": {
+        "type": "string"
+      },
+      "code": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "transaction_fee": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "asset": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value",
+          "asset"
+        ]
+      },
+      "transaction_action": {
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "modified_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "transaction_id",
+      "idempotency_key",
+      "amount",
+      "asset",
+      "network",
+      "status",
+      "transaction_fee",
+      "transaction_action",
+      "created_at",
+      "modified_at"
+    ]
+  },
+  "withdrawals.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "transaction_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      },
+      "amount": {
+        "type": "string"
+      },
+      "asset": {
+        "type": "string"
+      },
+      "network": {
+        "type": "string"
+      },
+      "wallet_address": {
+        "type": "string"
+      },
+      "external_account_id": {
+        "type": "string"
+      },
+      "code": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "transaction_fee": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "asset": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value",
+          "asset"
+        ]
+      },
+      "transaction_action": {
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "modified_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "transaction_id",
+      "idempotency_key",
+      "amount",
+      "asset",
+      "network",
+      "status",
+      "transaction_fee",
+      "transaction_action",
+      "created_at",
+      "modified_at"
+    ]
+  },
+  "withdrawals.get_by_idempotency_key": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "transaction_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      },
+      "amount": {
+        "type": "string"
+      },
+      "asset": {
+        "type": "string"
+      },
+      "network": {
+        "type": "string"
+      },
+      "wallet_address": {
+        "type": "string"
+      },
+      "external_account_id": {
+        "type": "string"
+      },
+      "code": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "transaction_fee": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "asset": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value",
+          "asset"
+        ]
+      },
+      "transaction_action": {
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "modified_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "transaction_id",
+      "idempotency_key",
+      "amount",
+      "asset",
+      "network",
+      "status",
+      "transaction_fee",
+      "transaction_action",
+      "created_at",
+      "modified_at"
+    ]
+  },
+  "transactions.list": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "list": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "customer_id": {
+              "type": "string"
+            },
+            "transaction_id": {
+              "type": "string"
+            },
+            "idempotency_key": {
+              "type": "string"
+            },
+            "transaction_action": {
+              "type": "string",
+              "enum": [
+                "DEPOSIT",
+                "WITHDRAWAL",
+                "CONVERSION"
+              ]
+            },
+            "amount": {
+              "type": "string"
+            },
+            "asset": {
+              "type": "string"
+            },
+            "network": {
+              "type": "string"
+            },
+            "transaction_fee": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "asset": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value",
+                "asset"
+              ]
+            },
+            "source": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "amount": {
+                  "type": "string"
+                },
+                "asset": {
+                  "type": "string"
+                },
+                "network": {
+                  "type": "string"
+                },
+                "address_id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "address_id"
+              ]
+            },
+            "destination": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "amount": {
+                  "type": "string"
+                },
+                "asset": {
+                  "type": "string"
+                },
+                "network": {
+                  "type": "string"
+                },
+                "address_id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "address_id"
+              ]
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "COMPLETED",
+                "FAILED",
+                "REVERSED"
+              ]
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "modified_at": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "customer_id",
+            "transaction_id",
+            "idempotency_key",
+            "transaction_action",
+            "amount",
+            "transaction_fee",
+            "source",
+            "destination",
+            "status",
+            "created_at",
+            "modified_at"
+          ]
+        }
+      },
+      "total": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "list"
+    ]
+  },
+  "transactions.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "transaction_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      },
+      "transaction_action": {
+        "type": "string",
+        "enum": [
+          "DEPOSIT",
+          "WITHDRAWAL",
+          "CONVERSION"
+        ]
+      },
+      "amount": {
+        "type": "string"
+      },
+      "asset": {
+        "type": "string"
+      },
+      "network": {
+        "type": "string"
+      },
+      "transaction_fee": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "asset": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value",
+          "asset"
+        ]
+      },
+      "source": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "amount": {
+            "type": "string"
+          },
+          "asset": {
+            "type": "string"
+          },
+          "network": {
+            "type": "string"
+          },
+          "address_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "address_id"
+        ]
+      },
+      "destination": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "amount": {
+            "type": "string"
+          },
+          "asset": {
+            "type": "string"
+          },
+          "network": {
+            "type": "string"
+          },
+          "address_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "address_id"
+        ]
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "PENDING",
+          "COMPLETED",
+          "FAILED",
+          "REVERSED"
+        ]
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "modified_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "transaction_id",
+      "idempotency_key",
+      "transaction_action",
+      "amount",
+      "transaction_fee",
+      "source",
+      "destination",
+      "status",
+      "created_at",
+      "modified_at"
+    ]
+  },
+  "simulations.simulate_deposit": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "simulation_id": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "PENDING",
+          "COMPLETED",
+          "FAILED",
+          "REVERSED"
+        ]
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "modified_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "simulation_id",
+      "status",
+      "created_at",
+      "modified_at"
+    ]
+  },
+  "echo.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "message": {
+        "type": "string"
+      },
+      "timestamp": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "message"
+    ]
+  },
+  "echo.post": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "message": {
+        "type": "string"
+      },
+      "timestamp": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "message"
+    ]
+  }
+}

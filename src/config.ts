@@ -18,7 +18,7 @@ import os from "node:os";
 import path from "node:path";
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const DEFAULT_BASE_URL = "https://api.sandbox.1money.com";
 const DEFAULT_PROFILE = "default";
@@ -93,19 +93,15 @@ export const loadConfig = (): Config => {
   const accessKey = process.env.ONEMONEY_ACCESS_KEY || fileProfile.access_key || "";
   const secretKey = process.env.ONEMONEY_SECRET_KEY || fileProfile.secret_key;
   const baseUrl = process.env.ONEMONEY_BASE_URL || fileProfile.base_url || DEFAULT_BASE_URL;
+  const sandboxEnv = process.env.ONEMONEY_SANDBOX ?? fileProfile.sandbox;
   const sandbox =
-    process.env.ONEMONEY_SANDBOX === "1" ||
-    process.env.ONEMONEY_SANDBOX === "true" ||
-    fileProfile.sandbox === "1" ||
-    fileProfile.sandbox === "true";
+    sandboxEnv !== undefined
+      ? sandboxEnv === "1" || sandboxEnv === "true"
+      : baseUrl === DEFAULT_BASE_URL;
   const timeoutMs = Number(process.env.ONEMONEY_TIMEOUT_MS || DEFAULT_TIMEOUT_MS);
 
   if (!accessKey) {
-    throw new Error("Missing ONEMONEY_ACCESS_KEY or credentials file access_key");
-  }
-
-  if (!sandbox && !secretKey) {
-    throw new Error("Missing ONEMONEY_SECRET_KEY or credentials file secret_key");
+    console.error("Warning: Missing ONEMONEY_ACCESS_KEY or credentials file access_key. Tools will fail until configured.");
   }
 
   return {
