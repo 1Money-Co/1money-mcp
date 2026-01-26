@@ -1,5 +1,5 @@
 # 1Money MCP
-<img src="./public/logo.png" alt="1Money Logo" width="200"/> 
+<img src="./public/logo.png" alt="1Money Logo" width="200"/>
 
 
 MCP (stdio) for the 1Money API, covering all services exposed in the Go SDK.

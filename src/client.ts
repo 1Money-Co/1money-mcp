@@ -80,6 +80,10 @@ export class OneMoneyClient {
   }
 
   private async request(method: string, path: string, options: RequestOptions) {
+    if (!this.accessKey) {
+      throw new Error("OneMoney MCP not configured. Please set ONEMONEY_ACCESS_KEY or create a credentials file.");
+    }
+
     const bodyBytes = options.body ? Buffer.from(JSON.stringify(options.body)) : Buffer.alloc(0);
     const timestamp = this.getTimestamp();
     const authHeader = this.buildAuthHeader(method, path, bodyBytes, timestamp);
