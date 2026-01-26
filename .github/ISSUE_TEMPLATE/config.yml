@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Private Security Reporting
+    url: mailto:developer@1money.com
+    about: For public repos or sensitive details, report privately via this email.
+  - name: Product/Business Support
+    url: mailto:developer@1money.com
+    about: For requirement discussions or product-level questions.

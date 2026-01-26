@@ -1,0 +1,61 @@
+name: NPM CICD
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  Build-Publish:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == '1Money-Co'
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+
+    - name: Restore node_modules
+      uses: actions/cache@v4
+      with:
+        path: |
+          node_modules
+          **/node_modules
+        key: ${{ runner.os }}-${{ hashFiles('./pnpm-lock.yaml') }}
+
+    - name: Setup node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.16'
+        registry-url: 'https://registry.npmjs.org'
+
+    - run: npm install --global pnpm@10
+    - run: pnpm i --frozen-lockfile
+    - run: pnpm build
+
+    - name: Get package version
+      id: pkg_version
+      run: |
+        version=$(node -p "require('./package.json').version")
+        echo "version=${version}" >> $GITHUB_OUTPUT
+
+    - name: Set npm tag based on version
+      id: set_tag
+      run: |
+        version=${{ steps.pkg_version.outputs.version }}
+        if [[ "$version" == *"-"* ]]; then
+          prerelease="${version#*-}"
+          tag="${prerelease%%.*}"
+          echo "Found prerelease portion: $prerelease, using tag: $tag"
+          echo "tag=$tag" >> $GITHUB_OUTPUT
+        else
+          echo "No prerelease found, using tag: latest"
+          echo "tag=latest" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Publish to NPM
+      run: npm publish --provenance --access public --tag ${{ steps.set_tag.outputs.tag }}
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

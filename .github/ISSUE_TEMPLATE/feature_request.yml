@@ -1,0 +1,41 @@
+name: Feature Request
+description: Submit a business feature/enhancement with ETA for planning
+title: "[Feature Request] Short title (e.g., Export sales report)"
+labels:
+  - enhancement
+  - feature
+  - triage
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Provide a concise requirement description and ETA to help prioritization and scheduling.
+
+  - type: textarea
+    id: requirement_desc
+    attributes:
+      label: Requirement Description
+      description: Detailed requirement statement; include user story if helpful
+      placeholder: As a <role>, I want <capability>, so that <benefit>
+    validations:
+      required: true
+
+  - type: input
+    id: eta
+    attributes:
+      label: ETA / Target Release
+      placeholder: YYYY-MM-DD or Sprint name
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - P0 - Critical
+        - P1 - High
+        - P2 - Medium
+        - P3 - Low
+    validations:
+      required: true
