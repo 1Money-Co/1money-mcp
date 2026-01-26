@@ -60,6 +60,7 @@
       "request": {
         "type": "object",
         "additionalProperties": false,
+        "minProperties": 1,
         "properties": {
           "redirect_url": {
             "type": "string"
@@ -87,6 +88,7 @@
       "request": {
         "type": "object",
         "additionalProperties": false,
+        "minProperties": 1,
         "properties": {
           "business_legal_name": {
             "type": "string"
