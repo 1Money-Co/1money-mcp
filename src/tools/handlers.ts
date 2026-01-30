@@ -27,6 +27,8 @@ type RequestInput = {
   request?: Record<string, unknown>;
   params?: Record<string, string | number | boolean | undefined>;
   customer_id?: string;
+  recipient_id?: string;
+  bank_account_id?: string;
   session_token?: string;
   associated_person_id?: string;
   external_account_id?: string;
@@ -188,6 +190,65 @@ export const createHandlers = (client: OneMoneyClient): Record<ToolName, ToolHan
       const { customer_id, external_account_id } = input as RequestInput;
       return client.delete(
         `${buildCustomerPath(customer_id!)}/external-accounts/${external_account_id}`,
+      );
+    }),
+  "recipients.create": (input) =>
+    runTool("recipients.create", async () => {
+      const { customer_id, request } = input as RequestInput;
+      const { body, headers } = extractIdempotency(request);
+      return client.post(`${buildCustomerPath(customer_id!)}/recipients`, body, headers);
+    }),
+  "recipients.list": (input) =>
+    runTool("recipients.list", async () => {
+      const { customer_id, params } = input as RequestInput;
+      return client.get(`${buildCustomerPath(customer_id!)}/recipients/list`, params);
+    }),
+  "recipients.get": (input) =>
+    runTool("recipients.get", async () => {
+      const { customer_id, recipient_id } = input as RequestInput;
+      return client.get(`${buildCustomerPath(customer_id!)}/recipients/${recipient_id}`);
+    }),
+  "recipients.delete": (input) =>
+    runTool("recipients.delete", async () => {
+      const { customer_id, recipient_id } = input as RequestInput;
+      return client.delete(`${buildCustomerPath(customer_id!)}/recipients/${recipient_id}`);
+    }),
+  "recipients.get_by_idempotency_key": (input) =>
+    runTool("recipients.get_by_idempotency_key", async () => {
+      const { customer_id, idempotency_key } = input as RequestInput;
+      return client.get(`${buildCustomerPath(customer_id!)}/recipients`, { idempotency_key });
+    }),
+  "recipients.bank_accounts.get_by_idempotency_key": (input) =>
+    runTool("recipients.bank_accounts.get_by_idempotency_key", async () => {
+      const { customer_id, recipient_id, idempotency_key } = input as RequestInput;
+      return client.get(
+        `${buildCustomerPath(customer_id!)}/recipients/${recipient_id}/bank_accounts`,
+        { idempotency_key },
+      );
+    }),
+  "recipients.bank_accounts.create": (input) =>
+    runTool("recipients.bank_accounts.create", async () => {
+      const { customer_id, recipient_id, request } = input as RequestInput;
+      const { body, headers } = extractIdempotency(request);
+      return client.post(
+        `${buildCustomerPath(customer_id!)}/recipients/${recipient_id}/bank_accounts`,
+        body,
+        headers,
+      );
+    }),
+  "recipients.bank_accounts.list": (input) =>
+    runTool("recipients.bank_accounts.list", async () => {
+      const { customer_id, recipient_id, params } = input as RequestInput;
+      return client.get(
+        `${buildCustomerPath(customer_id!)}/recipients/${recipient_id}/bank_accounts/list`,
+        params,
+      );
+    }),
+  "recipients.bank_accounts.delete": (input) =>
+    runTool("recipients.bank_accounts.delete", async () => {
+      const { customer_id, recipient_id, bank_account_id } = input as RequestInput;
+      return client.delete(
+        `${buildCustomerPath(customer_id!)}/recipients/${recipient_id}/bank_accounts/${bank_account_id}`,
       );
     }),
   "instructions.get_deposit_instruction": (input) =>
