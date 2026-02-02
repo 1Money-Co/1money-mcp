@@ -55,6 +55,9 @@ toolSchemas["external_accounts.list"] = ExternalAccountsListSchema;
 const ExternalAccountsRemoveSchema = z.object({ "customer_id": z.string(), "external_account_id": z.string() }).strict()
 toolSchemas["external_accounts.remove"] = ExternalAccountsRemoveSchema;
 
+const RecipientsCreateSchema = z.object({ "customer_id": z.string(), "request": z.object({ "idempotency_key": z.string(), "business_type": z.enum(["INDIVIDUAL","COMPANY"]), "first_name": z.string().optional(), "last_name": z.string().optional(), "company_name": z.string().optional(), "nickname": z.string().optional(), "email": z.string().optional(), "mobile_code": z.string().optional(), "mobile_num": z.string().optional(), "relationship": z.enum(["EMPLOYEE","CONTRACTOR","VENDOR","SUBSIDIARY","MERCHANT","CUSTOMER","LANDLORD","FAMILY","OTHER"]), "address": z.object({ "country_code": z.enum(["AND","ARE","AFG","ATG","AIA","ALB","ARM","AGO","ARG","ASM","AUT","AUS","ABW","AZE","BIH","BRB","BGD","BEL","BFA","BGR","BHR","BDI","BEN","BLM","BMU","BRN","BOL","BRA","BHS","BTN","BWA","BLR","BLZ","CAN","CCK","COD","CAF","COG","CHE","CIV","COK","CHL","CMR","CHN","COL","CRI","CUB","CPV","CUW","CXR","CYP","CZE","DEU","DJI","DNK","DMA","DOM","DZA","ECU","EST","EGY","ESH","ERI","ESP","ETH","FIN","FJI","FLK","FSM","FRO","FRA","GAB","GBR","GRD","GEO","GUF","GGY","GHA","GIB","GRL","GMB","GIN","GLP","GNQ","GRC","SGS","GTM","GUM","GNB","GUY","HKG","HND","HRV","HTI","HUN","IDN","IRL","ISR","IMN","IND","IOT","IRQ","IRN","ISL","ITA","JEY","JAM","JOR","JPN","KEN","KGZ","KHM","KIR","COM","KNA","PRK","KOR","KWT","CYM","KAZ","LAO","LBN","LCA","LIE","LKA","LBR","LSO","LTU","LUX","LVA","LBY","MAR","MCO","MDA","MNE","MAF","MDG","MHL","MKD","MLI","MMR","MNG","MAC","MNP","MTQ","MRT","MSR","MLT","MUS","MDV","MWI","MEX","MYS","MOZ","NAM","NCL","NER","NFK","NGA","NIC","NLD","NOR","NPL","NRU","NIU","NZL","OMN","PAN","PER","PYF","PNG","PHL","PAK","POL","SPM","PCN","PRI","PSE","PRT","PLW","PRY","QAT","REU","ROU","SRB","RUS","RWA","SAU","SLB","SYC","SDN","SWE","SGP","SHN","SVN","SJM","SVK","SLE","SMR","SEN","SOM","SUR","SSD","STP","SLV","SXM","SYR","SWZ","TCA","TCD","TGO","THA","TJK","TKL","TLS","TKM","TUN","TON","TUR","TTO","TUV","TWN","TZA","UKR","UGA","USA","URY","UZB","VAT","VCT","VEN","VGB","VIR","VNM","VUT","WLF","WSM","YEM","MYT","ZAF","ZMB","ZWE"]), "address_line1": z.string(), "address_line2": z.string().optional(), "city": z.string(), "region": z.string().optional(), "postal_code": z.string() }).strict(), "bank_accounts": z.array(z.object({ "network": z.enum(["US_FEDWIRE","US_ACH","SWIFT"]), "nickname": z.string().optional(), "account_holder_name": z.string(), "currency": z.string(), "country_code": z.enum(["AND","ARE","AFG","ATG","AIA","ALB","ARM","AGO","ARG","ASM","AUT","AUS","ABW","AZE","BIH","BRB","BGD","BEL","BFA","BGR","BHR","BDI","BEN","BLM","BMU","BRN","BOL","BRA","BHS","BTN","BWA","BLR","BLZ","CAN","CCK","COD","CAF","COG","CHE","CIV","COK","CHL","CMR","CHN","COL","CRI","CUB","CPV","CUW","CXR","CYP","CZE","DEU","DJI","DNK","DMA","DOM","DZA","ECU","EST","EGY","ESH","ERI","ESP","ETH","FIN","FJI","FLK","FSM","FRO","FRA","GAB","GBR","GRD","GEO","GUF","GGY","GHA","GIB","GRL","GMB","GIN","GLP","GNQ","GRC","SGS","GTM","GUM","GNB","GUY","HKG","HND","HRV","HTI","HUN","IDN","IRL","ISR","IMN","IND","IOT","IRQ","IRN","ISL","ITA","JEY","JAM","JOR","JPN","KEN","KGZ","KHM","KIR","COM","KNA","PRK","KOR","KWT","CYM","KAZ","LAO","LBN","LCA","LIE","LKA","LBR","LSO","LTU","LUX","LVA","LBY","MAR","MCO","MDA","MNE","MAF","MDG","MHL","MKD","MLI","MMR","MNG","MAC","MNP","MTQ","MRT","MSR","MLT","MUS","MDV","MWI","MEX","MYS","MOZ","NAM","NCL","NER","NFK","NGA","NIC","NLD","NOR","NPL","NRU","NIU","NZL","OMN","PAN","PER","PYF","PNG","PHL","PAK","POL","SPM","PCN","PRI","PSE","PRT","PLW","PRY","QAT","REU","ROU","SRB","RUS","RWA","SAU","SLB","SYC","SDN","SWE","SGP","SHN","SVN","SJM","SVK","SLE","SMR","SEN","SOM","SUR","SSD","STP","SLV","SXM","SYR","SWZ","TCA","TCD","TGO","THA","TJK","TKL","TLS","TKM","TUN","TON","TUR","TTO","TUV","TWN","TZA","UKR","UGA","USA","URY","UZB","VAT","VCT","VEN","VGB","VIR","VNM","VUT","WLF","WSM","YEM","MYT","ZAF","ZMB","ZWE"]), "account_number": z.string(), "institution_id": z.string(), "institution_name": z.string(), "institution_clearing_code": z.string().optional(), "intermediary_bank": z.object({ "institution_id": z.string() }).strict().optional() }).strict()).optional() }).strict() }).strict()
+toolSchemas["recipients.create"] = RecipientsCreateSchema;
+
 const InstructionsGetDepositInstructionSchema = z.object({ "customer_id": z.string(), "params": z.object({ "asset": z.enum(["USD","USDC","USDT","PYUSD","RLUSD","USDG","USDP","EURC","MXNB"]), "network": z.enum(["US_ACH","SWIFT","US_FEDWIRE","ARBITRUM","AVALANCHE","BASE","BNBCHAIN","ETHEREUM","POLYGON","SOLANA"]) }).strict() }).strict()
 toolSchemas["instructions.get_deposit_instruction"] = InstructionsGetDepositInstructionSchema;
 
@@ -113,6 +116,9 @@ toolSchemas["withdrawals.get"] = WithdrawalsGetSchema;
 const WithdrawalsGetByIdempotencyKeySchema = z.object({ "customer_id": z.string(), "idempotency_key": z.string() }).strict()
 toolSchemas["withdrawals.get_by_idempotency_key"] = WithdrawalsGetByIdempotencyKeySchema;
 
+const RecipientsGetByIdempotencyKeySchema = z.object({ "customer_id": z.string(), "idempotency_key": z.string() }).strict()
+toolSchemas["recipients.get_by_idempotency_key"] = RecipientsGetByIdempotencyKeySchema;
+
 const TransactionsListSchema = z.object({ "customer_id": z.string(), "params": z.object({ "transaction_id": z.string().optional(), "asset": z.enum(["USD","USDC","USDT","PYUSD","RLUSD","USDG","USDP","EURC","MXNB"]).optional(), "created_after": z.string().optional(), "created_before": z.string().optional(), "page": z.number().int().optional(), "size": z.number().int().optional() }).strict().optional() }).strict()
 toolSchemas["transactions.list"] = TransactionsListSchema;
 
@@ -127,6 +133,43 @@ toolSchemas["echo.get"] = EchoGetSchema;
 
 const EchoPostSchema = z.object({ "request": z.object({ "message": z.string() }).strict() }).strict()
 toolSchemas["echo.post"] = EchoPostSchema;
+
+const RecipientsListSchema = z.object({ "customer_id": z.string(), "params": z.object({ "search": z.union([z.string(), z.null()]).optional(), "page": z.number().int().gte(0).optional(), "size": z.number().int().gte(0).optional() }).strict().optional() }).strict()
+toolSchemas["recipients.list"] = RecipientsListSchema;
+
+const RecipientsGetSchema = z.object({ "customer_id": z.string(), "recipient_id": z.string() }).strict()
+toolSchemas["recipients.get"] = RecipientsGetSchema;
+
+const RecipientsDeleteSchema = z.object({ "customer_id": z.string(), "recipient_id": z.string() }).strict()
+toolSchemas["recipients.delete"] = RecipientsDeleteSchema;
+
+const RecipientsBankAccountsGetByIdempotencyKeySchema = z.object({ "customer_id": z.string(), "recipient_id": z.string(), "idempotency_key": z.string() }).strict()
+toolSchemas["recipients.bank_accounts.get_by_idempotency_key"] = RecipientsBankAccountsGetByIdempotencyKeySchema;
+
+const RecipientsBankAccountsCreateSchema = z.object({ "customer_id": z.string(), "recipient_id": z.string(), "request": z.object({ "idempotency_key": z.string(), "network": z.enum(["US_ACH","SWIFT","US_FEDWIRE"]), "nickname": z.union([z.string(), z.null()]).optional(), "account_holder_name": z.string(), "currency": z.string(), "country_code": z.enum(["AND","ARE","AFG","ATG","AIA","ALB","ARM","AGO","ARG","ASM","AUT","AUS","ABW","AZE","BIH","BRB","BGD","BEL","BFA","BGR","BHR","BDI","BEN","BLM","BMU","BRN","BOL","BRA","BHS","BTN","BWA","BLR","BLZ","CAN","CCK","COD","CAF","COG","CHE","CIV","COK","CHL","CMR","CHN","COL","CRI","CUB","CPV","CUW","CXR","CYP","CZE","DEU","DJI","DNK","DMA","DOM","DZA","ECU","EST","EGY","ESH","ERI","ESP","ETH","FIN","FJI","FLK","FSM","FRO","FRA","GAB","GBR","GRD","GEO","GUF","GGY","GHA","GIB","GRL","GMB","GIN","GLP","GNQ","GRC","SGS","GTM","GUM","GNB","GUY","HKG","HND","HRV","HTI","HUN","IDN","IRL","ISR","IMN","IND","IOT","IRQ","IRN","ISL","ITA","JEY","JAM","JOR","JPN","KEN","KGZ","KHM","KIR","COM","KNA","PRK","KOR","KWT","CYM","KAZ","LAO","LBN","LCA","LIE","LKA","LBR","LSO","LTU","LUX","LVA","LBY","MAR","MCO","MDA","MNE","MAF","MDG","MHL","MKD","MLI","MMR","MNG","MAC","MNP","MTQ","MRT","MSR","MLT","MUS","MDV","MWI","MEX","MYS","MOZ","NAM","NCL","NER","NFK","NGA","NIC","NLD","NOR","NPL","NRU","NIU","NZL","OMN","PAN","PER","PYF","PNG","PHL","PAK","POL","SPM","PCN","PRI","PSE","PRT","PLW","PRY","QAT","REU","ROU","SRB","RUS","RWA","SAU","SLB","SYC","SDN","SWE","SGP","SHN","SVN","SJM","SVK","SLE","SMR","SEN","SOM","SUR","SSD","STP","SLV","SXM","SYR","SWZ","TCA","TCD","TGO","THA","TJK","TKL","TLS","TKM","TUN","TON","TUR","TTO","TUV","TWN","TZA","UKR","UGA","USA","URY","UZB","VAT","VCT","VEN","VGB","VIR","VNM","VUT","WLF","WSM","YEM","MYT","ZAF","ZMB","ZWE"]), "account_number": z.string(), "institution_id": z.string(), "institution_name": z.string(), "institution_clearing_code": z.union([z.string(), z.null()]).optional(), "intermediary_bank": z.any().superRefine((x, ctx) => {
+    const schemas = [z.null(), z.object({ "institution_id": z.string() }).strict()];
+    const errors = schemas.reduce<z.ZodError[]>(
+      (errors, schema) =>
+        ((result) =>
+          result.error ? [...errors, result.error] : errors)(
+          schema.safeParse(x),
+        ),
+      [],
+    );
+    if (schemas.length - errors.length !== 1) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Invalid input: Should pass single schema",
+      });
+    }
+  }).optional() }).strict() }).strict()
+toolSchemas["recipients.bank_accounts.create"] = RecipientsBankAccountsCreateSchema;
+
+const RecipientsBankAccountsListSchema = z.object({ "customer_id": z.string(), "recipient_id": z.string(), "params": z.object({ "currency": z.union([z.string(), z.null()]).optional(), "network": z.union([z.string(), z.null()]).optional() }).strict().optional() }).strict()
+toolSchemas["recipients.bank_accounts.list"] = RecipientsBankAccountsListSchema;
+
+const RecipientsBankAccountsDeleteSchema = z.object({ "customer_id": z.string(), "recipient_id": z.string(), "bank_account_id": z.string() }).strict()
+toolSchemas["recipients.bank_accounts.delete"] = RecipientsBankAccountsDeleteSchema;
 
 const AssetsListResponseSchema = z.array(z.object({ "customer_id": z.string(), "asset": z.string(), "network": z.string().optional(), "available_amount": z.string(), "unavailable_amount": z.string(), "created_at": z.string(), "modified_at": z.string() }).strict())
 toolResponseSchemas["assets.list"] = AssetsListResponseSchema;
@@ -178,6 +221,9 @@ toolResponseSchemas["external_accounts.list"] = ExternalAccountsListResponseSche
 
 const ExternalAccountsRemoveResponseSchema = z.union([z.null(), z.record(z.string(), z.any())])
 toolResponseSchemas["external_accounts.remove"] = ExternalAccountsRemoveResponseSchema;
+
+const RecipientsCreateResponseSchema = z.object({ "recipient_id": z.string(), "customer_id": z.string(), "business_type": z.string(), "full_name": z.string(), "nickname": z.string().optional(), "email": z.string().optional(), "relationship": z.string().optional(), "status": z.string(), "address": z.union([z.object({ "full_address": z.string(), "country_code": z.string(), "address_line1": z.string(), "address_line2": z.string().optional(), "city": z.string(), "region": z.string().optional(), "postal_code": z.string() }).strict(), z.null()]).optional(), "created_at": z.string(), "modified_at": z.string() }).strict()
+toolResponseSchemas["recipients.create"] = RecipientsCreateResponseSchema;
 
 const InstructionsGetDepositInstructionResponseSchema = z.object({ "asset": z.string(), "network": z.string(), "bank_instruction": z.object({ "bank_name": z.string().optional(), "routing_number": z.string().optional(), "account_holder": z.string().optional(), "account_number": z.string().optional(), "account_identifier": z.string().optional(), "bic_code": z.string().optional(), "address": z.object({ "street_line_1": z.string().optional(), "street_line_2": z.string().optional(), "city": z.string().optional(), "state": z.string().optional(), "country": z.string().optional(), "postal_code": z.string().optional() }).strict().optional(), "transaction_fee": z.object({ "value": z.string(), "asset": z.string() }).strict() }).strict().optional(), "wallet_instruction": z.object({ "wallet_address": z.string().optional(), "transaction_fee": z.object({ "value": z.string(), "asset": z.string() }).strict() }).strict().optional(), "transaction_action": z.string(), "created_at": z.string(), "modified_at": z.string() }).strict()
 toolResponseSchemas["instructions.get_deposit_instruction"] = InstructionsGetDepositInstructionResponseSchema;
@@ -285,6 +331,73 @@ toolResponseSchemas["withdrawals.get"] = WithdrawalsGetResponseSchema;
 const WithdrawalsGetByIdempotencyKeyResponseSchema = z.object({ "transaction_id": z.string(), "idempotency_key": z.string(), "amount": z.string(), "asset": z.string(), "network": z.string(), "wallet_address": z.string().optional(), "external_account_id": z.string().optional(), "code": z.string().optional(), "status": z.string(), "transaction_fee": z.object({ "value": z.string(), "asset": z.string() }).strict(), "transaction_action": z.string(), "created_at": z.string(), "modified_at": z.string() }).strict()
 toolResponseSchemas["withdrawals.get_by_idempotency_key"] = WithdrawalsGetByIdempotencyKeyResponseSchema;
 
+const RecipientsGetByIdempotencyKeyResponseSchema = z.object({ "recipient_id": z.string(), "customer_id": z.string(), "business_type": z.string(), "full_name": z.string(), "nickname": z.any().superRefine((x, ctx) => {
+    const schemas = [z.string(), z.null()];
+    const errors = schemas.reduce<z.ZodError[]>(
+      (errors, schema) =>
+        ((result) =>
+          result.error ? [...errors, result.error] : errors)(
+          schema.safeParse(x),
+        ),
+      [],
+    );
+    if (schemas.length - errors.length !== 1) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Invalid input: Should pass single schema",
+      });
+    }
+  }).optional(), "email": z.any().superRefine((x, ctx) => {
+    const schemas = [z.string(), z.null()];
+    const errors = schemas.reduce<z.ZodError[]>(
+      (errors, schema) =>
+        ((result) =>
+          result.error ? [...errors, result.error] : errors)(
+          schema.safeParse(x),
+        ),
+      [],
+    );
+    if (schemas.length - errors.length !== 1) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Invalid input: Should pass single schema",
+      });
+    }
+  }).optional(), "relationship": z.any().superRefine((x, ctx) => {
+    const schemas = [z.string(), z.null()];
+    const errors = schemas.reduce<z.ZodError[]>(
+      (errors, schema) =>
+        ((result) =>
+          result.error ? [...errors, result.error] : errors)(
+          schema.safeParse(x),
+        ),
+      [],
+    );
+    if (schemas.length - errors.length !== 1) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Invalid input: Should pass single schema",
+      });
+    }
+  }).optional(), "status": z.string(), "address": z.any().superRefine((x, ctx) => {
+    const schemas = [z.null(), z.object({ "full_address": z.string(), "country_code": z.string(), "address_line1": z.string(), "address_line2": z.string().optional(), "city": z.string(), "region": z.string().optional(), "postal_code": z.string() }).strict()];
+    const errors = schemas.reduce<z.ZodError[]>(
+      (errors, schema) =>
+        ((result) =>
+          result.error ? [...errors, result.error] : errors)(
+          schema.safeParse(x),
+        ),
+      [],
+    );
+    if (schemas.length - errors.length !== 1) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Invalid input: Should pass single schema",
+      });
+    }
+  }).optional(), "created_at": z.string().datetime({ offset: true }), "modified_at": z.string().datetime({ offset: true }) }).strict()
+toolResponseSchemas["recipients.get_by_idempotency_key"] = RecipientsGetByIdempotencyKeyResponseSchema;
+
 const TransactionsListResponseSchema = z.object({ "list": z.array(z.object({ "customer_id": z.string(), "transaction_id": z.string(), "idempotency_key": z.string(), "transaction_action": z.enum(["DEPOSIT","WITHDRAWAL","CONVERSION"]), "amount": z.string(), "asset": z.string().optional(), "network": z.string().optional(), "transaction_fee": z.object({ "value": z.string(), "asset": z.string() }).strict(), "source": z.object({ "amount": z.string().optional(), "asset": z.string().optional(), "network": z.string().optional(), "address_id": z.string() }).strict(), "destination": z.object({ "amount": z.string().optional(), "asset": z.string().optional(), "network": z.string().optional(), "address_id": z.string() }).strict(), "status": z.enum(["PENDING","COMPLETED","FAILED","REVERSED"]), "created_at": z.string(), "modified_at": z.string() }).strict()), "total": z.number().int().optional() }).strict()
 toolResponseSchemas["transactions.list"] = TransactionsListResponseSchema;
 
@@ -299,6 +412,27 @@ toolResponseSchemas["echo.get"] = EchoGetResponseSchema;
 
 const EchoPostResponseSchema = z.object({ "message": z.string(), "timestamp": z.string().optional() }).strict()
 toolResponseSchemas["echo.post"] = EchoPostResponseSchema;
+
+const RecipientsListResponseSchema = z.object({ "list": z.array(z.object({ "recipient_id": z.string(), "customer_id": z.string(), "business_type": z.string(), "full_name": z.string(), "nickname": z.string().optional(), "email": z.string().optional(), "relationship": z.string().optional(), "status": z.string(), "address": z.union([z.object({ "full_address": z.string(), "country_code": z.string(), "address_line1": z.string(), "address_line2": z.string().optional(), "city": z.string(), "region": z.string().optional(), "postal_code": z.string() }).strict(), z.null()]).optional(), "created_at": z.string(), "modified_at": z.string() }).strict()) }).strict()
+toolResponseSchemas["recipients.list"] = RecipientsListResponseSchema;
+
+const RecipientsGetResponseSchema = z.object({ "recipient_id": z.string(), "customer_id": z.string(), "business_type": z.string(), "full_name": z.string(), "nickname": z.string().optional(), "email": z.string().optional(), "relationship": z.string().optional(), "status": z.string(), "address": z.union([z.object({ "full_address": z.string(), "country_code": z.string(), "address_line1": z.string(), "address_line2": z.string().optional(), "city": z.string(), "region": z.string().optional(), "postal_code": z.string() }).strict(), z.null()]).optional(), "created_at": z.string(), "modified_at": z.string() }).strict()
+toolResponseSchemas["recipients.get"] = RecipientsGetResponseSchema;
+
+const RecipientsDeleteResponseSchema = z.union([z.null(), z.record(z.string(), z.any())])
+toolResponseSchemas["recipients.delete"] = RecipientsDeleteResponseSchema;
+
+const RecipientsBankAccountsGetByIdempotencyKeyResponseSchema = z.object({ "external_account_id": z.string(), "idempotency_key": z.string(), "customer_id": z.string(), "status": z.string(), "network": z.string(), "nickname": z.string().optional(), "account_holder_name": z.string(), "currency": z.string(), "country_code": z.string(), "account_number": z.string(), "institution_id": z.string(), "institution_name": z.string(), "institution_clearing_code": z.string().optional(), "intermediary_bank": z.object({ "institution_id": z.string(), "institution_name": z.string().optional() }).strict().optional(), "reference_code": z.string().optional(), "created_at": z.string(), "modified_at": z.string() }).strict()
+toolResponseSchemas["recipients.bank_accounts.get_by_idempotency_key"] = RecipientsBankAccountsGetByIdempotencyKeyResponseSchema;
+
+const RecipientsBankAccountsCreateResponseSchema = z.object({ "external_account_id": z.string(), "idempotency_key": z.string(), "customer_id": z.string(), "status": z.string(), "network": z.string(), "nickname": z.string().optional(), "account_holder_name": z.string(), "currency": z.string(), "country_code": z.string(), "account_number": z.string(), "institution_id": z.string(), "institution_name": z.string(), "institution_clearing_code": z.string().optional(), "intermediary_bank": z.object({ "institution_id": z.string(), "institution_name": z.string().optional() }).strict().optional(), "reference_code": z.string().optional(), "created_at": z.string(), "modified_at": z.string() }).strict()
+toolResponseSchemas["recipients.bank_accounts.create"] = RecipientsBankAccountsCreateResponseSchema;
+
+const RecipientsBankAccountsListResponseSchema = z.object({ "list": z.array(z.object({ "external_account_id": z.string(), "idempotency_key": z.string(), "customer_id": z.string(), "status": z.string(), "network": z.string(), "nickname": z.string().optional(), "account_holder_name": z.string(), "currency": z.string(), "country_code": z.string(), "account_number": z.string(), "institution_id": z.string(), "institution_name": z.string(), "institution_clearing_code": z.string().optional(), "intermediary_bank": z.object({ "institution_id": z.string(), "institution_name": z.string().optional() }).strict().optional(), "reference_code": z.string().optional(), "created_at": z.string(), "modified_at": z.string() }).strict()) }).strict()
+toolResponseSchemas["recipients.bank_accounts.list"] = RecipientsBankAccountsListResponseSchema;
+
+const RecipientsBankAccountsDeleteResponseSchema = z.union([z.null(), z.record(z.string(), z.any())])
+toolResponseSchemas["recipients.bank_accounts.delete"] = RecipientsBankAccountsDeleteResponseSchema;
 
 export type ToolName = keyof typeof toolSchemas;
 export type ToolResponseName = keyof typeof toolResponseSchemas;
