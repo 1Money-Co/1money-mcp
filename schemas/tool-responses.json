@@ -1634,6 +1634,92 @@
       }
     ]
   },
+  "recipients.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "recipient_id": {
+        "type": "string"
+      },
+      "customer_id": {
+        "type": "string"
+      },
+      "business_type": {
+        "type": "string"
+      },
+      "full_name": {
+        "type": "string"
+      },
+      "nickname": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      },
+      "relationship": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "address": {
+        "anyOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "full_address": {
+                "type": "string"
+              },
+              "country_code": {
+                "type": "string"
+              },
+              "address_line1": {
+                "type": "string"
+              },
+              "address_line2": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "region": {
+                "type": "string"
+              },
+              "postal_code": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "full_address",
+              "country_code",
+              "address_line1",
+              "city",
+              "postal_code"
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "modified_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "recipient_id",
+      "customer_id",
+      "business_type",
+      "full_name",
+      "status",
+      "created_at",
+      "modified_at"
+    ]
+  },
   "instructions.get_deposit_instruction": {
     "type": "object",
     "additionalProperties": false,
@@ -3146,6 +3232,115 @@
       "modified_at"
     ]
   },
+  "recipients.get_by_idempotency_key": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "recipient_id": {
+        "type": "string"
+      },
+      "customer_id": {
+        "type": "string"
+      },
+      "business_type": {
+        "type": "string"
+      },
+      "full_name": {
+        "type": "string"
+      },
+      "nickname": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "email": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "relationship": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "status": {
+        "type": "string"
+      },
+      "address": {
+        "oneOf": [
+          {
+            "type": "null"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "full_address": {
+                "type": "string"
+              },
+              "country_code": {
+                "type": "string"
+              },
+              "address_line1": {
+                "type": "string"
+              },
+              "address_line2": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "region": {
+                "type": "string"
+              },
+              "postal_code": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "full_address",
+              "country_code",
+              "address_line1",
+              "city",
+              "postal_code"
+            ]
+          }
+        ]
+      },
+      "created_at": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "modified_at": {
+        "type": "string",
+        "format": "date-time"
+      }
+    },
+    "required": [
+      "recipient_id",
+      "customer_id",
+      "business_type",
+      "full_name",
+      "status",
+      "created_at",
+      "modified_at"
+    ]
+  },
   "transactions.list": {
     "type": "object",
     "additionalProperties": false,
@@ -3455,6 +3650,476 @@
     },
     "required": [
       "message"
+    ]
+  },
+  "recipients.list": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "list": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "recipient_id": {
+              "type": "string"
+            },
+            "customer_id": {
+              "type": "string"
+            },
+            "business_type": {
+              "type": "string"
+            },
+            "full_name": {
+              "type": "string"
+            },
+            "nickname": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "relationship": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "address": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "full_address": {
+                      "type": "string"
+                    },
+                    "country_code": {
+                      "type": "string"
+                    },
+                    "address_line1": {
+                      "type": "string"
+                    },
+                    "address_line2": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "region": {
+                      "type": "string"
+                    },
+                    "postal_code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "full_address",
+                    "country_code",
+                    "address_line1",
+                    "city",
+                    "postal_code"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "modified_at": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "recipient_id",
+            "customer_id",
+            "business_type",
+            "full_name",
+            "status",
+            "created_at",
+            "modified_at"
+          ]
+        }
+      }
+    },
+    "required": [
+      "list"
+    ]
+  },
+  "recipients.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "recipient_id": {
+        "type": "string"
+      },
+      "customer_id": {
+        "type": "string"
+      },
+      "business_type": {
+        "type": "string"
+      },
+      "full_name": {
+        "type": "string"
+      },
+      "nickname": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      },
+      "relationship": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "address": {
+        "anyOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "full_address": {
+                "type": "string"
+              },
+              "country_code": {
+                "type": "string"
+              },
+              "address_line1": {
+                "type": "string"
+              },
+              "address_line2": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "region": {
+                "type": "string"
+              },
+              "postal_code": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "full_address",
+              "country_code",
+              "address_line1",
+              "city",
+              "postal_code"
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "modified_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "recipient_id",
+      "customer_id",
+      "business_type",
+      "full_name",
+      "status",
+      "created_at",
+      "modified_at"
+    ]
+  },
+  "recipients.delete": {
+    "anyOf": [
+      {
+        "type": "null"
+      },
+      {
+        "type": "object",
+        "additionalProperties": true
+      }
+    ]
+  },
+  "recipients.bank_accounts.get_by_idempotency_key": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "external_account_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      },
+      "customer_id": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "network": {
+        "type": "string"
+      },
+      "nickname": {
+        "type": "string"
+      },
+      "account_holder_name": {
+        "type": "string"
+      },
+      "currency": {
+        "type": "string"
+      },
+      "country_code": {
+        "type": "string"
+      },
+      "account_number": {
+        "type": "string"
+      },
+      "institution_id": {
+        "type": "string"
+      },
+      "institution_name": {
+        "type": "string"
+      },
+      "institution_clearing_code": {
+        "type": "string"
+      },
+      "intermediary_bank": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "institution_id": {
+            "type": "string"
+          },
+          "institution_name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "institution_id"
+        ]
+      },
+      "reference_code": {
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "modified_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "external_account_id",
+      "idempotency_key",
+      "customer_id",
+      "status",
+      "network",
+      "account_holder_name",
+      "currency",
+      "country_code",
+      "account_number",
+      "institution_id",
+      "institution_name",
+      "created_at",
+      "modified_at"
+    ]
+  },
+  "recipients.bank_accounts.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "external_account_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      },
+      "customer_id": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "network": {
+        "type": "string"
+      },
+      "nickname": {
+        "type": "string"
+      },
+      "account_holder_name": {
+        "type": "string"
+      },
+      "currency": {
+        "type": "string"
+      },
+      "country_code": {
+        "type": "string"
+      },
+      "account_number": {
+        "type": "string"
+      },
+      "institution_id": {
+        "type": "string"
+      },
+      "institution_name": {
+        "type": "string"
+      },
+      "institution_clearing_code": {
+        "type": "string"
+      },
+      "intermediary_bank": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "institution_id": {
+            "type": "string"
+          },
+          "institution_name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "institution_id"
+        ]
+      },
+      "reference_code": {
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "modified_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "external_account_id",
+      "idempotency_key",
+      "customer_id",
+      "status",
+      "network",
+      "account_holder_name",
+      "currency",
+      "country_code",
+      "account_number",
+      "institution_id",
+      "institution_name",
+      "created_at",
+      "modified_at"
+    ]
+  },
+  "recipients.bank_accounts.list": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "list": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "external_account_id": {
+              "type": "string"
+            },
+            "idempotency_key": {
+              "type": "string"
+            },
+            "customer_id": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "network": {
+              "type": "string"
+            },
+            "nickname": {
+              "type": "string"
+            },
+            "account_holder_name": {
+              "type": "string"
+            },
+            "currency": {
+              "type": "string"
+            },
+            "country_code": {
+              "type": "string"
+            },
+            "account_number": {
+              "type": "string"
+            },
+            "institution_id": {
+              "type": "string"
+            },
+            "institution_name": {
+              "type": "string"
+            },
+            "institution_clearing_code": {
+              "type": "string"
+            },
+            "intermediary_bank": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "institution_id": {
+                  "type": "string"
+                },
+                "institution_name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "institution_id"
+              ]
+            },
+            "reference_code": {
+              "type": "string"
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "modified_at": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "external_account_id",
+            "idempotency_key",
+            "customer_id",
+            "status",
+            "network",
+            "account_holder_name",
+            "currency",
+            "country_code",
+            "account_number",
+            "institution_id",
+            "institution_name",
+            "created_at",
+            "modified_at"
+          ]
+        }
+      }
+    },
+    "required": [
+      "list"
+    ]
+  },
+  "recipients.bank_accounts.delete": {
+    "anyOf": [
+      {
+        "type": "null"
+      },
+      {
+        "type": "object",
+        "additionalProperties": true
+      }
     ]
   }
 }

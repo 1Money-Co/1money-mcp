@@ -2222,6 +2222,656 @@
       "external_account_id"
     ]
   },
+  "recipients.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "request": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "idempotency_key": {
+            "type": "string"
+          },
+          "business_type": {
+            "type": "string",
+            "enum": [
+              "INDIVIDUAL",
+              "COMPANY"
+            ]
+          },
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "company_name": {
+            "type": "string"
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "mobile_code": {
+            "type": "string"
+          },
+          "mobile_num": {
+            "type": "string"
+          },
+          "relationship": {
+            "type": "string",
+            "enum": [
+              "EMPLOYEE",
+              "CONTRACTOR",
+              "VENDOR",
+              "SUBSIDIARY",
+              "MERCHANT",
+              "CUSTOMER",
+              "LANDLORD",
+              "FAMILY",
+              "OTHER"
+            ]
+          },
+          "address": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "country_code": {
+                "type": "string",
+                "enum": [
+                  "AND",
+                  "ARE",
+                  "AFG",
+                  "ATG",
+                  "AIA",
+                  "ALB",
+                  "ARM",
+                  "AGO",
+                  "ARG",
+                  "ASM",
+                  "AUT",
+                  "AUS",
+                  "ABW",
+                  "AZE",
+                  "BIH",
+                  "BRB",
+                  "BGD",
+                  "BEL",
+                  "BFA",
+                  "BGR",
+                  "BHR",
+                  "BDI",
+                  "BEN",
+                  "BLM",
+                  "BMU",
+                  "BRN",
+                  "BOL",
+                  "BRA",
+                  "BHS",
+                  "BTN",
+                  "BWA",
+                  "BLR",
+                  "BLZ",
+                  "CAN",
+                  "CCK",
+                  "COD",
+                  "CAF",
+                  "COG",
+                  "CHE",
+                  "CIV",
+                  "COK",
+                  "CHL",
+                  "CMR",
+                  "CHN",
+                  "COL",
+                  "CRI",
+                  "CUB",
+                  "CPV",
+                  "CUW",
+                  "CXR",
+                  "CYP",
+                  "CZE",
+                  "DEU",
+                  "DJI",
+                  "DNK",
+                  "DMA",
+                  "DOM",
+                  "DZA",
+                  "ECU",
+                  "EST",
+                  "EGY",
+                  "ESH",
+                  "ERI",
+                  "ESP",
+                  "ETH",
+                  "FIN",
+                  "FJI",
+                  "FLK",
+                  "FSM",
+                  "FRO",
+                  "FRA",
+                  "GAB",
+                  "GBR",
+                  "GRD",
+                  "GEO",
+                  "GUF",
+                  "GGY",
+                  "GHA",
+                  "GIB",
+                  "GRL",
+                  "GMB",
+                  "GIN",
+                  "GLP",
+                  "GNQ",
+                  "GRC",
+                  "SGS",
+                  "GTM",
+                  "GUM",
+                  "GNB",
+                  "GUY",
+                  "HKG",
+                  "HND",
+                  "HRV",
+                  "HTI",
+                  "HUN",
+                  "IDN",
+                  "IRL",
+                  "ISR",
+                  "IMN",
+                  "IND",
+                  "IOT",
+                  "IRQ",
+                  "IRN",
+                  "ISL",
+                  "ITA",
+                  "JEY",
+                  "JAM",
+                  "JOR",
+                  "JPN",
+                  "KEN",
+                  "KGZ",
+                  "KHM",
+                  "KIR",
+                  "COM",
+                  "KNA",
+                  "PRK",
+                  "KOR",
+                  "KWT",
+                  "CYM",
+                  "KAZ",
+                  "LAO",
+                  "LBN",
+                  "LCA",
+                  "LIE",
+                  "LKA",
+                  "LBR",
+                  "LSO",
+                  "LTU",
+                  "LUX",
+                  "LVA",
+                  "LBY",
+                  "MAR",
+                  "MCO",
+                  "MDA",
+                  "MNE",
+                  "MAF",
+                  "MDG",
+                  "MHL",
+                  "MKD",
+                  "MLI",
+                  "MMR",
+                  "MNG",
+                  "MAC",
+                  "MNP",
+                  "MTQ",
+                  "MRT",
+                  "MSR",
+                  "MLT",
+                  "MUS",
+                  "MDV",
+                  "MWI",
+                  "MEX",
+                  "MYS",
+                  "MOZ",
+                  "NAM",
+                  "NCL",
+                  "NER",
+                  "NFK",
+                  "NGA",
+                  "NIC",
+                  "NLD",
+                  "NOR",
+                  "NPL",
+                  "NRU",
+                  "NIU",
+                  "NZL",
+                  "OMN",
+                  "PAN",
+                  "PER",
+                  "PYF",
+                  "PNG",
+                  "PHL",
+                  "PAK",
+                  "POL",
+                  "SPM",
+                  "PCN",
+                  "PRI",
+                  "PSE",
+                  "PRT",
+                  "PLW",
+                  "PRY",
+                  "QAT",
+                  "REU",
+                  "ROU",
+                  "SRB",
+                  "RUS",
+                  "RWA",
+                  "SAU",
+                  "SLB",
+                  "SYC",
+                  "SDN",
+                  "SWE",
+                  "SGP",
+                  "SHN",
+                  "SVN",
+                  "SJM",
+                  "SVK",
+                  "SLE",
+                  "SMR",
+                  "SEN",
+                  "SOM",
+                  "SUR",
+                  "SSD",
+                  "STP",
+                  "SLV",
+                  "SXM",
+                  "SYR",
+                  "SWZ",
+                  "TCA",
+                  "TCD",
+                  "TGO",
+                  "THA",
+                  "TJK",
+                  "TKL",
+                  "TLS",
+                  "TKM",
+                  "TUN",
+                  "TON",
+                  "TUR",
+                  "TTO",
+                  "TUV",
+                  "TWN",
+                  "TZA",
+                  "UKR",
+                  "UGA",
+                  "USA",
+                  "URY",
+                  "UZB",
+                  "VAT",
+                  "VCT",
+                  "VEN",
+                  "VGB",
+                  "VIR",
+                  "VNM",
+                  "VUT",
+                  "WLF",
+                  "WSM",
+                  "YEM",
+                  "MYT",
+                  "ZAF",
+                  "ZMB",
+                  "ZWE"
+                ]
+              },
+              "address_line1": {
+                "type": "string"
+              },
+              "address_line2": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "region": {
+                "type": "string"
+              },
+              "postal_code": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "country_code",
+              "address_line1",
+              "city",
+              "postal_code"
+            ]
+          },
+          "bank_accounts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "network": {
+                  "type": "string",
+                  "enum": [
+                    "US_FEDWIRE",
+                    "US_ACH",
+                    "SWIFT"
+                  ]
+                },
+                "nickname": {
+                  "type": "string"
+                },
+                "account_holder_name": {
+                  "type": "string"
+                },
+                "currency": {
+                  "type": "string"
+                },
+                "country_code": {
+                  "type": "string",
+                  "enum": [
+                    "AND",
+                    "ARE",
+                    "AFG",
+                    "ATG",
+                    "AIA",
+                    "ALB",
+                    "ARM",
+                    "AGO",
+                    "ARG",
+                    "ASM",
+                    "AUT",
+                    "AUS",
+                    "ABW",
+                    "AZE",
+                    "BIH",
+                    "BRB",
+                    "BGD",
+                    "BEL",
+                    "BFA",
+                    "BGR",
+                    "BHR",
+                    "BDI",
+                    "BEN",
+                    "BLM",
+                    "BMU",
+                    "BRN",
+                    "BOL",
+                    "BRA",
+                    "BHS",
+                    "BTN",
+                    "BWA",
+                    "BLR",
+                    "BLZ",
+                    "CAN",
+                    "CCK",
+                    "COD",
+                    "CAF",
+                    "COG",
+                    "CHE",
+                    "CIV",
+                    "COK",
+                    "CHL",
+                    "CMR",
+                    "CHN",
+                    "COL",
+                    "CRI",
+                    "CUB",
+                    "CPV",
+                    "CUW",
+                    "CXR",
+                    "CYP",
+                    "CZE",
+                    "DEU",
+                    "DJI",
+                    "DNK",
+                    "DMA",
+                    "DOM",
+                    "DZA",
+                    "ECU",
+                    "EST",
+                    "EGY",
+                    "ESH",
+                    "ERI",
+                    "ESP",
+                    "ETH",
+                    "FIN",
+                    "FJI",
+                    "FLK",
+                    "FSM",
+                    "FRO",
+                    "FRA",
+                    "GAB",
+                    "GBR",
+                    "GRD",
+                    "GEO",
+                    "GUF",
+                    "GGY",
+                    "GHA",
+                    "GIB",
+                    "GRL",
+                    "GMB",
+                    "GIN",
+                    "GLP",
+                    "GNQ",
+                    "GRC",
+                    "SGS",
+                    "GTM",
+                    "GUM",
+                    "GNB",
+                    "GUY",
+                    "HKG",
+                    "HND",
+                    "HRV",
+                    "HTI",
+                    "HUN",
+                    "IDN",
+                    "IRL",
+                    "ISR",
+                    "IMN",
+                    "IND",
+                    "IOT",
+                    "IRQ",
+                    "IRN",
+                    "ISL",
+                    "ITA",
+                    "JEY",
+                    "JAM",
+                    "JOR",
+                    "JPN",
+                    "KEN",
+                    "KGZ",
+                    "KHM",
+                    "KIR",
+                    "COM",
+                    "KNA",
+                    "PRK",
+                    "KOR",
+                    "KWT",
+                    "CYM",
+                    "KAZ",
+                    "LAO",
+                    "LBN",
+                    "LCA",
+                    "LIE",
+                    "LKA",
+                    "LBR",
+                    "LSO",
+                    "LTU",
+                    "LUX",
+                    "LVA",
+                    "LBY",
+                    "MAR",
+                    "MCO",
+                    "MDA",
+                    "MNE",
+                    "MAF",
+                    "MDG",
+                    "MHL",
+                    "MKD",
+                    "MLI",
+                    "MMR",
+                    "MNG",
+                    "MAC",
+                    "MNP",
+                    "MTQ",
+                    "MRT",
+                    "MSR",
+                    "MLT",
+                    "MUS",
+                    "MDV",
+                    "MWI",
+                    "MEX",
+                    "MYS",
+                    "MOZ",
+                    "NAM",
+                    "NCL",
+                    "NER",
+                    "NFK",
+                    "NGA",
+                    "NIC",
+                    "NLD",
+                    "NOR",
+                    "NPL",
+                    "NRU",
+                    "NIU",
+                    "NZL",
+                    "OMN",
+                    "PAN",
+                    "PER",
+                    "PYF",
+                    "PNG",
+                    "PHL",
+                    "PAK",
+                    "POL",
+                    "SPM",
+                    "PCN",
+                    "PRI",
+                    "PSE",
+                    "PRT",
+                    "PLW",
+                    "PRY",
+                    "QAT",
+                    "REU",
+                    "ROU",
+                    "SRB",
+                    "RUS",
+                    "RWA",
+                    "SAU",
+                    "SLB",
+                    "SYC",
+                    "SDN",
+                    "SWE",
+                    "SGP",
+                    "SHN",
+                    "SVN",
+                    "SJM",
+                    "SVK",
+                    "SLE",
+                    "SMR",
+                    "SEN",
+                    "SOM",
+                    "SUR",
+                    "SSD",
+                    "STP",
+                    "SLV",
+                    "SXM",
+                    "SYR",
+                    "SWZ",
+                    "TCA",
+                    "TCD",
+                    "TGO",
+                    "THA",
+                    "TJK",
+                    "TKL",
+                    "TLS",
+                    "TKM",
+                    "TUN",
+                    "TON",
+                    "TUR",
+                    "TTO",
+                    "TUV",
+                    "TWN",
+                    "TZA",
+                    "UKR",
+                    "UGA",
+                    "USA",
+                    "URY",
+                    "UZB",
+                    "VAT",
+                    "VCT",
+                    "VEN",
+                    "VGB",
+                    "VIR",
+                    "VNM",
+                    "VUT",
+                    "WLF",
+                    "WSM",
+                    "YEM",
+                    "MYT",
+                    "ZAF",
+                    "ZMB",
+                    "ZWE"
+                  ]
+                },
+                "account_number": {
+                  "type": "string"
+                },
+                "institution_id": {
+                  "type": "string"
+                },
+                "institution_name": {
+                  "type": "string"
+                },
+                "institution_clearing_code": {
+                  "type": "string"
+                },
+                "intermediary_bank": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "institution_id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "institution_id"
+                  ]
+                }
+              },
+              "required": [
+                "network",
+                "account_holder_name",
+                "currency",
+                "country_code",
+                "account_number",
+                "institution_id",
+                "institution_name"
+              ]
+            }
+          }
+        },
+        "required": [
+          "idempotency_key",
+          "business_type",
+          "relationship",
+          "address"
+        ]
+      }
+    },
+    "required": [
+      "customer_id",
+      "request"
+    ]
+  },
   "instructions.get_deposit_instruction": {
     "type": "object",
     "additionalProperties": false,
@@ -2724,6 +3374,22 @@
       "idempotency_key"
     ]
   },
+  "recipients.get_by_idempotency_key": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "idempotency_key"
+    ]
+  },
   "transactions.list": {
     "type": "object",
     "additionalProperties": false,
@@ -2869,6 +3535,483 @@
     },
     "required": [
       "request"
+    ]
+  },
+  "recipients.list": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "params": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "search": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "page": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "required": [
+      "customer_id"
+    ]
+  },
+  "recipients.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "recipient_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "recipient_id"
+    ]
+  },
+  "recipients.delete": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "recipient_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "recipient_id"
+    ]
+  },
+  "recipients.bank_accounts.get_by_idempotency_key": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "recipient_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "recipient_id",
+      "idempotency_key"
+    ]
+  },
+  "recipients.bank_accounts.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "recipient_id": {
+        "type": "string"
+      },
+      "request": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "idempotency_key": {
+            "type": "string"
+          },
+          "network": {
+            "type": "string",
+            "enum": [
+              "US_ACH",
+              "SWIFT",
+              "US_FEDWIRE"
+            ]
+          },
+          "nickname": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "account_holder_name": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "country_code": {
+            "type": "string",
+            "enum": [
+              "AND",
+              "ARE",
+              "AFG",
+              "ATG",
+              "AIA",
+              "ALB",
+              "ARM",
+              "AGO",
+              "ARG",
+              "ASM",
+              "AUT",
+              "AUS",
+              "ABW",
+              "AZE",
+              "BIH",
+              "BRB",
+              "BGD",
+              "BEL",
+              "BFA",
+              "BGR",
+              "BHR",
+              "BDI",
+              "BEN",
+              "BLM",
+              "BMU",
+              "BRN",
+              "BOL",
+              "BRA",
+              "BHS",
+              "BTN",
+              "BWA",
+              "BLR",
+              "BLZ",
+              "CAN",
+              "CCK",
+              "COD",
+              "CAF",
+              "COG",
+              "CHE",
+              "CIV",
+              "COK",
+              "CHL",
+              "CMR",
+              "CHN",
+              "COL",
+              "CRI",
+              "CUB",
+              "CPV",
+              "CUW",
+              "CXR",
+              "CYP",
+              "CZE",
+              "DEU",
+              "DJI",
+              "DNK",
+              "DMA",
+              "DOM",
+              "DZA",
+              "ECU",
+              "EST",
+              "EGY",
+              "ESH",
+              "ERI",
+              "ESP",
+              "ETH",
+              "FIN",
+              "FJI",
+              "FLK",
+              "FSM",
+              "FRO",
+              "FRA",
+              "GAB",
+              "GBR",
+              "GRD",
+              "GEO",
+              "GUF",
+              "GGY",
+              "GHA",
+              "GIB",
+              "GRL",
+              "GMB",
+              "GIN",
+              "GLP",
+              "GNQ",
+              "GRC",
+              "SGS",
+              "GTM",
+              "GUM",
+              "GNB",
+              "GUY",
+              "HKG",
+              "HND",
+              "HRV",
+              "HTI",
+              "HUN",
+              "IDN",
+              "IRL",
+              "ISR",
+              "IMN",
+              "IND",
+              "IOT",
+              "IRQ",
+              "IRN",
+              "ISL",
+              "ITA",
+              "JEY",
+              "JAM",
+              "JOR",
+              "JPN",
+              "KEN",
+              "KGZ",
+              "KHM",
+              "KIR",
+              "COM",
+              "KNA",
+              "PRK",
+              "KOR",
+              "KWT",
+              "CYM",
+              "KAZ",
+              "LAO",
+              "LBN",
+              "LCA",
+              "LIE",
+              "LKA",
+              "LBR",
+              "LSO",
+              "LTU",
+              "LUX",
+              "LVA",
+              "LBY",
+              "MAR",
+              "MCO",
+              "MDA",
+              "MNE",
+              "MAF",
+              "MDG",
+              "MHL",
+              "MKD",
+              "MLI",
+              "MMR",
+              "MNG",
+              "MAC",
+              "MNP",
+              "MTQ",
+              "MRT",
+              "MSR",
+              "MLT",
+              "MUS",
+              "MDV",
+              "MWI",
+              "MEX",
+              "MYS",
+              "MOZ",
+              "NAM",
+              "NCL",
+              "NER",
+              "NFK",
+              "NGA",
+              "NIC",
+              "NLD",
+              "NOR",
+              "NPL",
+              "NRU",
+              "NIU",
+              "NZL",
+              "OMN",
+              "PAN",
+              "PER",
+              "PYF",
+              "PNG",
+              "PHL",
+              "PAK",
+              "POL",
+              "SPM",
+              "PCN",
+              "PRI",
+              "PSE",
+              "PRT",
+              "PLW",
+              "PRY",
+              "QAT",
+              "REU",
+              "ROU",
+              "SRB",
+              "RUS",
+              "RWA",
+              "SAU",
+              "SLB",
+              "SYC",
+              "SDN",
+              "SWE",
+              "SGP",
+              "SHN",
+              "SVN",
+              "SJM",
+              "SVK",
+              "SLE",
+              "SMR",
+              "SEN",
+              "SOM",
+              "SUR",
+              "SSD",
+              "STP",
+              "SLV",
+              "SXM",
+              "SYR",
+              "SWZ",
+              "TCA",
+              "TCD",
+              "TGO",
+              "THA",
+              "TJK",
+              "TKL",
+              "TLS",
+              "TKM",
+              "TUN",
+              "TON",
+              "TUR",
+              "TTO",
+              "TUV",
+              "TWN",
+              "TZA",
+              "UKR",
+              "UGA",
+              "USA",
+              "URY",
+              "UZB",
+              "VAT",
+              "VCT",
+              "VEN",
+              "VGB",
+              "VIR",
+              "VNM",
+              "VUT",
+              "WLF",
+              "WSM",
+              "YEM",
+              "MYT",
+              "ZAF",
+              "ZMB",
+              "ZWE"
+            ]
+          },
+          "account_number": {
+            "type": "string"
+          },
+          "institution_id": {
+            "type": "string"
+          },
+          "institution_name": {
+            "type": "string"
+          },
+          "institution_clearing_code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "intermediary_bank": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "institution_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "institution_id"
+                ]
+              }
+            ]
+          }
+        },
+        "required": [
+          "idempotency_key",
+          "network",
+          "account_holder_name",
+          "currency",
+          "country_code",
+          "account_number",
+          "institution_id",
+          "institution_name"
+        ]
+      }
+    },
+    "required": [
+      "customer_id",
+      "recipient_id",
+      "request"
+    ]
+  },
+  "recipients.bank_accounts.list": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "recipient_id": {
+        "type": "string"
+      },
+      "params": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "currency": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "network": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "required": [
+      "customer_id",
+      "recipient_id"
+    ]
+  },
+  "recipients.bank_accounts.delete": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "recipient_id": {
+        "type": "string"
+      },
+      "bank_account_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "recipient_id",
+      "bank_account_id"
     ]
   }
 }

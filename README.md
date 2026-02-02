@@ -102,11 +102,63 @@ The server also reads `~/.onemoney/credentials` with lower priority than env var
 
 ## Example prompts
 
+### assets
 - "List USD assets for customer cus_123 on US_ACH."
-- "Create a TOS link and return the session token."
-- "Create an external account and then withdraw $100 to it."
+
+### customer
+- "Create a TOS link for customer cus_123 and return the session token."
+- "Sign the TOS agreement for customer cus_123 using session token tok_123."
+- "Create a customer named Jane Doe with email jane@example.com."
+- "List the first 20 customers."
+- "Get customer cus_123."
+- "Update customer cus_123 with phone +1-415-555-0100."
+
+### customer.associated_persons
+- "Create an associated person for customer cus_123 named John Doe."
+- "List associated persons for customer cus_123."
+- "Get associated person ap_123 for customer cus_123."
+- "Update associated person ap_123 for customer cus_123 with phone +1-415-555-0100."
+- "Delete associated person ap_123 for customer cus_123."
+
+### external_accounts
+- "Create an external account for customer cus_123 on US_ACH."
+- "Get external account ext_123 for customer cus_123."
+- "Get an external account by idempotency key extacct-001 for customer cus_123."
+- "List external accounts for customer cus_123."
+- "Remove external account ext_123 for customer cus_123."
+
+### instructions
+- "Get deposit instructions for customer cus_123 for USDC on ETHEREUM."
+
+### conversions
+- "Create a conversion quote for customer cus_123 from USD to USDC for 100.00."
+- "Create a hedge for conversion quote convq_123."
+- "Get conversion order conv_123."
+
+### auto_conversion_rules
+- "Create an auto conversion rule for customer cus_123 to convert USD to USDC daily."
+- "Get auto conversion rule acr_123."
+- "Get auto conversion rule by idempotency key acr-001."
+- "List auto conversion rules for customer cus_123."
+- "Delete auto conversion rule acr_123."
+- "List auto conversion rule orders for rule acr_123."
+- "Get auto conversion rule order acro_123."
+
+### withdrawals
+- "Create a withdrawal of $100 USD for customer cus_123 to external account ext_123."
+- "Get withdrawal wd_123."
+- "Get withdrawal by idempotency key withdrawal-001."
+
+### transactions
 - "List the last 10 transactions for customer cus_123."
-- "Simulate a USDC deposit on ETHEREUM for $50."
+- "Get transaction txn_123."
+
+### simulations
+- "Simulate a USDC deposit on ETHEREUM for $50 for customer cus_123."
+
+### echo
+- "Call echo.get and return the response."
+- "Call echo.post with {\"hello\": \"world\"}."
 
 ## API Reference
 
@@ -123,6 +175,8 @@ The server also reads `~/.onemoney/credentials` with lower priority than env var
 - customer: `customer.create_tos_link`, `customer.sign_tos_agreement`, `customer.create`, `customer.list`, `customer.get`, `customer.update`
 - customer.associated_persons: `create`, `list`, `get`, `update`, `delete`
 - external_accounts: `create`, `get`, `get_by_idempotency_key`, `list`, `remove`
+- recipients: `recipients.create`, `recipients.list`, `recipients.get`, `recipients.delete`, `recipients.get_by_idempotency_key`
+- recipients.bank_accounts: `get_by_idempotency_key`, `create`, `list`, `delete`
 - instructions: `instructions.get_deposit_instruction`
 - conversions: `conversions.create_quote`, `conversions.create_hedge`, `conversions.get_order`
 - auto_conversion_rules: `create`, `get`, `get_by_idempotency_key`, `list`, `delete`, `list_orders`, `get_order`
