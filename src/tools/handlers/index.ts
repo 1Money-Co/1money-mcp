@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { OneMoneyClient } from "../client.js";
-import type { ToolName } from "../schemas/zod.js";
-import { createAssetsHandlers } from "./handlers-assets.js";
-import { createAutoConversionRulesHandlers } from "./handlers-auto-conversion-rules.js";
-import { createConversionsHandlers } from "./handlers-conversions.js";
-import { createCustomerAssociatedPersonsHandlers } from "./handlers-customer-associated-persons.js";
-import { createCustomerHandlers } from "./handlers-customer.js";
-import { createEchoHandlers } from "./handlers-echo.js";
-import { createExternalAccountsHandlers } from "./handlers-external-accounts.js";
-import { createInstructionsHandlers } from "./handlers-instructions.js";
-import { createRecipientsBankAccountsHandlers } from "./handlers-recipients-bank-accounts.js";
-import { createRecipientsHandlers } from "./handlers-recipients.js";
-import { createSimulationsHandlers } from "./handlers-simulations.js";
-import { createTransactionsHandlers } from "./handlers-transactions.js";
-import type { ToolHandler } from "./handlers-shared.js";
-import { createWithdrawalsHandlers } from "./handlers-withdrawals.js";
+import type { OneMoneyClient } from "../../client.js";
+import type { ToolName } from "../../schemas/zod.js";
+import { createAssetsHandlers } from "./assets.js";
+import { createAutoConversionRulesHandlers } from "./auto-conversion-rules.js";
+import { createConversionsHandlers } from "./conversions.js";
+import { createCustomerAssociatedPersonsHandlers } from "./customer-associated-persons.js";
+import { createCustomerHandlers } from "./customer.js";
+import { createEchoHandlers } from "./echo.js";
+import { createExternalAccountsHandlers } from "./external-accounts.js";
+import { createInstructionsHandlers } from "./instructions.js";
+import { createRecipientsBankAccountsHandlers } from "./recipients-bank-accounts.js";
+import { createRecipientsHandlers } from "./recipients.js";
+import { createSimulationsHandlers } from "./simulations.js";
+import { createTransactionsHandlers } from "./transactions.js";
+import type { ToolHandler } from "./shared.js";
+import { createWithdrawalsHandlers } from "./withdrawals.js";
 
-export type { ToolHandler } from "./handlers-shared.js";
+export type { ToolHandler } from "./shared.js";
 
 /**
  * Builds the MCP tool handler map backed by the 1money client.

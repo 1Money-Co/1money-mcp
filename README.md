@@ -228,3 +228,7 @@ The server also reads `~/.onemoney/credentials` with lower priority than env var
 ```bash
 npm run generate-schemas
 ```
+
+## Code organization
+
+- Tool handlers are grouped by tool prefix in `src/tools/handlers-*.ts` and composed in `src/tools/handlers.ts`.
