@@ -28,7 +28,7 @@
     "url": "https://github.com/1Money-Co/1money-mcp"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.10.0",
+    "@modelcontextprotocol/sdk": "^1.26.0",
     "dotenv": "^17.2.3",
     "zod": "^4.3.6"
   },
