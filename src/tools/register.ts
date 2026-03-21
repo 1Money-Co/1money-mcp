@@ -30,6 +30,7 @@ export const registerTools = (server: McpServer, client: OneMoneyClient) => {
       throw new Error(`Missing handler for tool ${toolName}`);
     }
 
-    server.registerTool(toolName, { inputSchema: schema }, handler);
+    const mcpToolName = toolName.replaceAll(".", "_");
+    server.registerTool(mcpToolName, { inputSchema: schema }, handler);
   }
 };
