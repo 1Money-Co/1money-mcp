@@ -1,85 +1,54 @@
 {
-  "assets.list": {
+  "customer.list": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
-      "customer_id": {
-        "type": "string"
-      },
       "params": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "asset": {
-            "type": "string",
-            "enum": [
-              "USD",
-              "USDC",
-              "USDT",
-              "PYUSD",
-              "RLUSD",
-              "USDG",
-              "USDP",
-              "EURC",
-              "MXNB"
-            ]
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "minimum": 1
           },
-          "network": {
-            "type": "string",
-            "enum": [
-              "US_ACH",
-              "SWIFT",
-              "US_FEDWIRE",
-              "ARBITRUM",
-              "AVALANCHE",
-              "BASE",
-              "BNBCHAIN",
-              "ETHEREUM",
-              "POLYGON",
-              "SOLANA"
-            ]
+          "size": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "minimum": 1,
+            "maximum": 100
           },
-          "sort_order": {
-            "type": "string",
-            "enum": [
-              "ASC",
-              "DESC"
+          "page_num": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "minimum": 0
+          },
+          "page_size": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "minimum": 0
+          },
+          "kyb_status": {
+            "type": [
+              "string",
+              "null"
             ]
-          }
-        }
-      }
-    },
-    "required": [
-      "customer_id"
-    ]
-  },
-  "customer.create_tos_link": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "request": {
-        "type": "object",
-        "additionalProperties": false,
-        "minProperties": 1,
-        "properties": {
-          "redirect_url": {
-            "type": "string"
           }
         }
       }
     }
-  },
-  "customer.sign_tos_agreement": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "session_token": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "session_token"
-    ]
   },
   "customer.create": {
     "type": "object",
@@ -87,8 +56,27 @@
     "properties": {
       "request": {
         "type": "object",
-        "additionalProperties": false,
-        "minProperties": 1,
+        "required": [
+          "business_legal_name",
+          "business_description",
+          "email",
+          "business_type",
+          "business_industry",
+          "registered_address",
+          "date_of_incorporation",
+          "associated_persons",
+          "account_purpose",
+          "source_of_funds",
+          "source_of_wealth",
+          "documents",
+          "publicly_traded",
+          "estimated_annual_revenue_usd",
+          "expected_monthly_fiat_deposits",
+          "expected_monthly_fiat_withdrawals",
+          "tax_country",
+          "tax_id",
+          "tax_type"
+        ],
         "properties": {
           "business_legal_name": {
             "type": "string"
@@ -97,7 +85,10 @@
             "type": "string"
           },
           "business_registration_number": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "email": {
             "type": "string"
@@ -105,11 +96,15 @@
           "business_type": {
             "type": "string",
             "enum": [
-              "cooperative",
               "corporation",
               "llc",
               "partnership",
-              "sole_proprietorship"
+              "sole_proprietorship",
+              "investment_fund",
+              "societies",
+              "trust",
+              "government",
+              "dao"
             ]
           },
           "business_industry": {
@@ -117,7 +112,12 @@
           },
           "registered_address": {
             "type": "object",
-            "additionalProperties": false,
+            "required": [
+              "street_line_1",
+              "city",
+              "country",
+              "state"
+            ],
             "properties": {
               "street_line_1": {
                 "type": "string"
@@ -131,78 +131,117 @@
               "state": {
                 "type": "string"
               },
-              "postal_code": {
-                "type": "string"
-              },
               "street_line_2": {
-                "type": "string"
+                "type": [
+                  "string",
+                  "null"
+                ]
               },
               "subdivision": {
-                "type": "string"
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "postal_code": {
+                "type": [
+                  "string",
+                  "null"
+                ]
               }
-            },
-            "required": [
-              "street_line_1",
-              "city",
-              "country",
-              "state",
-              "postal_code"
-            ]
+            }
           },
           "date_of_incorporation": {
             "type": "string"
           },
           "physical_address": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "street_line_1": {
-                "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
               },
-              "city": {
-                "type": "string"
-              },
-              "country": {
-                "type": "string"
-              },
-              "state": {
-                "type": "string"
-              },
-              "postal_code": {
-                "type": "string"
-              },
-              "street_line_2": {
-                "type": "string"
-              },
-              "subdivision": {
-                "type": "string"
+              {
+                "type": "object",
+                "required": [
+                  "street_line_1",
+                  "city",
+                  "country",
+                  "state"
+                ],
+                "properties": {
+                  "street_line_1": {
+                    "type": "string"
+                  },
+                  "city": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "street_line_2": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "subdivision": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "postal_code": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
               }
-            },
-            "required": [
-              "street_line_1",
-              "city",
-              "country",
-              "state",
-              "postal_code"
             ]
           },
           "signed_agreement_id": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
-          "is_dao": {
-            "type": "boolean"
+          "terms_signed_at": {
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "associated_persons": {
             "type": "array",
             "items": {
               "type": "object",
-              "additionalProperties": false,
+              "required": [
+                "first_name",
+                "last_name",
+                "email",
+                "residential_address",
+                "birth_date",
+                "primary_nationality",
+                "has_ownership",
+                "has_control",
+                "is_signer",
+                "is_director",
+                "identifying_information",
+                "poa",
+                "poa_type"
+              ],
               "properties": {
                 "first_name": {
                   "type": "string"
                 },
                 "middle_name": {
-                  "type": "string"
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "last_name": {
                   "type": "string"
@@ -210,16 +249,14 @@
                 "email": {
                   "type": "string"
                 },
-                "gender": {
-                  "type": "string",
-                  "enum": [
-                    "male",
-                    "female"
-                  ]
-                },
                 "residential_address": {
                   "type": "object",
-                  "additionalProperties": false,
+                  "required": [
+                    "street_line_1",
+                    "city",
+                    "country",
+                    "state"
+                  ],
                   "properties": {
                     "street_line_1": {
                       "type": "string"
@@ -233,28 +270,27 @@
                     "state": {
                       "type": "string"
                     },
-                    "postal_code": {
-                      "type": "string"
-                    },
                     "street_line_2": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "subdivision": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "postal_code": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     }
-                  },
-                  "required": [
-                    "street_line_1",
-                    "city",
-                    "country",
-                    "state",
-                    "postal_code"
-                  ]
+                  }
                 },
                 "birth_date": {
-                  "type": "string"
-                },
-                "country_of_birth": {
                   "type": "string"
                 },
                 "primary_nationality": {
@@ -264,7 +300,11 @@
                   "type": "boolean"
                 },
                 "ownership_percentage": {
-                  "type": "integer"
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "format": "double"
                 },
                 "has_control": {
                   "type": "boolean"
@@ -279,18 +319,28 @@
                   "type": "array",
                   "items": {
                     "type": "object",
-                    "additionalProperties": false,
+                    "required": [
+                      "type",
+                      "issuing_country",
+                      "national_identity_number",
+                      "image_front",
+                      "image_back"
+                    ],
                     "properties": {
                       "type": {
                         "type": "string",
                         "enum": [
                           "drivers_license",
-                          "passport",
+                          "permanent_residency_id",
                           "national_id",
-                          "state_id"
+                          "passport",
+                          "other"
                         ]
                       },
                       "issuing_country": {
+                        "type": "string"
+                      },
+                      "national_identity_number": {
                         "type": "string"
                       },
                       "image_front": {
@@ -298,102 +348,109 @@
                       },
                       "image_back": {
                         "type": "string"
-                      },
-                      "national_identity_number": {
-                        "type": "string"
                       }
-                    },
-                    "required": [
-                      "type",
-                      "issuing_country",
-                      "image_front",
-                      "image_back",
-                      "national_identity_number"
-                    ]
+                    }
                   }
                 },
                 "dual_nationality": {
-                  "type": "string"
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "country_of_tax": {
-                  "type": "string"
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "tax_type": {
-                  "type": "string",
-                  "enum": [
-                    "SSN",
-                    "EIN",
-                    "TFN",
-                    "ABN",
-                    "ACN",
-                    "UTR",
-                    "NINO",
-                    "NRIC",
-                    "FIN",
-                    "ASDG",
-                    "ITR",
-                    "NIF",
-                    "TIN",
-                    "VAT",
-                    "CUIL",
-                    "CUIT",
-                    "DNI",
-                    "BIN",
-                    "UNP",
-                    "RNPM",
-                    "NIT",
-                    "CPF",
-                    "CNPJ",
-                    "NIRE",
-                    "UCN",
-                    "UIC",
-                    "SIN",
-                    "BN",
-                    "RUT",
-                    "IIN",
-                    "USCC",
-                    "CNOC",
-                    "USCN",
-                    "ITIN",
-                    "CPJ",
-                    "OIB",
-                    "DIC",
-                    "CPR",
-                    "CVR",
-                    "CN",
-                    "RNC",
-                    "RUC",
-                    "TN",
-                    "HETU",
-                    "YT",
-                    "ALV",
-                    "SIREN",
-                    "IDNR",
-                    "STNR",
-                    "VTA",
-                    "HKID",
-                    "AJ",
-                    "EN",
-                    "KN",
-                    "VSK",
-                    "PAN",
-                    "GSTN",
-                    "NIK",
-                    "NPWP",
-                    "PPS",
-                    "TRN",
-                    "CRO",
-                    "CHY",
-                    "CF",
-                    "IVA",
-                    "IN",
-                    "JCT",
-                    "EDRPOU",
-                    "EID"
+                  "oneOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string",
+                      "enum": [
+                        "SSN",
+                        "EIN",
+                        "TFN",
+                        "ABN",
+                        "ACN",
+                        "UTR",
+                        "NINO",
+                        "NRIC",
+                        "FIN",
+                        "ASDG",
+                        "ITR",
+                        "OTHER",
+                        "NIF",
+                        "TIN",
+                        "VAT",
+                        "CUIL",
+                        "CUIT",
+                        "DNI",
+                        "BIN",
+                        "UNP",
+                        "RNPM",
+                        "NIT",
+                        "CPF",
+                        "CNPJ",
+                        "NIRE",
+                        "UCN",
+                        "UIC",
+                        "SIN",
+                        "BN",
+                        "RUT",
+                        "IIN",
+                        "USCC",
+                        "CNOC",
+                        "USCN",
+                        "ITIN",
+                        "CPJ",
+                        "OIB",
+                        "DIC",
+                        "CPR",
+                        "CVR",
+                        "CN",
+                        "RNC",
+                        "RUC",
+                        "TN",
+                        "HETU",
+                        "YT",
+                        "ALV",
+                        "SIREN",
+                        "IDNR",
+                        "STNR",
+                        "VTA",
+                        "HKID",
+                        "AJ",
+                        "EN",
+                        "KN",
+                        "VSK",
+                        "PAN",
+                        "GSTN",
+                        "NIK",
+                        "NPWP",
+                        "PPS",
+                        "TRN",
+                        "CRO",
+                        "CHY",
+                        "CF",
+                        "IVA",
+                        "IN",
+                        "JCT",
+                        "EDRPOU",
+                        "EID"
+                      ]
+                    }
                   ]
                 },
                 "tax_id": {
-                  "type": "string"
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "poa": {
                   "type": "string"
@@ -401,26 +458,33 @@
                 "poa_type": {
                   "type": "string"
                 }
-              },
+              }
+            }
+          },
+          "intermediaries": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "object",
               "required": [
-                "first_name",
-                "last_name",
-                "email",
-                "gender",
-                "residential_address",
-                "birth_date",
-                "country_of_birth",
-                "primary_nationality",
-                "has_ownership",
-                "has_control",
-                "is_signer",
-                "is_director",
-                "country_of_tax",
-                "tax_type",
-                "tax_id",
-                "poa",
-                "poa_type"
-              ]
+                "entity_name",
+                "country",
+                "ownership"
+              ],
+              "properties": {
+                "entity_name": {
+                  "type": "string"
+                },
+                "country": {
+                  "type": "string"
+                },
+                "ownership": {
+                  "type": "number",
+                  "format": "double"
+                }
+              }
             }
           },
           "account_purpose": {
@@ -467,12 +531,13 @@
               "type": "string",
               "enum": [
                 "business_dividends_or_profits",
-                "sale_of_business",
+                "investments",
+                "asset_sales",
+                "client_investor_contributions",
+                "gambling",
+                "charitable_contributions",
                 "inheritance",
-                "real_estate_investments",
-                "investment_returns",
-                "accumulated_revenue",
-                "other"
+                "affiliate_or_royalty_income"
               ]
             }
           },
@@ -480,7 +545,10 @@
             "type": "array",
             "items": {
               "type": "object",
-              "additionalProperties": false,
+              "required": [
+                "doc_type",
+                "file"
+              ],
               "properties": {
                 "doc_type": {
                   "type": "string",
@@ -488,6 +556,7 @@
                     "aml_comfort_letter",
                     "constitutional_document",
                     "directors_registry",
+                    "cert_of_incumbency",
                     "e_signature_certificate",
                     "evidence_of_good_standing",
                     "flow_of_funds",
@@ -500,29 +569,29 @@
                     "proof_of_address",
                     "proof_of_entity_name_change",
                     "proof_of_nature_of_business",
+                    "proof_of_nature_of_business_license",
+                    "proof_of_nature_of_business_aml_policy",
                     "proof_of_signatory_authority",
                     "proof_of_source_of_funds",
                     "proof_of_source_of_wealth",
                     "proof_of_tax_identification",
                     "registration_document",
-                    "shareholder_register"
+                    "shareholder_register",
+                    "evidence_of_directors_and_controllers",
+                    "tax_exempt_entity_confirmation"
                   ]
                 },
                 "file": {
                   "type": "string"
-                },
-                "description": {
-                  "type": "string"
                 }
-              },
-              "required": [
-                "doc_type",
-                "file"
-              ]
+              }
             }
           },
           "primary_website": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "publicly_traded": {
             "type": "boolean"
@@ -531,52 +600,74 @@
             "type": "string",
             "enum": [
               "0_99999",
-              "100000_499999",
-              "500000_999999",
-              "1000000_4999999",
-              "5000000_plus"
+              "100000_999999",
+              "1000000_9999999",
+              "10000000_49999999",
+              "50000000_249999999",
+              "2500000000_plus"
             ]
           },
           "expected_monthly_fiat_deposits": {
             "type": "string",
             "enum": [
               "0_99999",
-              "100000_499999",
-              "500000_999999",
-              "1000000_4999999",
-              "5000000_plus"
+              "100000_999999",
+              "1000000_9999999",
+              "10000000_49999999",
+              "50000000_249999999",
+              "2500000000_plus"
             ]
           },
           "expected_monthly_fiat_withdrawals": {
             "type": "string",
             "enum": [
               "0_99999",
-              "100000_499999",
-              "500000_999999",
-              "1000000_4999999",
-              "5000000_plus"
+              "100000_999999",
+              "1000000_9999999",
+              "10000000_49999999",
+              "50000000_249999999",
+              "2500000000_plus"
             ]
           },
           "account_purpose_other": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "high_risk_activities": {
-            "type": "array",
+            "type": [
+              "array",
+              "null"
+            ],
             "items": {
               "type": "string",
               "enum": [
                 "adult_entertainment",
-                "cannabis",
-                "cryptocurrency",
                 "gambling",
+                "hold_client_funds",
+                "investment_services",
+                "lending_banking",
+                "marijuana_or_related_services",
                 "money_services",
-                "precious_metals",
-                "weapons",
-                "none"
+                "nicotine_tobacco_or_related_services",
+                "operate_foreign_exchange_virtual_currencies_brokerage_otc",
+                "pharmaceuticals",
+                "precious_metals_precious_stones_jewelry",
+                "safe_deposit_box_rentals",
+                "third_party_payment_processing",
+                "weapons_firearms_and_explosives",
+                "none_of_the_above"
               ]
             }
           },
           "high_risk_activities_explanation": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "tax_country": {
             "type": "string"
           },
           "tax_id": {
@@ -596,6 +687,7 @@
               "FIN",
               "ASDG",
               "ITR",
+              "OTHER",
               "NIF",
               "TIN",
               "VAT",
@@ -655,60 +747,14 @@
               "EDRPOU",
               "EID"
             ]
-          },
-          "tax_country": {
-            "type": "string"
           }
         },
-        "required": [
-          "business_legal_name",
-          "business_description",
-          "business_registration_number",
-          "email",
-          "business_type",
-          "business_industry",
-          "registered_address",
-          "date_of_incorporation",
-          "signed_agreement_id",
-          "is_dao",
-          "associated_persons",
-          "account_purpose",
-          "source_of_funds",
-          "source_of_wealth",
-          "publicly_traded",
-          "estimated_annual_revenue_usd",
-          "expected_monthly_fiat_deposits",
-          "expected_monthly_fiat_withdrawals",
-          "tax_id",
-          "tax_type",
-          "tax_country"
-        ]
+        "additionalProperties": false
       }
     },
     "required": [
       "request"
     ]
-  },
-  "customer.list": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "params": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "page_size": {
-            "type": "integer"
-          },
-          "page_num": {
-            "type": "integer"
-          },
-          "kyb_status": {
-            "type": "string"
-          }
-        }
-      }
-    }
   },
   "customer.get": {
     "type": "object",
@@ -731,121 +777,197 @@
       },
       "request": {
         "type": "object",
-        "additionalProperties": false,
         "properties": {
           "business_legal_name": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "business_description": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "business_registration_number": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "email": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "business_type": {
-            "type": "string",
-            "enum": [
-              "cooperative",
-              "corporation",
-              "llc",
-              "partnership",
-              "sole_proprietorship"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "corporation",
+                  "llc",
+                  "partnership",
+                  "sole_proprietorship",
+                  "investment_fund",
+                  "societies",
+                  "trust",
+                  "government",
+                  "dao"
+                ]
+              }
             ]
           },
           "business_industry": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "registered_address": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "street_line_1": {
-                "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
               },
-              "city": {
-                "type": "string"
-              },
-              "country": {
-                "type": "string"
-              },
-              "state": {
-                "type": "string"
-              },
-              "postal_code": {
-                "type": "string"
-              },
-              "street_line_2": {
-                "type": "string"
-              },
-              "subdivision": {
-                "type": "string"
+              {
+                "type": "object",
+                "required": [
+                  "street_line_1",
+                  "city",
+                  "country",
+                  "state"
+                ],
+                "properties": {
+                  "street_line_1": {
+                    "type": "string"
+                  },
+                  "city": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "street_line_2": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "subdivision": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "postal_code": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
               }
-            },
-            "required": [
-              "street_line_1",
-              "city",
-              "country",
-              "state",
-              "postal_code"
             ]
           },
           "date_of_incorporation": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "physical_address": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "street_line_1": {
-                "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
               },
-              "city": {
-                "type": "string"
-              },
-              "country": {
-                "type": "string"
-              },
-              "state": {
-                "type": "string"
-              },
-              "postal_code": {
-                "type": "string"
-              },
-              "street_line_2": {
-                "type": "string"
-              },
-              "subdivision": {
-                "type": "string"
+              {
+                "type": "object",
+                "required": [
+                  "street_line_1",
+                  "city",
+                  "country",
+                  "state"
+                ],
+                "properties": {
+                  "street_line_1": {
+                    "type": "string"
+                  },
+                  "city": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "street_line_2": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "subdivision": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "postal_code": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
               }
-            },
-            "required": [
-              "street_line_1",
-              "city",
-              "country",
-              "state",
-              "postal_code"
             ]
           },
           "signed_agreement_id": {
-            "type": "string"
-          },
-          "is_dao": {
-            "type": "boolean"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "associated_persons": {
-            "type": "array",
+            "type": [
+              "array",
+              "null"
+            ],
             "items": {
               "type": "object",
-              "additionalProperties": false,
+              "required": [
+                "first_name",
+                "last_name",
+                "email",
+                "residential_address",
+                "birth_date",
+                "primary_nationality",
+                "has_ownership",
+                "has_control",
+                "is_signer",
+                "is_director",
+                "identifying_information",
+                "poa",
+                "poa_type"
+              ],
               "properties": {
                 "first_name": {
                   "type": "string"
                 },
                 "middle_name": {
-                  "type": "string"
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "last_name": {
                   "type": "string"
@@ -853,16 +975,14 @@
                 "email": {
                   "type": "string"
                 },
-                "gender": {
-                  "type": "string",
-                  "enum": [
-                    "male",
-                    "female"
-                  ]
-                },
                 "residential_address": {
                   "type": "object",
-                  "additionalProperties": false,
+                  "required": [
+                    "street_line_1",
+                    "city",
+                    "country",
+                    "state"
+                  ],
                   "properties": {
                     "street_line_1": {
                       "type": "string"
@@ -876,28 +996,27 @@
                     "state": {
                       "type": "string"
                     },
-                    "postal_code": {
-                      "type": "string"
-                    },
                     "street_line_2": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "subdivision": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "postal_code": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     }
-                  },
-                  "required": [
-                    "street_line_1",
-                    "city",
-                    "country",
-                    "state",
-                    "postal_code"
-                  ]
+                  }
                 },
                 "birth_date": {
-                  "type": "string"
-                },
-                "country_of_birth": {
                   "type": "string"
                 },
                 "primary_nationality": {
@@ -907,7 +1026,11 @@
                   "type": "boolean"
                 },
                 "ownership_percentage": {
-                  "type": "integer"
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "format": "double"
                 },
                 "has_control": {
                   "type": "boolean"
@@ -922,18 +1045,28 @@
                   "type": "array",
                   "items": {
                     "type": "object",
-                    "additionalProperties": false,
+                    "required": [
+                      "type",
+                      "issuing_country",
+                      "national_identity_number",
+                      "image_front",
+                      "image_back"
+                    ],
                     "properties": {
                       "type": {
                         "type": "string",
                         "enum": [
                           "drivers_license",
-                          "passport",
+                          "permanent_residency_id",
                           "national_id",
-                          "state_id"
+                          "passport",
+                          "other"
                         ]
                       },
                       "issuing_country": {
+                        "type": "string"
+                      },
+                      "national_identity_number": {
                         "type": "string"
                       },
                       "image_front": {
@@ -941,102 +1074,109 @@
                       },
                       "image_back": {
                         "type": "string"
-                      },
-                      "national_identity_number": {
-                        "type": "string"
                       }
-                    },
-                    "required": [
-                      "type",
-                      "issuing_country",
-                      "image_front",
-                      "image_back",
-                      "national_identity_number"
-                    ]
+                    }
                   }
                 },
                 "dual_nationality": {
-                  "type": "string"
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "country_of_tax": {
-                  "type": "string"
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "tax_type": {
-                  "type": "string",
-                  "enum": [
-                    "SSN",
-                    "EIN",
-                    "TFN",
-                    "ABN",
-                    "ACN",
-                    "UTR",
-                    "NINO",
-                    "NRIC",
-                    "FIN",
-                    "ASDG",
-                    "ITR",
-                    "NIF",
-                    "TIN",
-                    "VAT",
-                    "CUIL",
-                    "CUIT",
-                    "DNI",
-                    "BIN",
-                    "UNP",
-                    "RNPM",
-                    "NIT",
-                    "CPF",
-                    "CNPJ",
-                    "NIRE",
-                    "UCN",
-                    "UIC",
-                    "SIN",
-                    "BN",
-                    "RUT",
-                    "IIN",
-                    "USCC",
-                    "CNOC",
-                    "USCN",
-                    "ITIN",
-                    "CPJ",
-                    "OIB",
-                    "DIC",
-                    "CPR",
-                    "CVR",
-                    "CN",
-                    "RNC",
-                    "RUC",
-                    "TN",
-                    "HETU",
-                    "YT",
-                    "ALV",
-                    "SIREN",
-                    "IDNR",
-                    "STNR",
-                    "VTA",
-                    "HKID",
-                    "AJ",
-                    "EN",
-                    "KN",
-                    "VSK",
-                    "PAN",
-                    "GSTN",
-                    "NIK",
-                    "NPWP",
-                    "PPS",
-                    "TRN",
-                    "CRO",
-                    "CHY",
-                    "CF",
-                    "IVA",
-                    "IN",
-                    "JCT",
-                    "EDRPOU",
-                    "EID"
+                  "oneOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string",
+                      "enum": [
+                        "SSN",
+                        "EIN",
+                        "TFN",
+                        "ABN",
+                        "ACN",
+                        "UTR",
+                        "NINO",
+                        "NRIC",
+                        "FIN",
+                        "ASDG",
+                        "ITR",
+                        "OTHER",
+                        "NIF",
+                        "TIN",
+                        "VAT",
+                        "CUIL",
+                        "CUIT",
+                        "DNI",
+                        "BIN",
+                        "UNP",
+                        "RNPM",
+                        "NIT",
+                        "CPF",
+                        "CNPJ",
+                        "NIRE",
+                        "UCN",
+                        "UIC",
+                        "SIN",
+                        "BN",
+                        "RUT",
+                        "IIN",
+                        "USCC",
+                        "CNOC",
+                        "USCN",
+                        "ITIN",
+                        "CPJ",
+                        "OIB",
+                        "DIC",
+                        "CPR",
+                        "CVR",
+                        "CN",
+                        "RNC",
+                        "RUC",
+                        "TN",
+                        "HETU",
+                        "YT",
+                        "ALV",
+                        "SIREN",
+                        "IDNR",
+                        "STNR",
+                        "VTA",
+                        "HKID",
+                        "AJ",
+                        "EN",
+                        "KN",
+                        "VSK",
+                        "PAN",
+                        "GSTN",
+                        "NIK",
+                        "NPWP",
+                        "PPS",
+                        "TRN",
+                        "CRO",
+                        "CHY",
+                        "CF",
+                        "IVA",
+                        "IN",
+                        "JCT",
+                        "EDRPOU",
+                        "EID"
+                      ]
+                    }
                   ]
                 },
                 "tax_id": {
-                  "type": "string"
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "poa": {
                   "type": "string"
@@ -1044,48 +1184,39 @@
                 "poa_type": {
                   "type": "string"
                 }
-              },
-              "required": [
-                "first_name",
-                "last_name",
-                "email",
-                "gender",
-                "residential_address",
-                "birth_date",
-                "country_of_birth",
-                "primary_nationality",
-                "has_ownership",
-                "has_control",
-                "is_signer",
-                "is_director",
-                "country_of_tax",
-                "tax_type",
-                "tax_id",
-                "poa",
-                "poa_type"
-              ]
+              }
             }
           },
           "account_purpose": {
-            "type": "string",
-            "enum": [
-              "charitable_donations",
-              "ecommerce_retail_payments",
-              "investment_purposes",
-              "other",
-              "payments_to_friends_or_family_abroad",
-              "payroll",
-              "personal_or_living_expenses",
-              "protect_wealth",
-              "purchase_goods_and_services",
-              "receive_payments_for_goods_and_services",
-              "tax_optimization",
-              "third_party_money_transmission",
-              "treasury_management"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "charitable_donations",
+                  "ecommerce_retail_payments",
+                  "investment_purposes",
+                  "other",
+                  "payments_to_friends_or_family_abroad",
+                  "payroll",
+                  "personal_or_living_expenses",
+                  "protect_wealth",
+                  "purchase_goods_and_services",
+                  "receive_payments_for_goods_and_services",
+                  "tax_optimization",
+                  "third_party_money_transmission",
+                  "treasury_management"
+                ]
+              }
             ]
           },
           "source_of_funds": {
-            "type": "array",
+            "type": [
+              "array",
+              "null"
+            ],
             "items": {
               "type": "string",
               "enum": [
@@ -1105,25 +1236,35 @@
             }
           },
           "source_of_wealth": {
-            "type": "array",
+            "type": [
+              "array",
+              "null"
+            ],
             "items": {
               "type": "string",
               "enum": [
                 "business_dividends_or_profits",
-                "sale_of_business",
+                "investments",
+                "asset_sales",
+                "client_investor_contributions",
+                "gambling",
+                "charitable_contributions",
                 "inheritance",
-                "real_estate_investments",
-                "investment_returns",
-                "accumulated_revenue",
-                "other"
+                "affiliate_or_royalty_income"
               ]
             }
           },
           "documents": {
-            "type": "array",
+            "type": [
+              "array",
+              "null"
+            ],
             "items": {
               "type": "object",
-              "additionalProperties": false,
+              "required": [
+                "doc_type",
+                "file"
+              ],
               "properties": {
                 "doc_type": {
                   "type": "string",
@@ -1131,6 +1272,7 @@
                     "aml_comfort_letter",
                     "constitutional_document",
                     "directors_registry",
+                    "cert_of_incumbency",
                     "e_signature_certificate",
                     "evidence_of_good_standing",
                     "flow_of_funds",
@@ -1143,407 +1285,224 @@
                     "proof_of_address",
                     "proof_of_entity_name_change",
                     "proof_of_nature_of_business",
+                    "proof_of_nature_of_business_license",
+                    "proof_of_nature_of_business_aml_policy",
                     "proof_of_signatory_authority",
                     "proof_of_source_of_funds",
                     "proof_of_source_of_wealth",
                     "proof_of_tax_identification",
                     "registration_document",
-                    "shareholder_register"
+                    "shareholder_register",
+                    "evidence_of_directors_and_controllers",
+                    "tax_exempt_entity_confirmation"
                   ]
                 },
                 "file": {
                   "type": "string"
-                },
-                "description": {
-                  "type": "string"
                 }
-              },
-              "required": [
-                "doc_type",
-                "file"
-              ]
+              }
             }
           },
           "primary_website": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "publicly_traded": {
-            "type": "boolean"
+            "type": [
+              "boolean",
+              "null"
+            ]
           },
           "estimated_annual_revenue_usd": {
-            "type": "string",
-            "enum": [
-              "0_99999",
-              "100000_499999",
-              "500000_999999",
-              "1000000_4999999",
-              "5000000_plus"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "0_99999",
+                  "100000_999999",
+                  "1000000_9999999",
+                  "10000000_49999999",
+                  "50000000_249999999",
+                  "2500000000_plus"
+                ]
+              }
             ]
           },
           "expected_monthly_fiat_deposits": {
-            "type": "string",
-            "enum": [
-              "0_99999",
-              "100000_499999",
-              "500000_999999",
-              "1000000_4999999",
-              "5000000_plus"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "0_99999",
+                  "100000_999999",
+                  "1000000_9999999",
+                  "10000000_49999999",
+                  "50000000_249999999",
+                  "2500000000_plus"
+                ]
+              }
             ]
           },
           "expected_monthly_fiat_withdrawals": {
-            "type": "string",
-            "enum": [
-              "0_99999",
-              "100000_499999",
-              "500000_999999",
-              "1000000_4999999",
-              "5000000_plus"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "0_99999",
+                  "100000_999999",
+                  "1000000_9999999",
+                  "10000000_49999999",
+                  "50000000_249999999",
+                  "2500000000_plus"
+                ]
+              }
             ]
           },
           "account_purpose_other": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "high_risk_activities": {
-            "type": "array",
+            "type": [
+              "array",
+              "null"
+            ],
             "items": {
               "type": "string",
               "enum": [
                 "adult_entertainment",
-                "cannabis",
-                "cryptocurrency",
                 "gambling",
+                "hold_client_funds",
+                "investment_services",
+                "lending_banking",
+                "marijuana_or_related_services",
                 "money_services",
-                "precious_metals",
-                "weapons",
-                "none"
+                "nicotine_tobacco_or_related_services",
+                "operate_foreign_exchange_virtual_currencies_brokerage_otc",
+                "pharmaceuticals",
+                "precious_metals_precious_stones_jewelry",
+                "safe_deposit_box_rentals",
+                "third_party_payment_processing",
+                "weapons_firearms_and_explosives",
+                "none_of_the_above"
               ]
             }
           },
           "high_risk_activities_explanation": {
-            "type": "string"
-          },
-          "tax_id": {
-            "type": "string"
-          },
-          "tax_type": {
-            "type": "string",
-            "enum": [
-              "SSN",
-              "EIN",
-              "TFN",
-              "ABN",
-              "ACN",
-              "UTR",
-              "NINO",
-              "NRIC",
-              "FIN",
-              "ASDG",
-              "ITR",
-              "NIF",
-              "TIN",
-              "VAT",
-              "CUIL",
-              "CUIT",
-              "DNI",
-              "BIN",
-              "UNP",
-              "RNPM",
-              "NIT",
-              "CPF",
-              "CNPJ",
-              "NIRE",
-              "UCN",
-              "UIC",
-              "SIN",
-              "BN",
-              "RUT",
-              "IIN",
-              "USCC",
-              "CNOC",
-              "USCN",
-              "ITIN",
-              "CPJ",
-              "OIB",
-              "DIC",
-              "CPR",
-              "CVR",
-              "CN",
-              "RNC",
-              "RUC",
-              "TN",
-              "HETU",
-              "YT",
-              "ALV",
-              "SIREN",
-              "IDNR",
-              "STNR",
-              "VTA",
-              "HKID",
-              "AJ",
-              "EN",
-              "KN",
-              "VSK",
-              "PAN",
-              "GSTN",
-              "NIK",
-              "NPWP",
-              "PPS",
-              "TRN",
-              "CRO",
-              "CHY",
-              "CF",
-              "IVA",
-              "IN",
-              "JCT",
-              "EDRPOU",
-              "EID"
+            "type": [
+              "string",
+              "null"
             ]
           },
           "tax_country": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "required": [
-      "customer_id",
-      "request"
-    ]
-  },
-  "customer.associated_persons.create": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "request": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "first_name": {
-            "type": "string"
-          },
-          "middle_name": {
-            "type": "string"
-          },
-          "last_name": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "gender": {
-            "type": "string",
-            "enum": [
-              "male",
-              "female"
-            ]
-          },
-          "residential_address": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "street_line_1": {
-                "type": "string"
-              },
-              "city": {
-                "type": "string"
-              },
-              "country": {
-                "type": "string"
-              },
-              "state": {
-                "type": "string"
-              },
-              "postal_code": {
-                "type": "string"
-              },
-              "street_line_2": {
-                "type": "string"
-              },
-              "subdivision": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "street_line_1",
-              "city",
-              "country",
-              "state",
-              "postal_code"
-            ]
-          },
-          "birth_date": {
-            "type": "string"
-          },
-          "country_of_birth": {
-            "type": "string"
-          },
-          "primary_nationality": {
-            "type": "string"
-          },
-          "has_ownership": {
-            "type": "boolean"
-          },
-          "ownership_percentage": {
-            "type": "integer"
-          },
-          "has_control": {
-            "type": "boolean"
-          },
-          "is_signer": {
-            "type": "boolean"
-          },
-          "is_director": {
-            "type": "boolean"
-          },
-          "identifying_information": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "type": {
-                  "type": "string",
-                  "enum": [
-                    "drivers_license",
-                    "passport",
-                    "national_id",
-                    "state_id"
-                  ]
-                },
-                "issuing_country": {
-                  "type": "string"
-                },
-                "image_front": {
-                  "type": "string"
-                },
-                "image_back": {
-                  "type": "string"
-                },
-                "national_identity_number": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "type",
-                "issuing_country",
-                "image_front",
-                "image_back",
-                "national_identity_number"
-              ]
-            }
-          },
-          "dual_nationality": {
-            "type": "string"
-          },
-          "country_of_tax": {
-            "type": "string"
-          },
-          "tax_type": {
-            "type": "string",
-            "enum": [
-              "SSN",
-              "EIN",
-              "TFN",
-              "ABN",
-              "ACN",
-              "UTR",
-              "NINO",
-              "NRIC",
-              "FIN",
-              "ASDG",
-              "ITR",
-              "NIF",
-              "TIN",
-              "VAT",
-              "CUIL",
-              "CUIT",
-              "DNI",
-              "BIN",
-              "UNP",
-              "RNPM",
-              "NIT",
-              "CPF",
-              "CNPJ",
-              "NIRE",
-              "UCN",
-              "UIC",
-              "SIN",
-              "BN",
-              "RUT",
-              "IIN",
-              "USCC",
-              "CNOC",
-              "USCN",
-              "ITIN",
-              "CPJ",
-              "OIB",
-              "DIC",
-              "CPR",
-              "CVR",
-              "CN",
-              "RNC",
-              "RUC",
-              "TN",
-              "HETU",
-              "YT",
-              "ALV",
-              "SIREN",
-              "IDNR",
-              "STNR",
-              "VTA",
-              "HKID",
-              "AJ",
-              "EN",
-              "KN",
-              "VSK",
-              "PAN",
-              "GSTN",
-              "NIK",
-              "NPWP",
-              "PPS",
-              "TRN",
-              "CRO",
-              "CHY",
-              "CF",
-              "IVA",
-              "IN",
-              "JCT",
-              "EDRPOU",
-              "EID"
+            "type": [
+              "string",
+              "null"
             ]
           },
           "tax_id": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
-          "poa": {
-            "type": "string"
-          },
-          "poa_type": {
-            "type": "string"
+          "tax_type": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "SSN",
+                  "EIN",
+                  "TFN",
+                  "ABN",
+                  "ACN",
+                  "UTR",
+                  "NINO",
+                  "NRIC",
+                  "FIN",
+                  "ASDG",
+                  "ITR",
+                  "OTHER",
+                  "NIF",
+                  "TIN",
+                  "VAT",
+                  "CUIL",
+                  "CUIT",
+                  "DNI",
+                  "BIN",
+                  "UNP",
+                  "RNPM",
+                  "NIT",
+                  "CPF",
+                  "CNPJ",
+                  "NIRE",
+                  "UCN",
+                  "UIC",
+                  "SIN",
+                  "BN",
+                  "RUT",
+                  "IIN",
+                  "USCC",
+                  "CNOC",
+                  "USCN",
+                  "ITIN",
+                  "CPJ",
+                  "OIB",
+                  "DIC",
+                  "CPR",
+                  "CVR",
+                  "CN",
+                  "RNC",
+                  "RUC",
+                  "TN",
+                  "HETU",
+                  "YT",
+                  "ALV",
+                  "SIREN",
+                  "IDNR",
+                  "STNR",
+                  "VTA",
+                  "HKID",
+                  "AJ",
+                  "EN",
+                  "KN",
+                  "VSK",
+                  "PAN",
+                  "GSTN",
+                  "NIK",
+                  "NPWP",
+                  "PPS",
+                  "TRN",
+                  "CRO",
+                  "CHY",
+                  "CF",
+                  "IVA",
+                  "IN",
+                  "JCT",
+                  "EDRPOU",
+                  "EID"
+                ]
+              }
+            ]
           }
         },
-        "required": [
-          "first_name",
-          "last_name",
-          "email",
-          "gender",
-          "residential_address",
-          "birth_date",
-          "country_of_birth",
-          "primary_nationality",
-          "has_ownership",
-          "has_control",
-          "is_signer",
-          "is_director",
-          "country_of_tax",
-          "tax_type",
-          "tax_id",
-          "poa",
-          "poa_type"
-        ]
+        "additionalProperties": false
       }
     },
     "required": [
@@ -1561,6 +1520,267 @@
     },
     "required": [
       "customer_id"
+    ]
+  },
+  "customer.associated_persons.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "request": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "first_name",
+              "last_name",
+              "email",
+              "residential_address",
+              "birth_date",
+              "primary_nationality",
+              "has_ownership",
+              "has_control",
+              "is_signer",
+              "is_director",
+              "identifying_information",
+              "poa",
+              "poa_type"
+            ],
+            "properties": {
+              "first_name": {
+                "type": "string"
+              },
+              "middle_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "last_name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "residential_address": {
+                "type": "object",
+                "required": [
+                  "street_line_1",
+                  "city",
+                  "country",
+                  "state"
+                ],
+                "properties": {
+                  "street_line_1": {
+                    "type": "string"
+                  },
+                  "city": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "street_line_2": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "subdivision": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "postal_code": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              },
+              "birth_date": {
+                "type": "string"
+              },
+              "primary_nationality": {
+                "type": "string"
+              },
+              "has_ownership": {
+                "type": "boolean"
+              },
+              "ownership_percentage": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "format": "double"
+              },
+              "has_control": {
+                "type": "boolean"
+              },
+              "is_signer": {
+                "type": "boolean"
+              },
+              "is_director": {
+                "type": "boolean"
+              },
+              "identifying_information": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "type",
+                    "issuing_country",
+                    "national_identity_number",
+                    "image_front",
+                    "image_back"
+                  ],
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "drivers_license",
+                        "permanent_residency_id",
+                        "national_id",
+                        "passport",
+                        "other"
+                      ]
+                    },
+                    "issuing_country": {
+                      "type": "string"
+                    },
+                    "national_identity_number": {
+                      "type": "string"
+                    },
+                    "image_front": {
+                      "type": "string"
+                    },
+                    "image_back": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "dual_nationality": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "country_of_tax": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "tax_type": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "string",
+                    "enum": [
+                      "SSN",
+                      "EIN",
+                      "TFN",
+                      "ABN",
+                      "ACN",
+                      "UTR",
+                      "NINO",
+                      "NRIC",
+                      "FIN",
+                      "ASDG",
+                      "ITR",
+                      "OTHER",
+                      "NIF",
+                      "TIN",
+                      "VAT",
+                      "CUIL",
+                      "CUIT",
+                      "DNI",
+                      "BIN",
+                      "UNP",
+                      "RNPM",
+                      "NIT",
+                      "CPF",
+                      "CNPJ",
+                      "NIRE",
+                      "UCN",
+                      "UIC",
+                      "SIN",
+                      "BN",
+                      "RUT",
+                      "IIN",
+                      "USCC",
+                      "CNOC",
+                      "USCN",
+                      "ITIN",
+                      "CPJ",
+                      "OIB",
+                      "DIC",
+                      "CPR",
+                      "CVR",
+                      "CN",
+                      "RNC",
+                      "RUC",
+                      "TN",
+                      "HETU",
+                      "YT",
+                      "ALV",
+                      "SIREN",
+                      "IDNR",
+                      "STNR",
+                      "VTA",
+                      "HKID",
+                      "AJ",
+                      "EN",
+                      "KN",
+                      "VSK",
+                      "PAN",
+                      "GSTN",
+                      "NIK",
+                      "NPWP",
+                      "PPS",
+                      "TRN",
+                      "CRO",
+                      "CHY",
+                      "CF",
+                      "IVA",
+                      "IN",
+                      "JCT",
+                      "EDRPOU",
+                      "EID"
+                    ]
+                  }
+                ]
+              },
+              "tax_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "poa": {
+                "type": "string"
+              },
+              "poa_type": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "required": [
+      "customer_id",
+      "request"
     ]
   },
   "customer.associated_persons.get": {
@@ -1591,101 +1811,151 @@
       },
       "request": {
         "type": "object",
-        "additionalProperties": false,
         "properties": {
           "first_name": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "middle_name": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "last_name": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "email": {
-            "type": "string"
-          },
-          "gender": {
-            "type": "string",
-            "enum": [
-              "male",
-              "female"
+            "type": [
+              "string",
+              "null"
             ]
           },
           "residential_address": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "street_line_1": {
-                "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
               },
-              "city": {
-                "type": "string"
-              },
-              "country": {
-                "type": "string"
-              },
-              "state": {
-                "type": "string"
-              },
-              "postal_code": {
-                "type": "string"
-              },
-              "street_line_2": {
-                "type": "string"
-              },
-              "subdivision": {
-                "type": "string"
+              {
+                "type": "object",
+                "required": [
+                  "street_line_1",
+                  "city",
+                  "country",
+                  "state"
+                ],
+                "properties": {
+                  "street_line_1": {
+                    "type": "string"
+                  },
+                  "city": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "street_line_2": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "subdivision": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "postal_code": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
               }
-            },
-            "required": [
-              "street_line_1",
-              "city",
-              "country",
-              "state",
-              "postal_code"
             ]
           },
           "birth_date": {
-            "type": "string"
-          },
-          "country_of_birth": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "primary_nationality": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "has_ownership": {
-            "type": "boolean"
+            "type": [
+              "boolean",
+              "null"
+            ]
           },
           "ownership_percentage": {
-            "type": "integer"
+            "type": [
+              "number",
+              "null"
+            ],
+            "format": "double"
           },
           "has_control": {
-            "type": "boolean"
+            "type": [
+              "boolean",
+              "null"
+            ]
           },
           "is_signer": {
-            "type": "boolean"
+            "type": [
+              "boolean",
+              "null"
+            ]
           },
           "is_director": {
-            "type": "boolean"
+            "type": [
+              "boolean",
+              "null"
+            ]
           },
           "identifying_information": {
-            "type": "array",
+            "type": [
+              "array",
+              "null"
+            ],
             "items": {
               "type": "object",
-              "additionalProperties": false,
+              "required": [
+                "type",
+                "issuing_country",
+                "national_identity_number",
+                "image_front",
+                "image_back"
+              ],
               "properties": {
                 "type": {
                   "type": "string",
                   "enum": [
                     "drivers_license",
-                    "passport",
+                    "permanent_residency_id",
                     "national_id",
-                    "state_id"
+                    "passport",
+                    "other"
                   ]
                 },
                 "issuing_country": {
+                  "type": "string"
+                },
+                "national_identity_number": {
                   "type": "string"
                 },
                 "image_front": {
@@ -1693,110 +1963,124 @@
                 },
                 "image_back": {
                   "type": "string"
-                },
-                "national_identity_number": {
-                  "type": "string"
                 }
-              },
-              "required": [
-                "type",
-                "issuing_country",
-                "image_front",
-                "image_back",
-                "national_identity_number"
-              ]
+              }
             }
           },
           "dual_nationality": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "country_of_tax": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "tax_type": {
-            "type": "string",
-            "enum": [
-              "SSN",
-              "EIN",
-              "TFN",
-              "ABN",
-              "ACN",
-              "UTR",
-              "NINO",
-              "NRIC",
-              "FIN",
-              "ASDG",
-              "ITR",
-              "NIF",
-              "TIN",
-              "VAT",
-              "CUIL",
-              "CUIT",
-              "DNI",
-              "BIN",
-              "UNP",
-              "RNPM",
-              "NIT",
-              "CPF",
-              "CNPJ",
-              "NIRE",
-              "UCN",
-              "UIC",
-              "SIN",
-              "BN",
-              "RUT",
-              "IIN",
-              "USCC",
-              "CNOC",
-              "USCN",
-              "ITIN",
-              "CPJ",
-              "OIB",
-              "DIC",
-              "CPR",
-              "CVR",
-              "CN",
-              "RNC",
-              "RUC",
-              "TN",
-              "HETU",
-              "YT",
-              "ALV",
-              "SIREN",
-              "IDNR",
-              "STNR",
-              "VTA",
-              "HKID",
-              "AJ",
-              "EN",
-              "KN",
-              "VSK",
-              "PAN",
-              "GSTN",
-              "NIK",
-              "NPWP",
-              "PPS",
-              "TRN",
-              "CRO",
-              "CHY",
-              "CF",
-              "IVA",
-              "IN",
-              "JCT",
-              "EDRPOU",
-              "EID"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "SSN",
+                  "EIN",
+                  "TFN",
+                  "ABN",
+                  "ACN",
+                  "UTR",
+                  "NINO",
+                  "NRIC",
+                  "FIN",
+                  "ASDG",
+                  "ITR",
+                  "OTHER",
+                  "NIF",
+                  "TIN",
+                  "VAT",
+                  "CUIL",
+                  "CUIT",
+                  "DNI",
+                  "BIN",
+                  "UNP",
+                  "RNPM",
+                  "NIT",
+                  "CPF",
+                  "CNPJ",
+                  "NIRE",
+                  "UCN",
+                  "UIC",
+                  "SIN",
+                  "BN",
+                  "RUT",
+                  "IIN",
+                  "USCC",
+                  "CNOC",
+                  "USCN",
+                  "ITIN",
+                  "CPJ",
+                  "OIB",
+                  "DIC",
+                  "CPR",
+                  "CVR",
+                  "CN",
+                  "RNC",
+                  "RUC",
+                  "TN",
+                  "HETU",
+                  "YT",
+                  "ALV",
+                  "SIREN",
+                  "IDNR",
+                  "STNR",
+                  "VTA",
+                  "HKID",
+                  "AJ",
+                  "EN",
+                  "KN",
+                  "VSK",
+                  "PAN",
+                  "GSTN",
+                  "NIK",
+                  "NPWP",
+                  "PPS",
+                  "TRN",
+                  "CRO",
+                  "CHY",
+                  "CF",
+                  "IVA",
+                  "IN",
+                  "JCT",
+                  "EDRPOU",
+                  "EID"
+                ]
+              }
             ]
           },
           "tax_id": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "poa": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "poa_type": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           }
-        }
+        },
+        "additionalProperties": false
       }
     },
     "required": [
@@ -1821,7 +2105,19 @@
       "associated_person_id"
     ]
   },
-  "external_accounts.create": {
+  "customer.intermediaries.list": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id"
+    ]
+  },
+  "customer.intermediaries.create": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -1830,311 +2126,24 @@
       },
       "request": {
         "type": "object",
-        "additionalProperties": false,
+        "required": [
+          "entity_name",
+          "country",
+          "ownership"
+        ],
         "properties": {
-          "idempotency_key": {
+          "entity_name": {
             "type": "string"
           },
-          "network": {
-            "type": "string",
-            "enum": [
-              "US_ACH",
-              "SWIFT",
-              "US_FEDWIRE"
-            ]
-          },
-          "currency": {
-            "type": "string",
-            "enum": [
-              "USD"
-            ]
-          },
-          "country_code": {
-            "type": "string",
-            "enum": [
-              "AND",
-              "ARE",
-              "AFG",
-              "ATG",
-              "AIA",
-              "ALB",
-              "ARM",
-              "AGO",
-              "ARG",
-              "ASM",
-              "AUT",
-              "AUS",
-              "ABW",
-              "AZE",
-              "BIH",
-              "BRB",
-              "BGD",
-              "BEL",
-              "BFA",
-              "BGR",
-              "BHR",
-              "BDI",
-              "BEN",
-              "BLM",
-              "BMU",
-              "BRN",
-              "BOL",
-              "BRA",
-              "BHS",
-              "BTN",
-              "BWA",
-              "BLR",
-              "BLZ",
-              "CAN",
-              "CCK",
-              "COD",
-              "CAF",
-              "COG",
-              "CHE",
-              "CIV",
-              "COK",
-              "CHL",
-              "CMR",
-              "CHN",
-              "COL",
-              "CRI",
-              "CUB",
-              "CPV",
-              "CUW",
-              "CXR",
-              "CYP",
-              "CZE",
-              "DEU",
-              "DJI",
-              "DNK",
-              "DMA",
-              "DOM",
-              "DZA",
-              "ECU",
-              "EST",
-              "EGY",
-              "ESH",
-              "ERI",
-              "ESP",
-              "ETH",
-              "FIN",
-              "FJI",
-              "FLK",
-              "FSM",
-              "FRO",
-              "FRA",
-              "GAB",
-              "GBR",
-              "GRD",
-              "GEO",
-              "GUF",
-              "GGY",
-              "GHA",
-              "GIB",
-              "GRL",
-              "GMB",
-              "GIN",
-              "GLP",
-              "GNQ",
-              "GRC",
-              "SGS",
-              "GTM",
-              "GUM",
-              "GNB",
-              "GUY",
-              "HKG",
-              "HND",
-              "HRV",
-              "HTI",
-              "HUN",
-              "IDN",
-              "IRL",
-              "ISR",
-              "IMN",
-              "IND",
-              "IOT",
-              "IRQ",
-              "IRN",
-              "ISL",
-              "ITA",
-              "JEY",
-              "JAM",
-              "JOR",
-              "JPN",
-              "KEN",
-              "KGZ",
-              "KHM",
-              "KIR",
-              "COM",
-              "KNA",
-              "PRK",
-              "KOR",
-              "KWT",
-              "CYM",
-              "KAZ",
-              "LAO",
-              "LBN",
-              "LCA",
-              "LIE",
-              "LKA",
-              "LBR",
-              "LSO",
-              "LTU",
-              "LUX",
-              "LVA",
-              "LBY",
-              "MAR",
-              "MCO",
-              "MDA",
-              "MNE",
-              "MAF",
-              "MDG",
-              "MHL",
-              "MKD",
-              "MLI",
-              "MMR",
-              "MNG",
-              "MAC",
-              "MNP",
-              "MTQ",
-              "MRT",
-              "MSR",
-              "MLT",
-              "MUS",
-              "MDV",
-              "MWI",
-              "MEX",
-              "MYS",
-              "MOZ",
-              "NAM",
-              "NCL",
-              "NER",
-              "NFK",
-              "NGA",
-              "NIC",
-              "NLD",
-              "NOR",
-              "NPL",
-              "NRU",
-              "NIU",
-              "NZL",
-              "OMN",
-              "PAN",
-              "PER",
-              "PYF",
-              "PNG",
-              "PHL",
-              "PAK",
-              "POL",
-              "SPM",
-              "PCN",
-              "PRI",
-              "PSE",
-              "PRT",
-              "PLW",
-              "PRY",
-              "QAT",
-              "REU",
-              "ROU",
-              "SRB",
-              "RUS",
-              "RWA",
-              "SAU",
-              "SLB",
-              "SYC",
-              "SDN",
-              "SWE",
-              "SGP",
-              "SHN",
-              "SVN",
-              "SJM",
-              "SVK",
-              "SLE",
-              "SMR",
-              "SEN",
-              "SOM",
-              "SUR",
-              "SSD",
-              "STP",
-              "SLV",
-              "SXM",
-              "SYR",
-              "SWZ",
-              "TCA",
-              "TCD",
-              "TGO",
-              "THA",
-              "TJK",
-              "TKL",
-              "TLS",
-              "TKM",
-              "TUN",
-              "TON",
-              "TUR",
-              "TTO",
-              "TUV",
-              "TWN",
-              "TZA",
-              "UKR",
-              "UGA",
-              "USA",
-              "URY",
-              "UZB",
-              "VAT",
-              "VCT",
-              "VEN",
-              "VGB",
-              "VIR",
-              "VNM",
-              "VUT",
-              "WLF",
-              "WSM",
-              "YEM",
-              "MYT",
-              "ZAF",
-              "ZMB",
-              "ZWE"
-            ]
-          },
-          "account_number": {
+          "country": {
             "type": "string"
           },
-          "institution_id": {
-            "type": "string"
-          },
-          "institution_name": {
-            "type": "string"
-          },
-          "nickname": {
-            "type": "string"
-          },
-          "institution_clearing_code": {
-            "type": "string"
-          },
-          "intermediary_bank": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "institution_id": {
-                "type": "string"
-              },
-              "institution_name": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "institution_id"
-            ]
+          "ownership": {
+            "type": "number",
+            "format": "double"
           }
         },
-        "required": [
-          "network",
-          "currency",
-          "country_code",
-          "account_number",
-          "institution_id",
-          "institution_name"
-        ]
+        "additionalProperties": false
       }
     },
     "required": [
@@ -2142,7 +2151,340 @@
       "request"
     ]
   },
+  "customer.intermediaries.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "intermediary_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "intermediary_id"
+    ]
+  },
+  "customer.intermediaries.update": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "intermediary_id": {
+        "type": "string"
+      },
+      "request": {
+        "type": "object",
+        "properties": {
+          "entity_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "country": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ownership": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "customer_id",
+      "intermediary_id",
+      "request"
+    ]
+  },
+  "customer.intermediaries.delete": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "intermediary_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "intermediary_id"
+    ]
+  },
+  "customer.create_tos_link": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "request": {
+        "type": "object",
+        "required": [
+          "redirect_url"
+        ],
+        "properties": {
+          "redirect_url": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "request"
+    ]
+  },
+  "customer.lightweight.get_by_idempotency_key": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "idempotency_key": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "idempotency_key"
+    ]
+  },
+  "customer.lightweight.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "request": {
+        "type": "object",
+        "required": [
+          "email",
+          "first_name",
+          "last_name",
+          "customer_type"
+        ],
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "first_name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1
+          },
+          "last_name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1
+          },
+          "company_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 100,
+            "minLength": 1
+          },
+          "customer_type": {
+            "type": "string",
+            "enum": [
+              "Business",
+              "Individual"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "request"
+    ]
+  },
+  "customer.onboarding_links.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "request": {
+        "type": "object",
+        "properties": {
+          "redirect_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "locale": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "default": "en-US"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "customer_id",
+      "request"
+    ]
+  },
+  "customer.lightweight.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id"
+    ]
+  },
+  "customer.onboarding_grants.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "request": {
+        "type": "object",
+        "required": [
+          "customer_id"
+        ],
+        "properties": {
+          "customer_id": {
+            "type": "string"
+          },
+          "redirect_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "locale": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "default": "en-US"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "request"
+    ]
+  },
+  "assets.list": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "params": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "asset": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "sort_order": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "ASC",
+                  "DESC"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "required": [
+      "customer_id"
+    ]
+  },
+  "external_accounts.list": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "params": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "currency": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "network": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "include_recipient": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "required": [
+      "customer_id"
+    ]
+  },
   "external_accounts.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "external_account_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "external_account_id"
+    ]
+  },
+  "external_accounts.remove": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2174,55 +2516,7 @@
       "idempotency_key"
     ]
   },
-  "external_accounts.list": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "params": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "currency": {
-            "type": "string",
-            "enum": [
-              "USD"
-            ]
-          },
-          "network": {
-            "type": "string",
-            "enum": [
-              "US_ACH",
-              "SWIFT",
-              "US_FEDWIRE"
-            ]
-          }
-        }
-      }
-    },
-    "required": [
-      "customer_id"
-    ]
-  },
-  "external_accounts.remove": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "external_account_id": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "customer_id",
-      "external_account_id"
-    ]
-  },
-  "recipients.create": {
+  "external_accounts.create": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -2231,1422 +2525,17 @@
       },
       "request": {
         "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "idempotency_key": {
-            "type": "string"
-          },
-          "business_type": {
-            "type": "string",
-            "enum": [
-              "INDIVIDUAL",
-              "COMPANY"
-            ]
-          },
-          "first_name": {
-            "type": "string"
-          },
-          "last_name": {
-            "type": "string"
-          },
-          "company_name": {
-            "type": "string"
-          },
-          "nickname": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "mobile_code": {
-            "type": "string"
-          },
-          "mobile_num": {
-            "type": "string"
-          },
-          "relationship": {
-            "type": "string",
-            "enum": [
-              "EMPLOYEE",
-              "CONTRACTOR",
-              "VENDOR",
-              "SUBSIDIARY",
-              "MERCHANT",
-              "CUSTOMER",
-              "LANDLORD",
-              "FAMILY",
-              "OTHER"
-            ]
-          },
-          "address": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "country_code": {
-                "type": "string",
-                "enum": [
-                  "AND",
-                  "ARE",
-                  "AFG",
-                  "ATG",
-                  "AIA",
-                  "ALB",
-                  "ARM",
-                  "AGO",
-                  "ARG",
-                  "ASM",
-                  "AUT",
-                  "AUS",
-                  "ABW",
-                  "AZE",
-                  "BIH",
-                  "BRB",
-                  "BGD",
-                  "BEL",
-                  "BFA",
-                  "BGR",
-                  "BHR",
-                  "BDI",
-                  "BEN",
-                  "BLM",
-                  "BMU",
-                  "BRN",
-                  "BOL",
-                  "BRA",
-                  "BHS",
-                  "BTN",
-                  "BWA",
-                  "BLR",
-                  "BLZ",
-                  "CAN",
-                  "CCK",
-                  "COD",
-                  "CAF",
-                  "COG",
-                  "CHE",
-                  "CIV",
-                  "COK",
-                  "CHL",
-                  "CMR",
-                  "CHN",
-                  "COL",
-                  "CRI",
-                  "CUB",
-                  "CPV",
-                  "CUW",
-                  "CXR",
-                  "CYP",
-                  "CZE",
-                  "DEU",
-                  "DJI",
-                  "DNK",
-                  "DMA",
-                  "DOM",
-                  "DZA",
-                  "ECU",
-                  "EST",
-                  "EGY",
-                  "ESH",
-                  "ERI",
-                  "ESP",
-                  "ETH",
-                  "FIN",
-                  "FJI",
-                  "FLK",
-                  "FSM",
-                  "FRO",
-                  "FRA",
-                  "GAB",
-                  "GBR",
-                  "GRD",
-                  "GEO",
-                  "GUF",
-                  "GGY",
-                  "GHA",
-                  "GIB",
-                  "GRL",
-                  "GMB",
-                  "GIN",
-                  "GLP",
-                  "GNQ",
-                  "GRC",
-                  "SGS",
-                  "GTM",
-                  "GUM",
-                  "GNB",
-                  "GUY",
-                  "HKG",
-                  "HND",
-                  "HRV",
-                  "HTI",
-                  "HUN",
-                  "IDN",
-                  "IRL",
-                  "ISR",
-                  "IMN",
-                  "IND",
-                  "IOT",
-                  "IRQ",
-                  "IRN",
-                  "ISL",
-                  "ITA",
-                  "JEY",
-                  "JAM",
-                  "JOR",
-                  "JPN",
-                  "KEN",
-                  "KGZ",
-                  "KHM",
-                  "KIR",
-                  "COM",
-                  "KNA",
-                  "PRK",
-                  "KOR",
-                  "KWT",
-                  "CYM",
-                  "KAZ",
-                  "LAO",
-                  "LBN",
-                  "LCA",
-                  "LIE",
-                  "LKA",
-                  "LBR",
-                  "LSO",
-                  "LTU",
-                  "LUX",
-                  "LVA",
-                  "LBY",
-                  "MAR",
-                  "MCO",
-                  "MDA",
-                  "MNE",
-                  "MAF",
-                  "MDG",
-                  "MHL",
-                  "MKD",
-                  "MLI",
-                  "MMR",
-                  "MNG",
-                  "MAC",
-                  "MNP",
-                  "MTQ",
-                  "MRT",
-                  "MSR",
-                  "MLT",
-                  "MUS",
-                  "MDV",
-                  "MWI",
-                  "MEX",
-                  "MYS",
-                  "MOZ",
-                  "NAM",
-                  "NCL",
-                  "NER",
-                  "NFK",
-                  "NGA",
-                  "NIC",
-                  "NLD",
-                  "NOR",
-                  "NPL",
-                  "NRU",
-                  "NIU",
-                  "NZL",
-                  "OMN",
-                  "PAN",
-                  "PER",
-                  "PYF",
-                  "PNG",
-                  "PHL",
-                  "PAK",
-                  "POL",
-                  "SPM",
-                  "PCN",
-                  "PRI",
-                  "PSE",
-                  "PRT",
-                  "PLW",
-                  "PRY",
-                  "QAT",
-                  "REU",
-                  "ROU",
-                  "SRB",
-                  "RUS",
-                  "RWA",
-                  "SAU",
-                  "SLB",
-                  "SYC",
-                  "SDN",
-                  "SWE",
-                  "SGP",
-                  "SHN",
-                  "SVN",
-                  "SJM",
-                  "SVK",
-                  "SLE",
-                  "SMR",
-                  "SEN",
-                  "SOM",
-                  "SUR",
-                  "SSD",
-                  "STP",
-                  "SLV",
-                  "SXM",
-                  "SYR",
-                  "SWZ",
-                  "TCA",
-                  "TCD",
-                  "TGO",
-                  "THA",
-                  "TJK",
-                  "TKL",
-                  "TLS",
-                  "TKM",
-                  "TUN",
-                  "TON",
-                  "TUR",
-                  "TTO",
-                  "TUV",
-                  "TWN",
-                  "TZA",
-                  "UKR",
-                  "UGA",
-                  "USA",
-                  "URY",
-                  "UZB",
-                  "VAT",
-                  "VCT",
-                  "VEN",
-                  "VGB",
-                  "VIR",
-                  "VNM",
-                  "VUT",
-                  "WLF",
-                  "WSM",
-                  "YEM",
-                  "MYT",
-                  "ZAF",
-                  "ZMB",
-                  "ZWE"
-                ]
-              },
-              "address_line1": {
-                "type": "string"
-              },
-              "address_line2": {
-                "type": "string"
-              },
-              "city": {
-                "type": "string"
-              },
-              "region": {
-                "type": "string"
-              },
-              "postal_code": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "country_code",
-              "address_line1",
-              "city",
-              "postal_code"
-            ]
-          },
-          "bank_accounts": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "network": {
-                  "type": "string",
-                  "enum": [
-                    "US_FEDWIRE",
-                    "US_ACH",
-                    "SWIFT"
-                  ]
-                },
-                "nickname": {
-                  "type": "string"
-                },
-                "account_holder_name": {
-                  "type": "string"
-                },
-                "currency": {
-                  "type": "string"
-                },
-                "country_code": {
-                  "type": "string",
-                  "enum": [
-                    "AND",
-                    "ARE",
-                    "AFG",
-                    "ATG",
-                    "AIA",
-                    "ALB",
-                    "ARM",
-                    "AGO",
-                    "ARG",
-                    "ASM",
-                    "AUT",
-                    "AUS",
-                    "ABW",
-                    "AZE",
-                    "BIH",
-                    "BRB",
-                    "BGD",
-                    "BEL",
-                    "BFA",
-                    "BGR",
-                    "BHR",
-                    "BDI",
-                    "BEN",
-                    "BLM",
-                    "BMU",
-                    "BRN",
-                    "BOL",
-                    "BRA",
-                    "BHS",
-                    "BTN",
-                    "BWA",
-                    "BLR",
-                    "BLZ",
-                    "CAN",
-                    "CCK",
-                    "COD",
-                    "CAF",
-                    "COG",
-                    "CHE",
-                    "CIV",
-                    "COK",
-                    "CHL",
-                    "CMR",
-                    "CHN",
-                    "COL",
-                    "CRI",
-                    "CUB",
-                    "CPV",
-                    "CUW",
-                    "CXR",
-                    "CYP",
-                    "CZE",
-                    "DEU",
-                    "DJI",
-                    "DNK",
-                    "DMA",
-                    "DOM",
-                    "DZA",
-                    "ECU",
-                    "EST",
-                    "EGY",
-                    "ESH",
-                    "ERI",
-                    "ESP",
-                    "ETH",
-                    "FIN",
-                    "FJI",
-                    "FLK",
-                    "FSM",
-                    "FRO",
-                    "FRA",
-                    "GAB",
-                    "GBR",
-                    "GRD",
-                    "GEO",
-                    "GUF",
-                    "GGY",
-                    "GHA",
-                    "GIB",
-                    "GRL",
-                    "GMB",
-                    "GIN",
-                    "GLP",
-                    "GNQ",
-                    "GRC",
-                    "SGS",
-                    "GTM",
-                    "GUM",
-                    "GNB",
-                    "GUY",
-                    "HKG",
-                    "HND",
-                    "HRV",
-                    "HTI",
-                    "HUN",
-                    "IDN",
-                    "IRL",
-                    "ISR",
-                    "IMN",
-                    "IND",
-                    "IOT",
-                    "IRQ",
-                    "IRN",
-                    "ISL",
-                    "ITA",
-                    "JEY",
-                    "JAM",
-                    "JOR",
-                    "JPN",
-                    "KEN",
-                    "KGZ",
-                    "KHM",
-                    "KIR",
-                    "COM",
-                    "KNA",
-                    "PRK",
-                    "KOR",
-                    "KWT",
-                    "CYM",
-                    "KAZ",
-                    "LAO",
-                    "LBN",
-                    "LCA",
-                    "LIE",
-                    "LKA",
-                    "LBR",
-                    "LSO",
-                    "LTU",
-                    "LUX",
-                    "LVA",
-                    "LBY",
-                    "MAR",
-                    "MCO",
-                    "MDA",
-                    "MNE",
-                    "MAF",
-                    "MDG",
-                    "MHL",
-                    "MKD",
-                    "MLI",
-                    "MMR",
-                    "MNG",
-                    "MAC",
-                    "MNP",
-                    "MTQ",
-                    "MRT",
-                    "MSR",
-                    "MLT",
-                    "MUS",
-                    "MDV",
-                    "MWI",
-                    "MEX",
-                    "MYS",
-                    "MOZ",
-                    "NAM",
-                    "NCL",
-                    "NER",
-                    "NFK",
-                    "NGA",
-                    "NIC",
-                    "NLD",
-                    "NOR",
-                    "NPL",
-                    "NRU",
-                    "NIU",
-                    "NZL",
-                    "OMN",
-                    "PAN",
-                    "PER",
-                    "PYF",
-                    "PNG",
-                    "PHL",
-                    "PAK",
-                    "POL",
-                    "SPM",
-                    "PCN",
-                    "PRI",
-                    "PSE",
-                    "PRT",
-                    "PLW",
-                    "PRY",
-                    "QAT",
-                    "REU",
-                    "ROU",
-                    "SRB",
-                    "RUS",
-                    "RWA",
-                    "SAU",
-                    "SLB",
-                    "SYC",
-                    "SDN",
-                    "SWE",
-                    "SGP",
-                    "SHN",
-                    "SVN",
-                    "SJM",
-                    "SVK",
-                    "SLE",
-                    "SMR",
-                    "SEN",
-                    "SOM",
-                    "SUR",
-                    "SSD",
-                    "STP",
-                    "SLV",
-                    "SXM",
-                    "SYR",
-                    "SWZ",
-                    "TCA",
-                    "TCD",
-                    "TGO",
-                    "THA",
-                    "TJK",
-                    "TKL",
-                    "TLS",
-                    "TKM",
-                    "TUN",
-                    "TON",
-                    "TUR",
-                    "TTO",
-                    "TUV",
-                    "TWN",
-                    "TZA",
-                    "UKR",
-                    "UGA",
-                    "USA",
-                    "URY",
-                    "UZB",
-                    "VAT",
-                    "VCT",
-                    "VEN",
-                    "VGB",
-                    "VIR",
-                    "VNM",
-                    "VUT",
-                    "WLF",
-                    "WSM",
-                    "YEM",
-                    "MYT",
-                    "ZAF",
-                    "ZMB",
-                    "ZWE"
-                  ]
-                },
-                "account_number": {
-                  "type": "string"
-                },
-                "institution_id": {
-                  "type": "string"
-                },
-                "institution_name": {
-                  "type": "string"
-                },
-                "institution_clearing_code": {
-                  "type": "string"
-                },
-                "intermediary_bank": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "properties": {
-                    "institution_id": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "institution_id"
-                  ]
-                }
-              },
-              "required": [
-                "network",
-                "account_holder_name",
-                "currency",
-                "country_code",
-                "account_number",
-                "institution_id",
-                "institution_name"
-              ]
-            }
-          }
-        },
         "required": [
-          "idempotency_key",
-          "business_type",
-          "relationship",
-          "address"
-        ]
-      }
-    },
-    "required": [
-      "customer_id",
-      "request"
-    ]
-  },
-  "instructions.get_deposit_instruction": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "params": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "asset": {
-            "type": "string",
-            "enum": [
-              "USD",
-              "USDC",
-              "USDT",
-              "PYUSD",
-              "RLUSD",
-              "USDG",
-              "USDP",
-              "EURC",
-              "MXNB"
-            ]
-          },
-          "network": {
-            "type": "string",
-            "enum": [
-              "US_ACH",
-              "SWIFT",
-              "US_FEDWIRE",
-              "ARBITRUM",
-              "AVALANCHE",
-              "BASE",
-              "BNBCHAIN",
-              "ETHEREUM",
-              "POLYGON",
-              "SOLANA"
-            ]
-          }
-        },
-        "required": [
-          "asset",
-          "network"
-        ]
-      }
-    },
-    "required": [
-      "customer_id",
-      "params"
-    ]
-  },
-  "conversions.create_quote": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "request": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "from_asset": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "amount": {
-                "type": "string"
-              },
-              "asset": {
-                "type": "string",
-                "enum": [
-                  "USD",
-                  "USDC",
-                  "USDT",
-                  "PYUSD",
-                  "RLUSD",
-                  "USDG",
-                  "USDP",
-                  "EURC",
-                  "MXNB"
-                ]
-              },
-              "network": {
-                "type": "string",
-                "enum": [
-                  "ARBITRUM",
-                  "AVALANCHE",
-                  "BASE",
-                  "BNBCHAIN",
-                  "ETHEREUM",
-                  "POLYGON",
-                  "SOLANA"
-                ]
-              }
-            },
-            "required": [
-              "asset"
-            ]
-          },
-          "to_asset": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "amount": {
-                "type": "string"
-              },
-              "asset": {
-                "type": "string",
-                "enum": [
-                  "USD",
-                  "USDC",
-                  "USDT",
-                  "PYUSD",
-                  "RLUSD",
-                  "USDG",
-                  "USDP",
-                  "EURC",
-                  "MXNB"
-                ]
-              },
-              "network": {
-                "type": "string",
-                "enum": [
-                  "ARBITRUM",
-                  "AVALANCHE",
-                  "BASE",
-                  "BNBCHAIN",
-                  "ETHEREUM",
-                  "POLYGON",
-                  "SOLANA"
-                ]
-              }
-            },
-            "required": [
-              "asset"
-            ]
-          }
-        },
-        "required": [
-          "from_asset",
-          "to_asset"
-        ]
-      }
-    },
-    "required": [
-      "customer_id",
-      "request"
-    ]
-  },
-  "conversions.create_hedge": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "request": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "quote_id": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "quote_id"
-        ]
-      }
-    },
-    "required": [
-      "customer_id",
-      "request"
-    ]
-  },
-  "conversions.get_order": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "order_id": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "customer_id",
-      "order_id"
-    ]
-  },
-  "auto_conversion_rules.create": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "request": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "idempotency_key": {
-            "type": "string"
-          },
-          "source": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "asset": {
-                "type": "string"
-              },
-              "network": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "asset",
-              "network"
-            ]
-          },
-          "destination": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "asset": {
-                "type": "string"
-              },
-              "network": {
-                "type": "string"
-              },
-              "wallet_address": {
-                "type": "string"
-              },
-              "external_account_id": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "asset"
-            ]
-          }
-        },
-        "required": [
-          "source",
-          "destination"
-        ]
-      }
-    },
-    "required": [
-      "customer_id",
-      "request"
-    ]
-  },
-  "auto_conversion_rules.get": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "rule_id": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "customer_id",
-      "rule_id"
-    ]
-  },
-  "auto_conversion_rules.get_by_idempotency_key": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "idempotency_key": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "customer_id",
-      "idempotency_key"
-    ]
-  },
-  "auto_conversion_rules.list": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "params": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "page": {
-            "type": "integer"
-          },
-          "size": {
-            "type": "integer"
-          }
-        }
-      }
-    },
-    "required": [
-      "customer_id"
-    ]
-  },
-  "auto_conversion_rules.delete": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "rule_id": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "customer_id",
-      "rule_id"
-    ]
-  },
-  "auto_conversion_rules.list_orders": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "rule_id": {
-        "type": "string"
-      },
-      "params": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "status": {
-            "type": "string"
-          },
-          "page": {
-            "type": "integer"
-          },
-          "size": {
-            "type": "integer"
-          }
-        }
-      }
-    },
-    "required": [
-      "customer_id",
-      "rule_id"
-    ]
-  },
-  "auto_conversion_rules.get_order": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "rule_id": {
-        "type": "string"
-      },
-      "order_id": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "customer_id",
-      "rule_id",
-      "order_id"
-    ]
-  },
-  "withdrawals.create": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "request": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "idempotency_key": {
-            "type": "string"
-          },
-          "amount": {
-            "type": "string"
-          },
-          "asset": {
-            "type": "string",
-            "enum": [
-              "USD",
-              "USDC",
-              "USDT",
-              "PYUSD",
-              "RLUSD",
-              "USDG",
-              "USDP",
-              "EURC",
-              "MXNB"
-            ]
-          },
-          "network": {
-            "type": "string",
-            "enum": [
-              "US_ACH",
-              "SWIFT",
-              "US_FEDWIRE",
-              "ARBITRUM",
-              "AVALANCHE",
-              "BASE",
-              "BNBCHAIN",
-              "ETHEREUM",
-              "POLYGON",
-              "SOLANA"
-            ]
-          },
-          "wallet_address": {
-            "type": "string"
-          },
-          "external_account_id": {
-            "type": "string"
-          },
-          "code": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "amount",
-          "asset",
-          "network"
+          "network",
+          "account_holder_name",
+          "currency",
+          "country_code",
+          "account_number",
+          "institution_id"
         ],
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {
-              "wallet_address": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "wallet_address"
-            ]
-          },
-          {
-            "type": "object",
-            "properties": {
-              "external_account_id": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "external_account_id"
-            ]
-          }
-        ]
-      }
-    },
-    "required": [
-      "customer_id",
-      "request"
-    ]
-  },
-  "withdrawals.get": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "withdrawal_id": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "customer_id",
-      "withdrawal_id"
-    ]
-  },
-  "withdrawals.get_by_idempotency_key": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "idempotency_key": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "customer_id",
-      "idempotency_key"
-    ]
-  },
-  "recipients.get_by_idempotency_key": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "idempotency_key": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "customer_id",
-      "idempotency_key"
-    ]
-  },
-  "transactions.list": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "params": {
-        "type": "object",
-        "additionalProperties": false,
         "properties": {
-          "transaction_id": {
-            "type": "string"
-          },
-          "asset": {
-            "type": "string",
-            "enum": [
-              "USD",
-              "USDC",
-              "USDT",
-              "PYUSD",
-              "RLUSD",
-              "USDG",
-              "USDP",
-              "EURC",
-              "MXNB"
-            ]
-          },
-          "created_after": {
-            "type": "string"
-          },
-          "created_before": {
-            "type": "string"
-          },
-          "page": {
-            "type": "integer"
-          },
-          "size": {
-            "type": "integer"
-          }
-        }
-      }
-    },
-    "required": [
-      "customer_id"
-    ]
-  },
-  "transactions.get": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "transaction_id": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "customer_id",
-      "transaction_id"
-    ]
-  },
-  "simulations.simulate_deposit": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "request": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "asset": {
-            "type": "string",
-            "enum": [
-              "USD",
-              "USDC",
-              "USDT",
-              "PYUSD",
-              "RLUSD",
-              "USDG",
-              "USDP",
-              "EURC",
-              "MXNB"
-            ]
-          },
           "network": {
-            "type": "string",
-            "enum": [
-              "US_ACH",
-              "SWIFT",
-              "US_FEDWIRE",
-              "ARBITRUM",
-              "AVALANCHE",
-              "BASE",
-              "BNBCHAIN",
-              "ETHEREUM",
-              "POLYGON",
-              "SOLANA"
-            ]
-          },
-          "amount": {
             "type": "string"
-          },
-          "reference_code": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "asset",
-          "amount"
-        ]
-      }
-    },
-    "required": [
-      "customer_id",
-      "request"
-    ]
-  },
-  "echo.get": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {}
-  },
-  "echo.post": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "request": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "message": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "message"
-        ]
-      }
-    },
-    "required": [
-      "request"
-    ]
-  },
-  "recipients.list": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "params": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "search": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "page": {
-            "type": "integer",
-            "format": "int64",
-            "minimum": 0
-          },
-          "size": {
-            "type": "integer",
-            "format": "int64",
-            "minimum": 0
-          }
-        }
-      }
-    },
-    "required": [
-      "customer_id"
-    ]
-  },
-  "recipients.get": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "recipient_id": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "customer_id",
-      "recipient_id"
-    ]
-  },
-  "recipients.delete": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "recipient_id": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "customer_id",
-      "recipient_id"
-    ]
-  },
-  "recipients.bank_accounts.get_by_idempotency_key": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "recipient_id": {
-        "type": "string"
-      },
-      "idempotency_key": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "customer_id",
-      "recipient_id",
-      "idempotency_key"
-    ]
-  },
-  "recipients.bank_accounts.create": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "customer_id": {
-        "type": "string"
-      },
-      "recipient_id": {
-        "type": "string"
-      },
-      "request": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "idempotency_key": {
-            "type": "string"
-          },
-          "network": {
-            "type": "string",
-            "enum": [
-              "US_ACH",
-              "SWIFT",
-              "US_FEDWIRE"
-            ]
           },
           "nickname": {
             "type": [
@@ -3900,6 +2789,7 @@
               "VUT",
               "WLF",
               "WSM",
+              "XKX",
               "YEM",
               "MYT",
               "ZAF",
@@ -3911,9 +2801,6 @@
             "type": "string"
           },
           "institution_id": {
-            "type": "string"
-          },
-          "institution_name": {
             "type": "string"
           },
           "institution_clearing_code": {
@@ -3929,29 +2816,2352 @@
               },
               {
                 "type": "object",
-                "additionalProperties": false,
+                "required": [
+                  "institution_id"
+                ],
                 "properties": {
                   "institution_id": {
                     "type": "string"
                   }
-                },
-                "required": [
-                  "institution_id"
+                }
+              }
+            ]
+          },
+          "idempotency_key": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "customer_id",
+      "request"
+    ]
+  },
+  "instructions.get_deposit_instruction": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "params": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "asset": {
+            "type": "string"
+          },
+          "network": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "asset",
+          "network"
+        ]
+      }
+    },
+    "required": [
+      "customer_id",
+      "params"
+    ]
+  },
+  "instructions.crypto.list": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "params": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "page": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "maximum": 100
+          }
+        }
+      }
+    },
+    "required": [
+      "customer_id"
+    ]
+  },
+  "instructions.crypto.get_by_idempotency_key": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "idempotency_key"
+    ]
+  },
+  "instructions.crypto.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "request": {
+        "type": "object",
+        "required": [
+          "network"
+        ],
+        "properties": {
+          "network": {
+            "type": "string"
+          },
+          "nickname": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "customer_id",
+      "request"
+    ]
+  },
+  "instructions.crypto.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "deposit_instruction_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "deposit_instruction_id"
+    ]
+  },
+  "auto_conversion_rules.list": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "params": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "page": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "maximum": 100
+          }
+        }
+      }
+    },
+    "required": [
+      "customer_id"
+    ]
+  },
+  "auto_conversion_rules.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "auto_conversion_rule_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "auto_conversion_rule_id"
+    ]
+  },
+  "auto_conversion_rules.delete": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "auto_conversion_rule_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "auto_conversion_rule_id"
+    ]
+  },
+  "auto_conversion_rules.get_by_idempotency_key": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "idempotency_key"
+    ]
+  },
+  "auto_conversion_rules.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "request": {
+        "type": "object",
+        "required": [
+          "source",
+          "destination"
+        ],
+        "properties": {
+          "source": {
+            "type": "object",
+            "required": [
+              "asset",
+              "network"
+            ],
+            "properties": {
+              "asset": {
+                "type": "string"
+              },
+              "network": {
+                "type": "string"
+              }
+            }
+          },
+          "destination": {
+            "type": "object",
+            "required": [
+              "asset"
+            ],
+            "properties": {
+              "asset": {
+                "type": "string"
+              },
+              "network": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "string"
+                  }
                 ]
+              },
+              "wallet_address": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "external_account_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "idempotency_key": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "customer_id",
+      "request"
+    ]
+  },
+  "auto_conversion_rules.list_orders": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "auto_conversion_rule_id": {
+        "type": "string"
+      },
+      "params": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "maximum": 100
+          }
+        }
+      }
+    },
+    "required": [
+      "customer_id",
+      "auto_conversion_rule_id"
+    ]
+  },
+  "auto_conversion_rules.get_order": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "auto_conversion_rule_id": {
+        "type": "string"
+      },
+      "order_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "auto_conversion_rule_id",
+      "order_id"
+    ]
+  },
+  "withdrawals.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "transaction_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "transaction_id"
+    ]
+  },
+  "withdrawals.get_by_idempotency_key": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "idempotency_key"
+    ]
+  },
+  "withdrawals.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "request": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "wallet_address": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "external_account_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "amount",
+              "asset",
+              "network"
+            ],
+            "properties": {
+              "amount": {
+                "type": "string"
+              },
+              "asset": {
+                "type": "string"
+              },
+              "network": {
+                "type": "string"
+              },
+              "code": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "memorandum": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 256
+              },
+              "mode": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "string",
+                    "enum": [
+                      "prefunding"
+                    ]
+                  }
+                ]
+              },
+              "on_behalf_of": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "amount_type": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "string",
+                    "enum": [
+                      "SEND_AMOUNT",
+                      "RECEIVE_AMOUNT"
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "idempotency_key": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "required": [
+      "customer_id",
+      "request"
+    ]
+  },
+  "conversions.create_quote": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "request": {
+        "type": "object",
+        "required": [
+          "from_asset",
+          "to_asset"
+        ],
+        "properties": {
+          "from_asset": {
+            "type": "object",
+            "required": [
+              "asset"
+            ],
+            "properties": {
+              "amount": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "asset": {
+                "type": "string"
+              }
+            }
+          },
+          "to_asset": {
+            "type": "object",
+            "required": [
+              "asset"
+            ],
+            "properties": {
+              "amount": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "asset": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "customer_id",
+      "request"
+    ]
+  },
+  "conversions.create_hedge": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "request": {
+        "type": "object",
+        "required": [
+          "quote_id"
+        ],
+        "properties": {
+          "quote_id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "customer_id",
+      "request"
+    ]
+  },
+  "conversions.get_order": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "transaction_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "transaction_id"
+    ]
+  },
+  "transactions.list": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "params": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "transaction_action": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "DEPOSIT",
+                  "WITHDRAWAL",
+                  "CONVERSION",
+                  "AUTO_CONVERSION",
+                  "TRANSFER"
+                ]
+              }
+            ]
+          },
+          "transaction_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "asset": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "created_after": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "created_before": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "include_subaccounts": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "page": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "maximum": 100
+          }
+        }
+      }
+    },
+    "required": [
+      "customer_id"
+    ]
+  },
+  "transactions.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "transaction_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "transaction_id"
+    ]
+  },
+  "transfers.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "transaction_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "transaction_id"
+    ]
+  },
+  "transfers.get_by_idempotency_key": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "idempotency_key"
+    ]
+  },
+  "transfers.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "request": {
+        "type": "object",
+        "required": [
+          "amount",
+          "asset",
+          "target_customer_id"
+        ],
+        "properties": {
+          "amount": {
+            "type": "string"
+          },
+          "asset": {
+            "type": "string"
+          },
+          "target_customer_id": {
+            "type": "string"
+          },
+          "memorandum": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 255
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "customer_id",
+      "request"
+    ]
+  },
+  "fees.estimate": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "request": {
+        "type": "object",
+        "required": [
+          "action",
+          "amount",
+          "asset",
+          "network"
+        ],
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "DEPOSIT",
+              "WITHDRAWAL",
+              "CONVERSION",
+              "AUTO_CONVERSION",
+              "TRANSFER"
+            ]
+          },
+          "amount": {
+            "type": "string"
+          },
+          "asset": {
+            "type": "string"
+          },
+          "network": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "customer_id",
+      "request"
+    ]
+  },
+  "simulations.simulate_transaction": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "request": {
+        "type": "object",
+        "required": [
+          "asset",
+          "network",
+          "amount"
+        ],
+        "properties": {
+          "asset": {
+            "type": "string"
+          },
+          "network": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "string"
+          },
+          "reference_code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "simulate_status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "customer_id",
+      "request"
+    ]
+  },
+  "recipients.get_by_idempotency_key": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "idempotency_key"
+    ]
+  },
+  "recipients.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "request": {
+        "type": "object",
+        "required": [
+          "business_type",
+          "relationship",
+          "address",
+          "idempotency_key"
+        ],
+        "properties": {
+          "business_type": {
+            "type": "string"
+          },
+          "first_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "last_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "company_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "nickname": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "mobile_code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "mobile_num": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "relationship": {
+            "type": "string",
+            "enum": [
+              "EMPLOYEE",
+              "CONTRACTOR",
+              "VENDOR",
+              "SUBSIDIARY",
+              "MERCHANT",
+              "CUSTOMER",
+              "LANDLORD",
+              "FAMILY",
+              "OTHER",
+              "Unknown"
+            ]
+          },
+          "address": {
+            "type": "object",
+            "required": [
+              "country_code",
+              "address_line1",
+              "city",
+              "postal_code"
+            ],
+            "properties": {
+              "country_code": {
+                "type": "string",
+                "enum": [
+                  "AND",
+                  "ARE",
+                  "AFG",
+                  "ATG",
+                  "AIA",
+                  "ALB",
+                  "ARM",
+                  "AGO",
+                  "ARG",
+                  "ASM",
+                  "AUT",
+                  "AUS",
+                  "ABW",
+                  "AZE",
+                  "BIH",
+                  "BRB",
+                  "BGD",
+                  "BEL",
+                  "BFA",
+                  "BGR",
+                  "BHR",
+                  "BDI",
+                  "BEN",
+                  "BLM",
+                  "BMU",
+                  "BRN",
+                  "BOL",
+                  "BRA",
+                  "BHS",
+                  "BTN",
+                  "BWA",
+                  "BLR",
+                  "BLZ",
+                  "CAN",
+                  "CCK",
+                  "COD",
+                  "CAF",
+                  "COG",
+                  "CHE",
+                  "CIV",
+                  "COK",
+                  "CHL",
+                  "CMR",
+                  "CHN",
+                  "COL",
+                  "CRI",
+                  "CUB",
+                  "CPV",
+                  "CUW",
+                  "CXR",
+                  "CYP",
+                  "CZE",
+                  "DEU",
+                  "DJI",
+                  "DNK",
+                  "DMA",
+                  "DOM",
+                  "DZA",
+                  "ECU",
+                  "EST",
+                  "EGY",
+                  "ESH",
+                  "ERI",
+                  "ESP",
+                  "ETH",
+                  "FIN",
+                  "FJI",
+                  "FLK",
+                  "FSM",
+                  "FRO",
+                  "FRA",
+                  "GAB",
+                  "GBR",
+                  "GRD",
+                  "GEO",
+                  "GUF",
+                  "GGY",
+                  "GHA",
+                  "GIB",
+                  "GRL",
+                  "GMB",
+                  "GIN",
+                  "GLP",
+                  "GNQ",
+                  "GRC",
+                  "SGS",
+                  "GTM",
+                  "GUM",
+                  "GNB",
+                  "GUY",
+                  "HKG",
+                  "HND",
+                  "HRV",
+                  "HTI",
+                  "HUN",
+                  "IDN",
+                  "IRL",
+                  "ISR",
+                  "IMN",
+                  "IND",
+                  "IOT",
+                  "IRQ",
+                  "IRN",
+                  "ISL",
+                  "ITA",
+                  "JEY",
+                  "JAM",
+                  "JOR",
+                  "JPN",
+                  "KEN",
+                  "KGZ",
+                  "KHM",
+                  "KIR",
+                  "COM",
+                  "KNA",
+                  "PRK",
+                  "KOR",
+                  "KWT",
+                  "CYM",
+                  "KAZ",
+                  "LAO",
+                  "LBN",
+                  "LCA",
+                  "LIE",
+                  "LKA",
+                  "LBR",
+                  "LSO",
+                  "LTU",
+                  "LUX",
+                  "LVA",
+                  "LBY",
+                  "MAR",
+                  "MCO",
+                  "MDA",
+                  "MNE",
+                  "MAF",
+                  "MDG",
+                  "MHL",
+                  "MKD",
+                  "MLI",
+                  "MMR",
+                  "MNG",
+                  "MAC",
+                  "MNP",
+                  "MTQ",
+                  "MRT",
+                  "MSR",
+                  "MLT",
+                  "MUS",
+                  "MDV",
+                  "MWI",
+                  "MEX",
+                  "MYS",
+                  "MOZ",
+                  "NAM",
+                  "NCL",
+                  "NER",
+                  "NFK",
+                  "NGA",
+                  "NIC",
+                  "NLD",
+                  "NOR",
+                  "NPL",
+                  "NRU",
+                  "NIU",
+                  "NZL",
+                  "OMN",
+                  "PAN",
+                  "PER",
+                  "PYF",
+                  "PNG",
+                  "PHL",
+                  "PAK",
+                  "POL",
+                  "SPM",
+                  "PCN",
+                  "PRI",
+                  "PSE",
+                  "PRT",
+                  "PLW",
+                  "PRY",
+                  "QAT",
+                  "REU",
+                  "ROU",
+                  "SRB",
+                  "RUS",
+                  "RWA",
+                  "SAU",
+                  "SLB",
+                  "SYC",
+                  "SDN",
+                  "SWE",
+                  "SGP",
+                  "SHN",
+                  "SVN",
+                  "SJM",
+                  "SVK",
+                  "SLE",
+                  "SMR",
+                  "SEN",
+                  "SOM",
+                  "SUR",
+                  "SSD",
+                  "STP",
+                  "SLV",
+                  "SXM",
+                  "SYR",
+                  "SWZ",
+                  "TCA",
+                  "TCD",
+                  "TGO",
+                  "THA",
+                  "TJK",
+                  "TKL",
+                  "TLS",
+                  "TKM",
+                  "TUN",
+                  "TON",
+                  "TUR",
+                  "TTO",
+                  "TUV",
+                  "TWN",
+                  "TZA",
+                  "UKR",
+                  "UGA",
+                  "USA",
+                  "URY",
+                  "UZB",
+                  "VAT",
+                  "VCT",
+                  "VEN",
+                  "VGB",
+                  "VIR",
+                  "VNM",
+                  "VUT",
+                  "WLF",
+                  "WSM",
+                  "XKX",
+                  "YEM",
+                  "MYT",
+                  "ZAF",
+                  "ZMB",
+                  "ZWE"
+                ]
+              },
+              "address_line1": {
+                "type": "string"
+              },
+              "address_line2": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "city": {
+                "type": "string"
+              },
+              "region": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "postal_code": {
+                "type": "string"
+              }
+            }
+          },
+          "bank_accounts": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "object",
+              "required": [
+                "network",
+                "account_holder_name",
+                "currency",
+                "country_code",
+                "account_number",
+                "institution_id"
+              ],
+              "properties": {
+                "network": {
+                  "type": "string"
+                },
+                "nickname": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "account_holder_name": {
+                  "type": "string"
+                },
+                "currency": {
+                  "type": "string"
+                },
+                "country_code": {
+                  "type": "string",
+                  "enum": [
+                    "AND",
+                    "ARE",
+                    "AFG",
+                    "ATG",
+                    "AIA",
+                    "ALB",
+                    "ARM",
+                    "AGO",
+                    "ARG",
+                    "ASM",
+                    "AUT",
+                    "AUS",
+                    "ABW",
+                    "AZE",
+                    "BIH",
+                    "BRB",
+                    "BGD",
+                    "BEL",
+                    "BFA",
+                    "BGR",
+                    "BHR",
+                    "BDI",
+                    "BEN",
+                    "BLM",
+                    "BMU",
+                    "BRN",
+                    "BOL",
+                    "BRA",
+                    "BHS",
+                    "BTN",
+                    "BWA",
+                    "BLR",
+                    "BLZ",
+                    "CAN",
+                    "CCK",
+                    "COD",
+                    "CAF",
+                    "COG",
+                    "CHE",
+                    "CIV",
+                    "COK",
+                    "CHL",
+                    "CMR",
+                    "CHN",
+                    "COL",
+                    "CRI",
+                    "CUB",
+                    "CPV",
+                    "CUW",
+                    "CXR",
+                    "CYP",
+                    "CZE",
+                    "DEU",
+                    "DJI",
+                    "DNK",
+                    "DMA",
+                    "DOM",
+                    "DZA",
+                    "ECU",
+                    "EST",
+                    "EGY",
+                    "ESH",
+                    "ERI",
+                    "ESP",
+                    "ETH",
+                    "FIN",
+                    "FJI",
+                    "FLK",
+                    "FSM",
+                    "FRO",
+                    "FRA",
+                    "GAB",
+                    "GBR",
+                    "GRD",
+                    "GEO",
+                    "GUF",
+                    "GGY",
+                    "GHA",
+                    "GIB",
+                    "GRL",
+                    "GMB",
+                    "GIN",
+                    "GLP",
+                    "GNQ",
+                    "GRC",
+                    "SGS",
+                    "GTM",
+                    "GUM",
+                    "GNB",
+                    "GUY",
+                    "HKG",
+                    "HND",
+                    "HRV",
+                    "HTI",
+                    "HUN",
+                    "IDN",
+                    "IRL",
+                    "ISR",
+                    "IMN",
+                    "IND",
+                    "IOT",
+                    "IRQ",
+                    "IRN",
+                    "ISL",
+                    "ITA",
+                    "JEY",
+                    "JAM",
+                    "JOR",
+                    "JPN",
+                    "KEN",
+                    "KGZ",
+                    "KHM",
+                    "KIR",
+                    "COM",
+                    "KNA",
+                    "PRK",
+                    "KOR",
+                    "KWT",
+                    "CYM",
+                    "KAZ",
+                    "LAO",
+                    "LBN",
+                    "LCA",
+                    "LIE",
+                    "LKA",
+                    "LBR",
+                    "LSO",
+                    "LTU",
+                    "LUX",
+                    "LVA",
+                    "LBY",
+                    "MAR",
+                    "MCO",
+                    "MDA",
+                    "MNE",
+                    "MAF",
+                    "MDG",
+                    "MHL",
+                    "MKD",
+                    "MLI",
+                    "MMR",
+                    "MNG",
+                    "MAC",
+                    "MNP",
+                    "MTQ",
+                    "MRT",
+                    "MSR",
+                    "MLT",
+                    "MUS",
+                    "MDV",
+                    "MWI",
+                    "MEX",
+                    "MYS",
+                    "MOZ",
+                    "NAM",
+                    "NCL",
+                    "NER",
+                    "NFK",
+                    "NGA",
+                    "NIC",
+                    "NLD",
+                    "NOR",
+                    "NPL",
+                    "NRU",
+                    "NIU",
+                    "NZL",
+                    "OMN",
+                    "PAN",
+                    "PER",
+                    "PYF",
+                    "PNG",
+                    "PHL",
+                    "PAK",
+                    "POL",
+                    "SPM",
+                    "PCN",
+                    "PRI",
+                    "PSE",
+                    "PRT",
+                    "PLW",
+                    "PRY",
+                    "QAT",
+                    "REU",
+                    "ROU",
+                    "SRB",
+                    "RUS",
+                    "RWA",
+                    "SAU",
+                    "SLB",
+                    "SYC",
+                    "SDN",
+                    "SWE",
+                    "SGP",
+                    "SHN",
+                    "SVN",
+                    "SJM",
+                    "SVK",
+                    "SLE",
+                    "SMR",
+                    "SEN",
+                    "SOM",
+                    "SUR",
+                    "SSD",
+                    "STP",
+                    "SLV",
+                    "SXM",
+                    "SYR",
+                    "SWZ",
+                    "TCA",
+                    "TCD",
+                    "TGO",
+                    "THA",
+                    "TJK",
+                    "TKL",
+                    "TLS",
+                    "TKM",
+                    "TUN",
+                    "TON",
+                    "TUR",
+                    "TTO",
+                    "TUV",
+                    "TWN",
+                    "TZA",
+                    "UKR",
+                    "UGA",
+                    "USA",
+                    "URY",
+                    "UZB",
+                    "VAT",
+                    "VCT",
+                    "VEN",
+                    "VGB",
+                    "VIR",
+                    "VNM",
+                    "VUT",
+                    "WLF",
+                    "WSM",
+                    "XKX",
+                    "YEM",
+                    "MYT",
+                    "ZAF",
+                    "ZMB",
+                    "ZWE"
+                  ]
+                },
+                "account_number": {
+                  "type": "string"
+                },
+                "institution_id": {
+                  "type": "string"
+                },
+                "institution_clearing_code": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "intermediary_bank": {
+                  "oneOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "institution_id"
+                      ],
+                      "properties": {
+                        "institution_id": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "idempotency_key": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "customer_id",
+      "request"
+    ]
+  },
+  "recipients.list": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "params": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "search": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "page": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "maximum": 100
+          }
+        }
+      }
+    },
+    "required": [
+      "customer_id"
+    ]
+  },
+  "recipients.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "recipient_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "recipient_id"
+    ]
+  },
+  "recipients.update": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "recipient_id": {
+        "type": "string"
+      },
+      "request": {
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "last_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "company_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "nickname": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "mobile_code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "mobile_num": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "relationship": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "EMPLOYEE",
+                  "CONTRACTOR",
+                  "VENDOR",
+                  "SUBSIDIARY",
+                  "MERCHANT",
+                  "CUSTOMER",
+                  "LANDLORD",
+                  "FAMILY",
+                  "OTHER",
+                  "Unknown"
+                ]
+              }
+            ]
+          },
+          "address": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "country_code",
+                  "address_line1",
+                  "city",
+                  "postal_code"
+                ],
+                "properties": {
+                  "country_code": {
+                    "type": "string",
+                    "enum": [
+                      "AND",
+                      "ARE",
+                      "AFG",
+                      "ATG",
+                      "AIA",
+                      "ALB",
+                      "ARM",
+                      "AGO",
+                      "ARG",
+                      "ASM",
+                      "AUT",
+                      "AUS",
+                      "ABW",
+                      "AZE",
+                      "BIH",
+                      "BRB",
+                      "BGD",
+                      "BEL",
+                      "BFA",
+                      "BGR",
+                      "BHR",
+                      "BDI",
+                      "BEN",
+                      "BLM",
+                      "BMU",
+                      "BRN",
+                      "BOL",
+                      "BRA",
+                      "BHS",
+                      "BTN",
+                      "BWA",
+                      "BLR",
+                      "BLZ",
+                      "CAN",
+                      "CCK",
+                      "COD",
+                      "CAF",
+                      "COG",
+                      "CHE",
+                      "CIV",
+                      "COK",
+                      "CHL",
+                      "CMR",
+                      "CHN",
+                      "COL",
+                      "CRI",
+                      "CUB",
+                      "CPV",
+                      "CUW",
+                      "CXR",
+                      "CYP",
+                      "CZE",
+                      "DEU",
+                      "DJI",
+                      "DNK",
+                      "DMA",
+                      "DOM",
+                      "DZA",
+                      "ECU",
+                      "EST",
+                      "EGY",
+                      "ESH",
+                      "ERI",
+                      "ESP",
+                      "ETH",
+                      "FIN",
+                      "FJI",
+                      "FLK",
+                      "FSM",
+                      "FRO",
+                      "FRA",
+                      "GAB",
+                      "GBR",
+                      "GRD",
+                      "GEO",
+                      "GUF",
+                      "GGY",
+                      "GHA",
+                      "GIB",
+                      "GRL",
+                      "GMB",
+                      "GIN",
+                      "GLP",
+                      "GNQ",
+                      "GRC",
+                      "SGS",
+                      "GTM",
+                      "GUM",
+                      "GNB",
+                      "GUY",
+                      "HKG",
+                      "HND",
+                      "HRV",
+                      "HTI",
+                      "HUN",
+                      "IDN",
+                      "IRL",
+                      "ISR",
+                      "IMN",
+                      "IND",
+                      "IOT",
+                      "IRQ",
+                      "IRN",
+                      "ISL",
+                      "ITA",
+                      "JEY",
+                      "JAM",
+                      "JOR",
+                      "JPN",
+                      "KEN",
+                      "KGZ",
+                      "KHM",
+                      "KIR",
+                      "COM",
+                      "KNA",
+                      "PRK",
+                      "KOR",
+                      "KWT",
+                      "CYM",
+                      "KAZ",
+                      "LAO",
+                      "LBN",
+                      "LCA",
+                      "LIE",
+                      "LKA",
+                      "LBR",
+                      "LSO",
+                      "LTU",
+                      "LUX",
+                      "LVA",
+                      "LBY",
+                      "MAR",
+                      "MCO",
+                      "MDA",
+                      "MNE",
+                      "MAF",
+                      "MDG",
+                      "MHL",
+                      "MKD",
+                      "MLI",
+                      "MMR",
+                      "MNG",
+                      "MAC",
+                      "MNP",
+                      "MTQ",
+                      "MRT",
+                      "MSR",
+                      "MLT",
+                      "MUS",
+                      "MDV",
+                      "MWI",
+                      "MEX",
+                      "MYS",
+                      "MOZ",
+                      "NAM",
+                      "NCL",
+                      "NER",
+                      "NFK",
+                      "NGA",
+                      "NIC",
+                      "NLD",
+                      "NOR",
+                      "NPL",
+                      "NRU",
+                      "NIU",
+                      "NZL",
+                      "OMN",
+                      "PAN",
+                      "PER",
+                      "PYF",
+                      "PNG",
+                      "PHL",
+                      "PAK",
+                      "POL",
+                      "SPM",
+                      "PCN",
+                      "PRI",
+                      "PSE",
+                      "PRT",
+                      "PLW",
+                      "PRY",
+                      "QAT",
+                      "REU",
+                      "ROU",
+                      "SRB",
+                      "RUS",
+                      "RWA",
+                      "SAU",
+                      "SLB",
+                      "SYC",
+                      "SDN",
+                      "SWE",
+                      "SGP",
+                      "SHN",
+                      "SVN",
+                      "SJM",
+                      "SVK",
+                      "SLE",
+                      "SMR",
+                      "SEN",
+                      "SOM",
+                      "SUR",
+                      "SSD",
+                      "STP",
+                      "SLV",
+                      "SXM",
+                      "SYR",
+                      "SWZ",
+                      "TCA",
+                      "TCD",
+                      "TGO",
+                      "THA",
+                      "TJK",
+                      "TKL",
+                      "TLS",
+                      "TKM",
+                      "TUN",
+                      "TON",
+                      "TUR",
+                      "TTO",
+                      "TUV",
+                      "TWN",
+                      "TZA",
+                      "UKR",
+                      "UGA",
+                      "USA",
+                      "URY",
+                      "UZB",
+                      "VAT",
+                      "VCT",
+                      "VEN",
+                      "VGB",
+                      "VIR",
+                      "VNM",
+                      "VUT",
+                      "WLF",
+                      "WSM",
+                      "XKX",
+                      "YEM",
+                      "MYT",
+                      "ZAF",
+                      "ZMB",
+                      "ZWE"
+                    ]
+                  },
+                  "address_line1": {
+                    "type": "string"
+                  },
+                  "address_line2": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "city": {
+                    "type": "string"
+                  },
+                  "region": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "postal_code": {
+                    "type": "string"
+                  }
+                }
               }
             ]
           }
         },
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "customer_id",
+      "recipient_id",
+      "request"
+    ]
+  },
+  "recipients.delete": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "recipient_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "recipient_id"
+    ]
+  },
+  "recipients.get_by_external_account": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "external_account_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "external_account_id"
+    ]
+  },
+  "recipients.bank_accounts.get_by_idempotency_key": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "recipient_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "customer_id",
+      "recipient_id",
+      "idempotency_key"
+    ]
+  },
+  "recipients.bank_accounts.create": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "recipient_id": {
+        "type": "string"
+      },
+      "request": {
+        "type": "object",
         "required": [
-          "idempotency_key",
           "network",
           "account_holder_name",
           "currency",
           "country_code",
           "account_number",
           "institution_id",
-          "institution_name"
-        ]
+          "idempotency_key"
+        ],
+        "properties": {
+          "network": {
+            "type": "string"
+          },
+          "nickname": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "account_holder_name": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "country_code": {
+            "type": "string",
+            "enum": [
+              "AND",
+              "ARE",
+              "AFG",
+              "ATG",
+              "AIA",
+              "ALB",
+              "ARM",
+              "AGO",
+              "ARG",
+              "ASM",
+              "AUT",
+              "AUS",
+              "ABW",
+              "AZE",
+              "BIH",
+              "BRB",
+              "BGD",
+              "BEL",
+              "BFA",
+              "BGR",
+              "BHR",
+              "BDI",
+              "BEN",
+              "BLM",
+              "BMU",
+              "BRN",
+              "BOL",
+              "BRA",
+              "BHS",
+              "BTN",
+              "BWA",
+              "BLR",
+              "BLZ",
+              "CAN",
+              "CCK",
+              "COD",
+              "CAF",
+              "COG",
+              "CHE",
+              "CIV",
+              "COK",
+              "CHL",
+              "CMR",
+              "CHN",
+              "COL",
+              "CRI",
+              "CUB",
+              "CPV",
+              "CUW",
+              "CXR",
+              "CYP",
+              "CZE",
+              "DEU",
+              "DJI",
+              "DNK",
+              "DMA",
+              "DOM",
+              "DZA",
+              "ECU",
+              "EST",
+              "EGY",
+              "ESH",
+              "ERI",
+              "ESP",
+              "ETH",
+              "FIN",
+              "FJI",
+              "FLK",
+              "FSM",
+              "FRO",
+              "FRA",
+              "GAB",
+              "GBR",
+              "GRD",
+              "GEO",
+              "GUF",
+              "GGY",
+              "GHA",
+              "GIB",
+              "GRL",
+              "GMB",
+              "GIN",
+              "GLP",
+              "GNQ",
+              "GRC",
+              "SGS",
+              "GTM",
+              "GUM",
+              "GNB",
+              "GUY",
+              "HKG",
+              "HND",
+              "HRV",
+              "HTI",
+              "HUN",
+              "IDN",
+              "IRL",
+              "ISR",
+              "IMN",
+              "IND",
+              "IOT",
+              "IRQ",
+              "IRN",
+              "ISL",
+              "ITA",
+              "JEY",
+              "JAM",
+              "JOR",
+              "JPN",
+              "KEN",
+              "KGZ",
+              "KHM",
+              "KIR",
+              "COM",
+              "KNA",
+              "PRK",
+              "KOR",
+              "KWT",
+              "CYM",
+              "KAZ",
+              "LAO",
+              "LBN",
+              "LCA",
+              "LIE",
+              "LKA",
+              "LBR",
+              "LSO",
+              "LTU",
+              "LUX",
+              "LVA",
+              "LBY",
+              "MAR",
+              "MCO",
+              "MDA",
+              "MNE",
+              "MAF",
+              "MDG",
+              "MHL",
+              "MKD",
+              "MLI",
+              "MMR",
+              "MNG",
+              "MAC",
+              "MNP",
+              "MTQ",
+              "MRT",
+              "MSR",
+              "MLT",
+              "MUS",
+              "MDV",
+              "MWI",
+              "MEX",
+              "MYS",
+              "MOZ",
+              "NAM",
+              "NCL",
+              "NER",
+              "NFK",
+              "NGA",
+              "NIC",
+              "NLD",
+              "NOR",
+              "NPL",
+              "NRU",
+              "NIU",
+              "NZL",
+              "OMN",
+              "PAN",
+              "PER",
+              "PYF",
+              "PNG",
+              "PHL",
+              "PAK",
+              "POL",
+              "SPM",
+              "PCN",
+              "PRI",
+              "PSE",
+              "PRT",
+              "PLW",
+              "PRY",
+              "QAT",
+              "REU",
+              "ROU",
+              "SRB",
+              "RUS",
+              "RWA",
+              "SAU",
+              "SLB",
+              "SYC",
+              "SDN",
+              "SWE",
+              "SGP",
+              "SHN",
+              "SVN",
+              "SJM",
+              "SVK",
+              "SLE",
+              "SMR",
+              "SEN",
+              "SOM",
+              "SUR",
+              "SSD",
+              "STP",
+              "SLV",
+              "SXM",
+              "SYR",
+              "SWZ",
+              "TCA",
+              "TCD",
+              "TGO",
+              "THA",
+              "TJK",
+              "TKL",
+              "TLS",
+              "TKM",
+              "TUN",
+              "TON",
+              "TUR",
+              "TTO",
+              "TUV",
+              "TWN",
+              "TZA",
+              "UKR",
+              "UGA",
+              "USA",
+              "URY",
+              "UZB",
+              "VAT",
+              "VCT",
+              "VEN",
+              "VGB",
+              "VIR",
+              "VNM",
+              "VUT",
+              "WLF",
+              "WSM",
+              "XKX",
+              "YEM",
+              "MYT",
+              "ZAF",
+              "ZMB",
+              "ZWE"
+            ]
+          },
+          "account_number": {
+            "type": "string"
+          },
+          "institution_id": {
+            "type": "string"
+          },
+          "institution_clearing_code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "intermediary_bank": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "institution_id"
+                ],
+                "properties": {
+                  "institution_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          },
+          "idempotency_key": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
       }
     },
     "required": [
@@ -3975,16 +5185,27 @@
         "additionalProperties": false,
         "properties": {
           "currency": {
-            "type": [
-              "string",
-              "null"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
             ]
           },
           "network": {
-            "type": [
-              "string",
-              "null"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
             ]
+          },
+          "include_recipient": {
+            "type": "boolean"
           }
         }
       }
@@ -3992,6 +5213,45 @@
     "required": [
       "customer_id",
       "recipient_id"
+    ]
+  },
+  "recipients.bank_accounts.update": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "recipient_id": {
+        "type": "string"
+      },
+      "bank_account_id": {
+        "type": "string"
+      },
+      "request": {
+        "type": "object",
+        "properties": {
+          "nickname": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reference_code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "customer_id",
+      "recipient_id",
+      "bank_account_id",
+      "request"
     ]
   },
   "recipients.bank_accounts.delete": {
@@ -4012,6 +5272,44 @@
       "customer_id",
       "recipient_id",
       "bank_account_id"
+    ]
+  },
+  "customer.sign_tos_agreement": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "session_token": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "session_token"
+    ]
+  },
+  "echo.get": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  },
+  "echo.post": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "request": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      }
+    },
+    "required": [
+      "request"
     ]
   }
 }
