@@ -381,8 +381,18 @@ const main = () => {
   }
 
   for (const toolName of legacyKept) {
-    toolSchemas[toolName] = currentToolSchemas[toolName];
-    responseSchemas[toolName] = currentResponseSchemas[toolName];
+    const toolSchema = currentToolSchemas[toolName];
+    const responseSchema = currentResponseSchemas[toolName];
+
+    if (!toolSchema) {
+      throw new Error(`Missing current legacy tool schema: ${toolName}`);
+    }
+    if (!responseSchema) {
+      throw new Error(`Missing current legacy response schema: ${toolName}`);
+    }
+
+    toolSchemas[toolName] = toolSchema;
+    responseSchemas[toolName] = responseSchema;
   }
 
   writeJson(toolsOut, toolSchemas);

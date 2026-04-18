@@ -129,6 +129,7 @@ const getRefValue = (root, ref) => {
   return ref
     .slice(2)
     .split("/")
+    .map((part) => part.replace(/~1/g, "/").replace(/~0/g, "~"))
     .reduce((current, part) => current?.[part], root);
 };
 

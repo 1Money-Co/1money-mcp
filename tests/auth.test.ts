@@ -84,5 +84,8 @@ test("hashBody returns sha256 hex digest", () => {
 });
 
 test("getOmDateTimestamp returns OM-DATE timestamp format", () => {
-  assert.match(getOmDateTimestamp(new Date("2025-09-30T12:00:00.000Z")), /^\d{8}T\d{6}Z$/);
+  assert.equal(
+    getOmDateTimestamp(new Date("2025-09-30T12:00:00.000Z")),
+    "20250930T120000Z",
+  );
 });

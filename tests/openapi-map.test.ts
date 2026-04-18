@@ -8,7 +8,8 @@ import test from "node:test";
 const repoRoot = path.resolve(import.meta.dirname, "..");
 
 test("build-openapi-tool-map groups a fixture OAS into MCP tool names", () => {
-  const fixturePath = path.join(os.tmpdir(), "1money-mcp-openapi-fixture.json");
+  const fixtureDir = fs.mkdtempSync(path.join(os.tmpdir(), "1money-mcp-openapi-"));
+  const fixturePath = path.join(fixtureDir, "fixture.json");
   const fixture = {
     openapi: "3.1.0",
     info: { title: "fixture", version: "fixture-v1" },
@@ -58,9 +59,15 @@ test("build-openapi-tool-map groups a fixture OAS into MCP tool names", () => {
   ]);
 });
 
-test("build-openapi-tool-map reports the full supplied OAS shape when present", () => {
-  const suppliedOasPath = "/Users/ethan/Desktop/swagger-new.json";
+test("build-openapi-tool-map reports the full supplied OAS shape when present", (t) => {
+  const suppliedOasPath = process.env.OPENAPI_PATH;
+  if (!suppliedOasPath) {
+    t.skip("Set OPENAPI_PATH to run this test.");
+    return;
+  }
+
   if (!fs.existsSync(suppliedOasPath)) {
+    t.skip(`OPENAPI_PATH does not exist: ${suppliedOasPath}`);
     return;
   }
 

@@ -51,9 +51,15 @@ const assertPaginationConstraints = (toolSchemas, toolName) => {
   assert.equal(paramsSchema.properties.size.maximum, 100, `${toolName} size maximum`);
 };
 
-test("sync-openapi-schemas rewrites key MCP input contracts from the supplied OAS", () => {
-  const suppliedOasPath = "/Users/ethan/Desktop/swagger-new.json";
+test("sync-openapi-schemas rewrites key MCP input contracts from the supplied OAS", (t) => {
+  const suppliedOasPath = process.env.OPENAPI_PATH;
+  if (!suppliedOasPath) {
+    t.skip("Set OPENAPI_PATH to run this test.");
+    return;
+  }
+
   if (!fs.existsSync(suppliedOasPath)) {
+    t.skip(`OPENAPI_PATH does not exist: ${suppliedOasPath}`);
     return;
   }
 
