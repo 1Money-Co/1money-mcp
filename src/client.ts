@@ -48,7 +48,7 @@ export class OneMoneyClient {
     this.secretKey = config.secretKey;
     this.sandbox = config.sandbox;
     this.timeoutMs = config.timeoutMs;
-    this.userAgent = `1money-mcp/0.2.2 (Node/${process.version}; ${os.platform()}/${os.arch()})`;
+    this.userAgent = `1money-mcp/0.2.0 (Node/${process.version}; ${os.platform()}/${os.arch()})`;
   }
 
   /**
@@ -162,21 +162,14 @@ const safeJsonParse = (value: string) => {
   }
 };
 
-const buildQueryString = (
-  params: Record<string, string | number | boolean | null | undefined>,
-) => {
-  const searchParams = new URLSearchParams();
-  for (const [key, value] of Object.entries(params)) {
-    if (value === undefined || value === null) {
-      continue;
-    }
-    searchParams.append(key, String(value));
-  }
+const buildQueryString = (params: Record<string, string | number | boolean | null | undefined>) => {
+  const entries = Object.entries(params)
+    .filter(([, value]) => value !== undefined && value !== null)
+    .map(([key, value]) => `${key}=${String(value)}`);
 
-  const queryString = searchParams.toString();
-  if (!queryString) {
+  if (entries.length === 0) {
     return "";
   }
 
-  return `?${queryString}`;
+  return `?${entries.join("&")}`;
 };

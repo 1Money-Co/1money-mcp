@@ -26,7 +26,7 @@ const main = async () => {
 
   const server = new McpServer({
     name: "1money-mcp",
-    version: "0.2.2",
+    version: "0.2.0",
   });
 
   registerTools(server, client);
