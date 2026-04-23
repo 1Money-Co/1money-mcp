@@ -48,7 +48,7 @@ export class OneMoneyClient {
     this.secretKey = config.secretKey;
     this.sandbox = config.sandbox;
     this.timeoutMs = config.timeoutMs;
-    this.userAgent = `1money-mcp/0.2.0 (Node/${process.version}; ${os.platform()}/${os.arch()})`;
+    this.userAgent = `1money-mcp/0.3.0 (Node/${process.version}; ${os.platform()}/${os.arch()})`;
   }
 
   /**
