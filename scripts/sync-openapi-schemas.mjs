@@ -66,21 +66,10 @@ const isTopLevelQueryParam = (toolName, parameterName) =>
   (parameterName === "idempotency_key" && toolName.endsWith(".get_by_idempotency_key")) ||
   (toolName === "conversions.get_order" && parameterName === "transaction_id");
 
+// Manual overrides for endpoints whose swagger is missing the Idempotency-Key header.
 const requestCompatibilityFields = {
-  "external_accounts.create": {
-    idempotency_key: { schema: { type: "string" }, required: false },
-  },
-  "recipients.create": {
-    idempotency_key: { schema: { type: "string" }, required: true },
-  },
   "recipients.bank_accounts.create": {
     idempotency_key: { schema: { type: "string" }, required: true },
-  },
-  "auto_conversion_rules.create": {
-    idempotency_key: { schema: { type: "string" }, required: false },
-  },
-  "withdrawals.create": {
-    idempotency_key: { schema: { type: "string" }, required: false },
   },
 };
 
@@ -115,6 +104,29 @@ const applyQueryParameterCompatibilityOverrides = (parameter, schema) => {
   return applyPaginationFieldCompatibilityOverrides(parameter.name, schema);
 };
 
+const applyRequestCompatibilityOverrides = (toolName, requestSchema) => {
+  const fields = requestCompatibilityFields[toolName];
+  if (!fields || !requestSchema) {
+    return requestSchema;
+  }
+
+  const nextSchema = {
+    ...requestSchema,
+    properties: { ...(requestSchema.properties || {}) },
+  };
+  const required = new Set(nextSchema.required || []);
+  for (const [name, config] of Object.entries(fields)) {
+    nextSchema.properties[name] = config.schema;
+    if (config.required) {
+      required.add(name);
+    }
+  }
+  if (required.size > 0) {
+    nextSchema.required = [...required];
+  }
+  return nextSchema;
+};
+
 const normalizeSchema = (schema, root) =>
   stripSchemaMetadata(resolveSchemaRefs(schema, root));
 
@@ -130,57 +142,38 @@ const ensureStrictObject = (schema) => {
   return schema;
 };
 
-const applyRequestCompatibilityOverrides = (toolName, requestSchema) => {
-  const compatibilityFields = requestCompatibilityFields[toolName];
-  if (!compatibilityFields || !requestSchema) {
+const injectIdempotencyField = (toolName, requestSchema, parameters) => {
+  const headerParam = (parameters || []).find(
+    (p) => p.name === "Idempotency-Key" && p.in === "header",
+  );
+  if (!headerParam || !requestSchema) {
     return requestSchema;
   }
+
+  const isRequired = headerParam.required === true;
+  const field = { type: "string" };
 
   if (requestSchema.type === "object" || requestSchema.properties) {
     const nextSchema = {
       ...requestSchema,
-      properties: {
-        ...(requestSchema.properties || {}),
-      },
+      properties: { ...(requestSchema.properties || {}), idempotency_key: field },
     };
-
     const required = new Set(nextSchema.required || []);
-    for (const [fieldName, fieldConfig] of Object.entries(compatibilityFields)) {
-      nextSchema.properties[fieldName] = fieldConfig.schema;
-      if (fieldConfig.required) {
-        required.add(fieldName);
-      }
+    if (isRequired) {
+      required.add("idempotency_key");
     }
-
     if (required.size > 0) {
       nextSchema.required = [...required];
     }
-
     return nextSchema;
   }
 
   if (Array.isArray(requestSchema.allOf)) {
-    const extraFieldsSchema = {
-      type: "object",
-      properties: {},
-    };
-    const required = [];
-
-    for (const [fieldName, fieldConfig] of Object.entries(compatibilityFields)) {
-      extraFieldsSchema.properties[fieldName] = fieldConfig.schema;
-      if (fieldConfig.required) {
-        required.push(fieldName);
-      }
+    const extra = { type: "object", properties: { idempotency_key: field } };
+    if (isRequired) {
+      extra.required = ["idempotency_key"];
     }
-
-    if (required.length > 0) {
-      extraFieldsSchema.required = required;
-    }
-
-    return {
-      ...requestSchema,
-      allOf: [...requestSchema.allOf, extraFieldsSchema],
-    };
+    return { ...requestSchema, allOf: [...requestSchema.allOf, extra] };
   }
 
   return requestSchema;
@@ -294,10 +287,10 @@ const buildToolInputSchema = (toolName, operation, root) => {
 
   const requestSchema = operation.requestBody?.content?.["application/json"]?.schema;
   if (requestSchema) {
-    topLevelSchema.properties.request = applyRequestCompatibilityOverrides(
-      toolName,
-      ensureStrictObject(normalizeSchema(requestSchema, root)),
-    );
+    let resolvedRequest = ensureStrictObject(normalizeSchema(requestSchema, root));
+    resolvedRequest = injectIdempotencyField(toolName, resolvedRequest, parameters);
+    resolvedRequest = applyRequestCompatibilityOverrides(toolName, resolvedRequest);
+    topLevelSchema.properties.request = resolvedRequest;
     if (operation.requestBody.required) {
       required.push("request");
     }

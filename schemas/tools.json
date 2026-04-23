@@ -937,6 +937,12 @@
               "null"
             ]
           },
+          "terms_signed_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "associated_persons": {
             "type": [
               "array",
@@ -2531,7 +2537,8 @@
           "currency",
           "country_code",
           "account_number",
-          "institution_id"
+          "institution_id",
+          "idempotency_key"
         ],
         "properties": {
           "network": {
@@ -2923,7 +2930,8 @@
       "request": {
         "type": "object",
         "required": [
-          "network"
+          "network",
+          "idempotency_key"
         ],
         "properties": {
           "network": {
@@ -2934,6 +2942,9 @@
               "string",
               "null"
             ]
+          },
+          "idempotency_key": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -3048,7 +3059,8 @@
         "type": "object",
         "required": [
           "source",
-          "destination"
+          "destination",
+          "idempotency_key"
         ],
         "properties": {
           "source": {
@@ -3296,7 +3308,10 @@
               "idempotency_key": {
                 "type": "string"
               }
-            }
+            },
+            "required": [
+              "idempotency_key"
+            ]
           }
         ]
       }
@@ -3552,7 +3567,8 @@
         "required": [
           "amount",
           "asset",
-          "target_customer_id"
+          "target_customer_id",
+          "idempotency_key"
         ],
         "properties": {
           "amount": {
@@ -3570,6 +3586,9 @@
               "null"
             ],
             "maxLength": 255
+          },
+          "idempotency_key": {
+            "type": "string"
           }
         },
         "additionalProperties": false

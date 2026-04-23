@@ -1,6 +1,6 @@
 {
   "name": "@1money/mcp",
-  "version": "0.2.2",
+  "version": "0.2.0",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -31,7 +31,7 @@
     "generate-schemas": "node scripts/generate-schemas.mjs",
     "openapi:map": "node scripts/build-openapi-tool-map.mjs",
     "openapi:sync": "node scripts/sync-openapi-schemas.mjs",
-    "test": "node --experimental-transform-types --test tests/*.test.ts",
+    "test": "tsx --test tests/*.test.ts",
     "prepack": "npm run build"
   },
   "repository": {

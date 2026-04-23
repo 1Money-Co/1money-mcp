@@ -346,7 +346,8 @@ export const createHandlers = (client: OneMoneyClient): Record<ToolName, ToolHan
   "instructions.crypto.create": (input) =>
     runTool("instructions.crypto.create", async () => {
       const { customer_id, request } = input as RequestInput;
-      return client.post(`${buildCustomerPath(customer_id!)}/deposit_instruction`, request);
+      const { body, headers } = extractIdempotency(request);
+      return client.post(`${buildCustomerPath(customer_id!)}/deposit_instruction`, body, headers);
     }),
   "instructions.crypto.get": (input) =>
     runTool("instructions.crypto.get", async () => {
@@ -467,7 +468,8 @@ export const createHandlers = (client: OneMoneyClient): Record<ToolName, ToolHan
   "transfers.create": (input) =>
     runTool("transfers.create", async () => {
       const { customer_id, request } = input as RequestInput;
-      return client.post(`${buildCustomerPath(customer_id!)}/transfers`, request);
+      const { body, headers } = extractIdempotency(request);
+      return client.post(`${buildCustomerPath(customer_id!)}/transfers`, body, headers);
     }),
   "fees.estimate": (input) =>
     runTool("fees.estimate", async () => {
