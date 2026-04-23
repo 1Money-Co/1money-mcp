@@ -23,19 +23,22 @@ import type { ToolName } from "../schemas/zod.js";
  */
 export type ToolHandler = (input: unknown) => Promise<CallToolResult>;
 
+type RequestQueryValue = string | number | boolean | null | undefined;
+
 type RequestInput = {
   request?: Record<string, unknown>;
-  params?: Record<string, string | number | boolean | undefined>;
+  params?: Record<string, RequestQueryValue>;
   customer_id?: string;
   recipient_id?: string;
   bank_account_id?: string;
   session_token?: string;
   associated_person_id?: string;
   external_account_id?: string;
+  intermediary_id?: string;
+  auto_conversion_rule_id?: string;
+  deposit_instruction_id?: string;
   idempotency_key?: string;
-  rule_id?: string;
   order_id?: string;
-  withdrawal_id?: string;
   transaction_id?: string;
 };
 
@@ -90,6 +93,8 @@ const extractIdempotency = (request?: Record<string, unknown>) => {
 };
 
 const buildCustomerPath = (customerId: string) => `/v1/customers/${customerId}`;
+const buildRecipientPath = (customerId: string, recipientId: string) =>
+  `${buildCustomerPath(customerId)}/recipients/${recipientId}`;
 
 /**
  * Builds the MCP tool handler map backed by the 1money client.
@@ -162,6 +167,59 @@ export const createHandlers = (client: OneMoneyClient): Record<ToolName, ToolHan
         `${buildCustomerPath(customer_id!)}/associated_persons/${associated_person_id}`,
       );
     }),
+  "customer.intermediaries.list": (input) =>
+    runTool("customer.intermediaries.list", async () => {
+      const { customer_id } = input as RequestInput;
+      return client.get(`${buildCustomerPath(customer_id!)}/intermediaries`);
+    }),
+  "customer.intermediaries.create": (input) =>
+    runTool("customer.intermediaries.create", async () => {
+      const { customer_id, request } = input as RequestInput;
+      return client.post(`${buildCustomerPath(customer_id!)}/intermediaries`, request);
+    }),
+  "customer.intermediaries.get": (input) =>
+    runTool("customer.intermediaries.get", async () => {
+      const { customer_id, intermediary_id } = input as RequestInput;
+      return client.get(`${buildCustomerPath(customer_id!)}/intermediaries/${intermediary_id}`);
+    }),
+  "customer.intermediaries.update": (input) =>
+    runTool("customer.intermediaries.update", async () => {
+      const { customer_id, intermediary_id, request } = input as RequestInput;
+      return client.put(
+        `${buildCustomerPath(customer_id!)}/intermediaries/${intermediary_id}`,
+        request,
+      );
+    }),
+  "customer.intermediaries.delete": (input) =>
+    runTool("customer.intermediaries.delete", async () => {
+      const { customer_id, intermediary_id } = input as RequestInput;
+      return client.delete(`${buildCustomerPath(customer_id!)}/intermediaries/${intermediary_id}`);
+    }),
+  "customer.lightweight.get_by_idempotency_key": (input) =>
+    runTool("customer.lightweight.get_by_idempotency_key", async () => {
+      const { idempotency_key } = input as RequestInput;
+      return client.get("/v1/customers/lightweight", { idempotency_key });
+    }),
+  "customer.lightweight.create": (input) =>
+    runTool("customer.lightweight.create", async () => {
+      const { request } = input as RequestInput;
+      return client.post("/v1/customers/lightweight", request);
+    }),
+  "customer.onboarding_links.create": (input) =>
+    runTool("customer.onboarding_links.create", async () => {
+      const { customer_id, request } = input as RequestInput;
+      return client.post(`${buildCustomerPath(customer_id!)}/onboarding_links`, request);
+    }),
+  "customer.lightweight.get": (input) =>
+    runTool("customer.lightweight.get", async () => {
+      const { customer_id } = input as RequestInput;
+      return client.get(`/v1/customers/hosted/${customer_id}`);
+    }),
+  "customer.onboarding_grants.create": (input) =>
+    runTool("customer.onboarding_grants.create", async () => {
+      const { request } = input as RequestInput;
+      return client.post("/v1/customers/onboarding/grants", request);
+    }),
   "external_accounts.create": (input) =>
     runTool("external_accounts.create", async () => {
       const { customer_id, request } = input as RequestInput;
@@ -206,17 +264,29 @@ export const createHandlers = (client: OneMoneyClient): Record<ToolName, ToolHan
   "recipients.get": (input) =>
     runTool("recipients.get", async () => {
       const { customer_id, recipient_id } = input as RequestInput;
-      return client.get(`${buildCustomerPath(customer_id!)}/recipients/${recipient_id}`);
+      return client.get(buildRecipientPath(customer_id!, recipient_id!));
+    }),
+  "recipients.update": (input) =>
+    runTool("recipients.update", async () => {
+      const { customer_id, recipient_id, request } = input as RequestInput;
+      return client.put(buildRecipientPath(customer_id!, recipient_id!), request);
     }),
   "recipients.delete": (input) =>
     runTool("recipients.delete", async () => {
       const { customer_id, recipient_id } = input as RequestInput;
-      return client.delete(`${buildCustomerPath(customer_id!)}/recipients/${recipient_id}`);
+      return client.delete(buildRecipientPath(customer_id!, recipient_id!));
     }),
   "recipients.get_by_idempotency_key": (input) =>
     runTool("recipients.get_by_idempotency_key", async () => {
       const { customer_id, idempotency_key } = input as RequestInput;
       return client.get(`${buildCustomerPath(customer_id!)}/recipients`, { idempotency_key });
+    }),
+  "recipients.get_by_external_account": (input) =>
+    runTool("recipients.get_by_external_account", async () => {
+      const { customer_id, external_account_id } = input as RequestInput;
+      return client.get(
+        `${buildCustomerPath(customer_id!)}/recipients/by-external-account/${external_account_id}`,
+      );
     }),
   "recipients.bank_accounts.get_by_idempotency_key": (input) =>
     runTool("recipients.bank_accounts.get_by_idempotency_key", async () => {
@@ -231,7 +301,7 @@ export const createHandlers = (client: OneMoneyClient): Record<ToolName, ToolHan
       const { customer_id, recipient_id, request } = input as RequestInput;
       const { body, headers } = extractIdempotency(request);
       return client.post(
-        `${buildCustomerPath(customer_id!)}/recipients/${recipient_id}/bank_accounts`,
+        `${buildRecipientPath(customer_id!, recipient_id!)}/bank_accounts`,
         body,
         headers,
       );
@@ -239,22 +309,52 @@ export const createHandlers = (client: OneMoneyClient): Record<ToolName, ToolHan
   "recipients.bank_accounts.list": (input) =>
     runTool("recipients.bank_accounts.list", async () => {
       const { customer_id, recipient_id, params } = input as RequestInput;
-      return client.get(
-        `${buildCustomerPath(customer_id!)}/recipients/${recipient_id}/bank_accounts/list`,
-        params,
+      return client.get(`${buildRecipientPath(customer_id!, recipient_id!)}/bank_accounts/list`, params);
+    }),
+  "recipients.bank_accounts.update": (input) =>
+    runTool("recipients.bank_accounts.update", async () => {
+      const { customer_id, recipient_id, bank_account_id, request } = input as RequestInput;
+      return client.put(
+        `${buildRecipientPath(customer_id!, recipient_id!)}/bank_accounts/${bank_account_id}`,
+        request,
       );
     }),
   "recipients.bank_accounts.delete": (input) =>
     runTool("recipients.bank_accounts.delete", async () => {
       const { customer_id, recipient_id, bank_account_id } = input as RequestInput;
       return client.delete(
-        `${buildCustomerPath(customer_id!)}/recipients/${recipient_id}/bank_accounts/${bank_account_id}`,
+        `${buildRecipientPath(customer_id!, recipient_id!)}/bank_accounts/${bank_account_id}`,
       );
     }),
   "instructions.get_deposit_instruction": (input) =>
     runTool("instructions.get_deposit_instruction", async () => {
       const { customer_id, params } = input as RequestInput;
       return client.get(`${buildCustomerPath(customer_id!)}/deposit_instructions`, params);
+    }),
+  "instructions.crypto.list": (input) =>
+    runTool("instructions.crypto.list", async () => {
+      const { customer_id, params } = input as RequestInput;
+      return client.get(`${buildCustomerPath(customer_id!)}/all_deposit_instructions`, params);
+    }),
+  "instructions.crypto.get_by_idempotency_key": (input) =>
+    runTool("instructions.crypto.get_by_idempotency_key", async () => {
+      const { customer_id, idempotency_key } = input as RequestInput;
+      return client.get(`${buildCustomerPath(customer_id!)}/deposit_instruction`, {
+        idempotency_key,
+      });
+    }),
+  "instructions.crypto.create": (input) =>
+    runTool("instructions.crypto.create", async () => {
+      const { customer_id, request } = input as RequestInput;
+      const { body, headers } = extractIdempotency(request);
+      return client.post(`${buildCustomerPath(customer_id!)}/deposit_instruction`, body, headers);
+    }),
+  "instructions.crypto.get": (input) =>
+    runTool("instructions.crypto.get", async () => {
+      const { customer_id, deposit_instruction_id } = input as RequestInput;
+      return client.get(
+        `${buildCustomerPath(customer_id!)}/deposit_instruction/${deposit_instruction_id}`,
+      );
     }),
   "conversions.create_quote": (input) =>
     runTool("conversions.create_quote", async () => {
@@ -268,9 +368,9 @@ export const createHandlers = (client: OneMoneyClient): Record<ToolName, ToolHan
     }),
   "conversions.get_order": (input) =>
     runTool("conversions.get_order", async () => {
-      const { customer_id, order_id } = input as RequestInput;
+      const { customer_id, transaction_id } = input as RequestInput;
       return client.get(`${buildCustomerPath(customer_id!)}/conversions/order`, {
-        order_id,
+        transaction_id,
       });
     }),
   "auto_conversion_rules.create": (input) =>
@@ -281,8 +381,10 @@ export const createHandlers = (client: OneMoneyClient): Record<ToolName, ToolHan
     }),
   "auto_conversion_rules.get": (input) =>
     runTool("auto_conversion_rules.get", async () => {
-      const { customer_id, rule_id } = input as RequestInput;
-      return client.get(`${buildCustomerPath(customer_id!)}/auto-conversion-rules/${rule_id}`);
+      const { customer_id, auto_conversion_rule_id } = input as RequestInput;
+      return client.get(
+        `${buildCustomerPath(customer_id!)}/auto-conversion-rules/${auto_conversion_rule_id}`,
+      );
     }),
   "auto_conversion_rules.get_by_idempotency_key": (input) =>
     runTool("auto_conversion_rules.get_by_idempotency_key", async () => {
@@ -298,29 +400,24 @@ export const createHandlers = (client: OneMoneyClient): Record<ToolName, ToolHan
     }),
   "auto_conversion_rules.delete": (input) =>
     runTool("auto_conversion_rules.delete", async () => {
-      const { customer_id, rule_id } = input as RequestInput;
-      return client.delete(`${buildCustomerPath(customer_id!)}/auto-conversion-rules/${rule_id}`);
+      const { customer_id, auto_conversion_rule_id } = input as RequestInput;
+      return client.delete(
+        `${buildCustomerPath(customer_id!)}/auto-conversion-rules/${auto_conversion_rule_id}`,
+      );
     }),
   "auto_conversion_rules.list_orders": (input) =>
     runTool("auto_conversion_rules.list_orders", async () => {
-      const { customer_id, rule_id, params } = input as RequestInput;
-      const query = params
-        ? {
-            status: params.status as string | undefined,
-            "pagination[page]": params.page,
-            "pagination[size]": params.size,
-          }
-        : undefined;
+      const { customer_id, auto_conversion_rule_id, params } = input as RequestInput;
       return client.get(
-        `${buildCustomerPath(customer_id!)}/auto-conversion-rules/${rule_id}/orders`,
-        query,
+        `${buildCustomerPath(customer_id!)}/auto-conversion-rules/${auto_conversion_rule_id}/orders`,
+        params,
       );
     }),
   "auto_conversion_rules.get_order": (input) =>
     runTool("auto_conversion_rules.get_order", async () => {
-      const { customer_id, rule_id, order_id } = input as RequestInput;
+      const { customer_id, auto_conversion_rule_id, order_id } = input as RequestInput;
       return client.get(
-        `${buildCustomerPath(customer_id!)}/auto-conversion-rules/${rule_id}/orders/${order_id}`,
+        `${buildCustomerPath(customer_id!)}/auto-conversion-rules/${auto_conversion_rule_id}/orders/${order_id}`,
       );
     }),
   "withdrawals.create": (input) =>
@@ -338,8 +435,8 @@ export const createHandlers = (client: OneMoneyClient): Record<ToolName, ToolHan
     }),
   "withdrawals.get": (input) =>
     runTool("withdrawals.get", async () => {
-      const { customer_id, withdrawal_id } = input as RequestInput;
-      return client.get(`${buildCustomerPath(customer_id!)}/withdrawals/${withdrawal_id}`);
+      const { customer_id, transaction_id } = input as RequestInput;
+      return client.get(`${buildCustomerPath(customer_id!)}/withdrawals/${transaction_id}`);
     }),
   "withdrawals.get_by_idempotency_key": (input) =>
     runTool("withdrawals.get_by_idempotency_key", async () => {
@@ -358,8 +455,29 @@ export const createHandlers = (client: OneMoneyClient): Record<ToolName, ToolHan
       const { customer_id, transaction_id } = input as RequestInput;
       return client.get(`${buildCustomerPath(customer_id!)}/transactions/${transaction_id}`);
     }),
-  "simulations.simulate_deposit": (input) =>
-    runTool("simulations.simulate_deposit", async () => {
+  "transfers.get": (input) =>
+    runTool("transfers.get", async () => {
+      const { customer_id, transaction_id } = input as RequestInput;
+      return client.get(`${buildCustomerPath(customer_id!)}/transfers/${transaction_id}`);
+    }),
+  "transfers.get_by_idempotency_key": (input) =>
+    runTool("transfers.get_by_idempotency_key", async () => {
+      const { customer_id, idempotency_key } = input as RequestInput;
+      return client.get(`${buildCustomerPath(customer_id!)}/transfers`, { idempotency_key });
+    }),
+  "transfers.create": (input) =>
+    runTool("transfers.create", async () => {
+      const { customer_id, request } = input as RequestInput;
+      const { body, headers } = extractIdempotency(request);
+      return client.post(`${buildCustomerPath(customer_id!)}/transfers`, body, headers);
+    }),
+  "fees.estimate": (input) =>
+    runTool("fees.estimate", async () => {
+      const { customer_id, request } = input as RequestInput;
+      return client.post(`${buildCustomerPath(customer_id!)}/fees/estimate`, request);
+    }),
+  "simulations.simulate_transaction": (input) =>
+    runTool("simulations.simulate_transaction", async () => {
       const { customer_id, request } = input as RequestInput;
       return client.post(`${buildCustomerPath(customer_id!)}/simulate-transactions`, request);
     }),

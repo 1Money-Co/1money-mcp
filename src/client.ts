@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import crypto from "node:crypto";
 import os from "node:os";
 import { ApiError } from "./errors.js";
 import type { Config } from "./config.js";
+import { buildAuthorizationHeader, getOmDateTimestamp } from "./auth.js";
 
 type RequestOptions = {
-  query?: Record<string, string | number | boolean | undefined>;
+  query?: Record<string, string | number | boolean | null | undefined>;
   body?: unknown;
   headers?: Record<string, string>;
 };
@@ -48,7 +48,7 @@ export class OneMoneyClient {
     this.secretKey = config.secretKey;
     this.sandbox = config.sandbox;
     this.timeoutMs = config.timeoutMs;
-    this.userAgent = `1money-mcp/0.1.0 (Node/${process.version}; ${os.platform()}/${os.arch()})`;
+    this.userAgent = `1money-mcp/0.3.0 (Node/${process.version}; ${os.platform()}/${os.arch()})`;
   }
 
   /**
@@ -85,8 +85,16 @@ export class OneMoneyClient {
     }
 
     const bodyBytes = options.body ? Buffer.from(JSON.stringify(options.body)) : Buffer.alloc(0);
-    const timestamp = this.getTimestamp();
-    const authHeader = this.buildAuthHeader(method, path, bodyBytes, timestamp);
+    const timestamp = getOmDateTimestamp();
+    const authHeader = buildAuthorizationHeader({
+      accessKey: this.accessKey,
+      secretKey: this.sandbox ? undefined : this.secretKey,
+      method,
+      requestPath: path,
+      requestBody: bodyBytes,
+      timestamp,
+      sandbox: this.sandbox,
+    });
     const headers: Record<string, string> = {
       Authorization: authHeader,
       "X-OM-Date": timestamp,
@@ -124,44 +132,6 @@ export class OneMoneyClient {
       clearTimeout(timeout);
     }
   }
-
-  private buildAuthHeader(method: string, path: string, body: Buffer, timestamp: string) {
-    if (this.sandbox) {
-      return `Bearer ${this.accessKey}`;
-    }
-
-    if (!this.secretKey) {
-      throw new Error("Missing secret key for non-sandbox request");
-    }
-
-    const bodyHash = crypto.createHash("sha256").update(body).digest("hex");
-    const stringToSign = [
-      this.accessKey,
-      timestamp,
-      method.toUpperCase(),
-      path,
-      bodyHash,
-    ].join("\n");
-
-    const keyBytes = decodeSecretKey(this.secretKey);
-    const signature = crypto.createHmac("sha256", keyBytes).update(stringToSign).digest("hex");
-    return `OneMoney-HMAC-SHA256 ${this.accessKey}:${timestamp}:${signature}`;
-  }
-
-  private getTimestamp() {
-    const now = new Date();
-    const pad = (value: number) => String(value).padStart(2, "0");
-    return (
-      `${now.getUTCFullYear()}` +
-      `${pad(now.getUTCMonth() + 1)}` +
-      `${pad(now.getUTCDate())}` +
-      "T" +
-      `${pad(now.getUTCHours())}` +
-      `${pad(now.getUTCMinutes())}` +
-      `${pad(now.getUTCSeconds())}` +
-      "Z"
-    );
-  }
 }
 
 const buildApiError = (
@@ -192,9 +162,9 @@ const safeJsonParse = (value: string) => {
   }
 };
 
-const buildQueryString = (params: Record<string, string | number | boolean | undefined>) => {
+const buildQueryString = (params: Record<string, string | number | boolean | null | undefined>) => {
   const entries = Object.entries(params)
-    .filter(([, value]) => value !== undefined)
+    .filter(([, value]) => value !== undefined && value !== null)
     .map(([key, value]) => `${key}=${String(value)}`);
 
   if (entries.length === 0) {
@@ -202,10 +172,4 @@ const buildQueryString = (params: Record<string, string | number | boolean | und
   }
 
   return `?${entries.join("&")}`;
-};
-
-const decodeSecretKey = (secretKey: string) => {
-  const normalized = secretKey.replace(/-/g, "+").replace(/_/g, "/");
-  const padding = "=".repeat((4 - (normalized.length % 4)) % 4);
-  return Buffer.from(normalized + padding, "base64");
 };
