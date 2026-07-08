@@ -15,7 +15,7 @@
  */
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { OneMoneyClient } from "../client.js";
-import { toolSchemas, type ToolName } from "../schemas/zod.js";
+import { toolMetadata, toolSchemas, type ToolName } from "../schemas/zod.js";
 import { createHandlers } from "./handlers.js";
 
 /**
@@ -31,6 +31,15 @@ export const registerTools = (server: McpServer, client: OneMoneyClient) => {
     }
 
     const mcpToolName = toolName.replaceAll(".", "_");
-    server.registerTool(mcpToolName, { inputSchema: schema }, handler);
+    const metadata = toolMetadata[toolName as keyof typeof toolMetadata];
+    server.registerTool(
+      mcpToolName,
+      {
+        title: metadata?.title,
+        description: metadata?.description,
+        inputSchema: schema,
+      },
+      handler,
+    );
   }
 };

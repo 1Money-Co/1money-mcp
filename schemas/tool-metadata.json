@@ -1,0 +1,406 @@
+{
+  "business_onboarding.list": {
+    "title": "List Business Accounts",
+    "description": "List Business Accounts\n\nList business accounts under a Main-Account."
+  },
+  "business_onboarding.create": {
+    "title": "Initiate Business Account",
+    "description": "Initiate Business Account\n\nInitiates the onboarding of a business sub-account"
+  },
+  "business_onboarding.get": {
+    "title": "Get Business Account",
+    "description": "Get Business Account\n\nRetrieve the current state of a business account."
+  },
+  "business_onboarding.update": {
+    "title": "Update Business Account",
+    "description": "Update Business Account\n\nUpdate business account data, typically in response to an RFI."
+  },
+  "business_onboarding.onboarding_sessions.create": {
+    "title": "Create Self-Onboarding URL",
+    "description": "Create Self-Onboarding URL\n\nGenerate a 1Money-hosted onboarding URL for customer self-service."
+  },
+  "business_onboarding.documents.upload": {
+    "title": "Upload Company Document",
+    "description": "Upload Company Document\n\nUpload a document for a business account."
+  },
+  "business_onboarding.controllers.documents.upload": {
+    "title": "Upload Controller Document",
+    "description": "Upload Controller Document\n\nUpload a document for a business controller."
+  },
+  "business_onboarding.submit": {
+    "title": "Submit Business Account",
+    "description": "Submit Business Account\n\nSubmit an onboarding account for KYB review."
+  },
+  "business_onboarding.sandbox.set_status": {
+    "title": "Simulate Account Review",
+    "description": "Simulate Account Review\n\nSimulate a compliance review outcome in Sandbox."
+  },
+  "terms.signatures.create": {
+    "title": "Create Terms of Service URL",
+    "description": "Create Terms of Service URL\n\nCreate a signature for the given terms type. Atomically creates a signed TOS session and returns a stable `signature_id` to be used in the related onboarding request (`terms.signature_id`).\n\nThe returned `url` is a hosted page where the end-user can review the agreement and be redirected to `redirect_url` afterwards.\n\n    Supported `{type}` values are `BUSINESS_ONBOARDING` and `INDIVIDUAL_ONBOARDING`."
+  },
+  "individual_onboarding.list": {
+    "title": "List Individuals",
+    "description": "List Individuals\n\nList paginated KYC v2 individual accounts for the authenticated entity."
+  },
+  "individual_onboarding.create": {
+    "title": "Create Individual",
+    "description": "Create Individual\n\nCreate a KYC v2 individual account under the authenticated main account."
+  },
+  "individual_onboarding.get": {
+    "title": "Get Individual",
+    "description": "Get Individual\n\nFetch a single KYC v2 individual account with onboarding document statuses."
+  },
+  "individual_onboarding.update": {
+    "title": "Patch Individual",
+    "description": "Patch Individual\n\nPatch a KYC v2 individual account. Create payload fields except `profile` can be changed while the account is `DRAFT` or `ACTION_REQUIRED`. `profile` can be changed while eligible before Tier 3."
+  },
+  "individual_onboarding.documents.upload": {
+    "title": "Upload Individual Document",
+    "description": "Upload Individual Document\n\nUpload binary contents for an individual KYC v2 onboarding document. Allowed `document_type` values are `SELFIE`, `ID_FRONT`, `ID_BACK`, `POA`, `SOURCE_OF_FUNDS`, and `OTHER`."
+  },
+  "individual_onboarding.submit": {
+    "title": "Submit Individual",
+    "description": "Submit Individual\n\nSubmit an individual KYC v2 account for review."
+  },
+  "individual_onboarding.limits.get": {
+    "title": "Get Individual Limits",
+    "description": "Get Individual Limits\n\nGets transaction limits for an approved individual KYC v2 account."
+  },
+  "individual_onboarding.limits.review": {
+    "title": "Review Individual Limits",
+    "description": "Review Individual Limits\n\nRequests a limits review for an approved individual account. The optional `profile` body updates the saved profile before risk eligibility is evaluated. The request is accepted only when the account is approved, risk-eligible for limits upgrade, profile is complete, SOURCE_OF_FUNDS has been uploaded, and POA has been approved."
+  },
+  "individual_onboarding.sandbox.set_status": {
+    "title": "Sandbox: Simulate Individual KYC Status Transition",
+    "description": "Sandbox: Simulate Individual KYC Status Transition\n\nSimulates a KYC status transition in non-production environments and dispatches the corresponding webhook. Returns 404 in production. Accepts: APPROVED, REJECTED, UNDER_REVIEW, PENDING_REVIEW, PENDING_RESPONSE."
+  },
+  "individual_applications.list": {
+    "title": "List Individual Applications",
+    "description": "List Individual Applications\n\nList individual KYC applications with optional status filtering and pagination.\n\nResults are sorted by creation time, newest first. Use `page` and `page_size` for pagination; `status` filters by the KYC2 lifecycle status (`DRAFT`, `PROCESSING`, `ACTION_REQUIRED`, `UNDER_REVIEW`, `APPROVED`, `REJECTED`)."
+  },
+  "individual_applications.create": {
+    "title": "Initiate Individual Application",
+    "description": "Initiate Individual Application\n\nCreate a new individual KYC application in `DRAFT`.\n\nSend the required KYC2 profile groups: `terms`, `contact`, `person`, `residential_address`, and `document`. The response returns `customer_id`, `external_customer_id`, status fields, and `pending_documents`.\n\nAfter creation, upload the required KYC2 documents and call `POST /v1/individuals/applications/{customer_id}/submit` to start asynchronous verification. EDD/Tier3 data is not accepted at creation; provide it later via `PATCH /applications/{customer_id}` and `POST /upgrade` when needed.\n\n`Idempotency-Key` is required. Replay compares `(eid, idempotency_key, contact.email)` and returns the original response when it matches.\n\nFor the full flow, TOS options, document requirements, country rules, webhooks, and EDD upgrade path, see the [Individual Onboarding Overview](https://developer.1money.com/reference/individual_onboarding_overview)."
+  },
+  "individual_applications.documents.upload": {
+    "title": "Upload Application Document",
+    "description": "Upload Application Document\n\nUpload or replace documents for an individual KYC application.\n\nUse the `pending_documents` list from `POST /applications` or `GET /applications/{customer_id}` as the upload checklist. KYC2 document types are `ID_FRONT`, `ID_BACK` when applicable, and `SELFIE`; EDD uses `POA`.\n\nUploads are state-gated. ID/Selfie uploads are accepted in `DRAFT` and `ACTION_REQUIRED`. POA is accepted when EDD is in scope, when a Tier2-approved customer starts a proactive Tier3 upgrade, or as a pre-submit local-only upload in `DRAFT`. Re-uploading the same document type replaces the previous file.\n\nEach file must be a base64 data URI (`image/jpeg`, `image/png`, or `application/pdf`) and must decode to **4 MB or less**. See the [Individual Onboarding Overview](https://developer.1money.com/reference/individual_onboarding_overview) for the document matrix and POA rules."
+  },
+  "individual_applications.submit": {
+    "title": "Submit Individual Application",
+    "description": "Submit Individual Application\n\nSubmit an individual application for asynchronous KYC2 evaluation.\n\nAllowed when `kyc_status` is `DRAFT` or `ACTION_REQUIRED` and all KYC2 fields/documents are complete. The call returns `202 Accepted`, moves the application to `PROCESSING`, emits `kyc.submitted`, and starts ID/Selfie verification.\n\nThis endpoint is not resource-idempotent. An optional `Idempotency-Key` is used only for webhook correlation as `client_idempotency_key`; repeat calls after acceptance return a status conflict until the application moves to the next state.\n\nOutcomes are delivered through KYC webhooks and can be reconciled with `GET /applications/{customer_id}`. See the [Individual Onboarding Overview](https://developer.1money.com/reference/individual_onboarding_overview) for outcome handling."
+  },
+  "individual_applications.get": {
+    "title": "Get Individual Application",
+    "description": "Get Individual Application\n\nRetrieve the current state of an individual KYC application.\n\nUse this endpoint to reconcile webhook delivery, display the next required action, and check whether the application is ready for submit, document reupload, or EDD upgrade. See the [Individual Onboarding Overview](https://developer.1money.com/reference/individual_onboarding_overview) for status semantics."
+  },
+  "individual_applications.update": {
+    "title": "Update Individual Application",
+    "description": "Update Individual Application\n\nUpdate an existing individual KYC application.\n\nKYC2 profile groups (`contact`, `person`, `residential_address`, `document`) are editable while `kyc_status` is `DRAFT` or `ACTION_REQUIRED`. EDD fields (`due_diligence`) are editable while `edd_status` is `NOT_REQUIRED` or `REQUIRED`.\n\nNested objects are partial updates: omitted sub-fields keep their current value. Updating data does not restart verification by itself; call `POST /submit` for KYC2 or `POST /upgrade` for EDD when the required updates and documents are complete.\n\nThe response has the same metadata-only shape as `GET /applications/{customer_id}`. See the [Individual Onboarding Overview](https://developer.1money.com/reference/individual_onboarding_overview) for lifecycle rules."
+  },
+  "individual_applications.upgrade": {
+    "title": "Upgrade Account Tier",
+    "description": "Upgrade Account Tier\n\nTrigger Tier3 / EDD evaluation for an individual application.\n\nThis endpoint accepts no request body. Before calling it, provide the required `due_diligence` fields with `PATCH /applications/{customer_id}` and upload `POA` with `PUT /applications/{customer_id}/documents`.\n\nAllowed for the proactive Tier3 path (`kyc_status=APPROVED`, `edd_status=NOT_REQUIRED` or `REQUIRED`) and for KYC2-high recovery (`kyc_status=ACTION_REQUIRED`, `edd_status=REQUIRED`). The call returns `202 Accepted`, moves `edd_status` to `PENDING`, emits `kyc.upgrade_started`, and starts EDD evaluation.\n\nThe optional `Idempotency-Key` is webhook-correlation only. See the [Individual Onboarding Overview](https://developer.1money.com/reference/individual_onboarding_overview) for prerequisites, POA freshness, and EDD outcome webhooks."
+  },
+  "individual_accounts.get": {
+    "title": "Get Individual Account",
+    "description": "Get Individual Account\n\nRetrieve detailed information about an individual account.\n\n## Prerequisites\n\nThe account must be in APPROVED status (KYC completed and approved). The `customer_id` (Customer ID) is returned during onboarding — once an application is approved, it becomes the account.\n\n## Response Fields\n\n| Field | Description |\n|---|---|\n| `customer_id` | Customer ID from onboarding |\n| `email` | Account holder's email |\n| `first_name` | Account holder's first name |\n| `last_name` | Account holder's last name |\n| `person` | Submitted personal information |\n| `phone` | Submitted phone number |\n| `address` | Submitted residential address |\n| `identity` | Submitted identity information |\n| `document` | Submitted identity document data |\n| `due_diligence` | Submitted EDD data |\n| `status` | Account status (`ACTIVE`, `SUSPENDED`, `CLOSED`) |\n| `kyc_level` | `2` = Advanced KYC, `3` = EDD approved |\n| `approved_at` | When the account was approved (RFC 3339) |\n| `created_at` | When the application was created (RFC 3339) |"
+  },
+  "individual_accounts.get_limits": {
+    "title": "Get Transaction Limits",
+    "description": "Get Transaction Limits\n\nRetrieve withdrawal limits for an individual account based on the current KYC level.\n\n## Prerequisites\n\nThe account must be in APPROVED status.\n\n## Limits by KYC Level\n\n| KYC Level | Meaning | Limits |\n|---|---|---|\n| `1` | Basic KYC approved (US only) | Base daily + 30-day rolling limits |\n| `2` | Advanced KYC approved | Standard daily + 30-day rolling limits |\n| `3` | EDD approved | Highest daily + 30-day rolling limits |\n\n## Response Fields\n\n| Field | Description |\n|---|---|\n| `daily_withdrawal` | Maximum total withdrawal per calendar day (resets at UTC midnight) |\n| `daily_withdrawal_used` | USD amount already withdrawn today (rounded to 2 dp) |\n| `rolling_30d_withdrawal` | Maximum total withdrawal within a rolling 30-day sliding window |\n| `rolling_30d_withdrawal_used` | USD amount already withdrawn in the past 30 days (rounded to 2 dp) |\n| `currency` | Currency code for the limit amounts (e.g., `USD`) |"
+  },
+  "individual_tos_sessions.create": {
+    "title": "Create Individual Terms of Service URL",
+    "description": "Create Individual Terms of Service URL\n\nCreates a hosted Terms of Service signing session for individual onboarding.\n\nRedirect the end user to the returned URL. After signing, the user is redirected to your `redirect_url` with a `signed_agreement_id`; send that value as `terms.signed_agreement_id` when creating the application.\n\nThe session expires in **1 hour**. See the [Individual Onboarding Overview](https://developer.1money.com/reference/individual_onboarding_overview) for the full TOS and application flow."
+  },
+  "individual_tos_sessions.sign": {
+    "title": "Simulate Terms of Service Acceptance",
+    "description": "Simulate Terms of Service Acceptance\n\nProgrammatically signs an individual onboarding TOS session.\n\n> **Sandbox/Testing Only**: In production, users must sign the TOS by visiting the URL returned from Create TOS Session.\n\nReturns a `signed_agreement_id` to send as `terms.signed_agreement_id` on `POST /v1/individuals/applications`."
+  },
+  "instructions.get_deposit_instruction": {
+    "title": "Get Deposit Instructions",
+    "description": "Get Deposit Instructions\n\nReturns the default deposit instruction for a specified asset and network.\n\n**Supported Instruction Types:**\n- **Fiat** — Bank account details for Wire and SWIFT deposits\n- **Crypto** — Wallet address for token deposits\n\n**Default Wallet Addresses:**\n\nEach customer is automatically assigned a default deposit address for the following networks:\n\n| Network | Type |\n|---|---|\n| EVM (e.g. Ethereum, Polygon, BNB Chain) | Default wallet address |\n| Solana | Default wallet address |\n| Tron | Default wallet address |\n| Bitcoin | Default wallet address |\n\nCustomers may also request additional deposit addresses on any of these networks. This endpoint always returns the default address only. To manage multiple addresses, use the following endpoints instead:\n\n| Endpoint | Description |\n|---|---|\n| `GET /all_deposit_instructions` | List all deposit addresses across all networks |\n| `POST /deposit_instruction` | Request an additional deposit address |\n| `GET /deposit_instruction/{id}` | Retrieve a specific deposit address by ID |\n\n> ⚠️ For crypto deposits, verify the token contract address carefully before transferring funds to ensure you are depositing the correct token."
+  },
+  "instructions.crypto.get_by_idempotency_key": {
+    "title": "Get Crypto Deposit Address by Idempotency Key",
+    "description": "Get Crypto Deposit Address by Idempotency Key\n\nLook up a crypto deposit instruction using the idempotency key provided during creation.\n\n**Use Case:** Verify if a crypto deposit instruction was successfully created when network issues or timeouts occurred during the create request.\n\nFor EVM wallets, the `network` field indicates whether it was created as a specific chain (e.g., `ETHEREUM`) or as the virtual `EVM` network."
+  },
+  "instructions.crypto.create": {
+    "title": "Create Crypto Deposit Address",
+    "description": "Create Crypto Deposit Address\n\nCreate a new crypto deposit wallet address for a customer on a specific blockchain network.\n\n**Supported networks:** `EVM`, `ETHEREUM`, `POLYGON`, `BNBCHAIN`, `AVALANCHE`, `BASE`, `ARBITRUM`, `SOLANA`, `TRON`, `BITCOIN`.\n\n**EVM Network:** The `EVM` network is a virtual network representing all EVM-compatible chains. A single EVM deposit address can receive deposits from: Ethereum, Polygon, BNB Chain, Avalanche, Base, and Arbitrum.\n\n**Idempotency:** The `Idempotency-Key` header is required and must be a valid UUID. If a deposit instruction with the same key already exists and the parameters match, it will be returned. If the same key is used with different network or nickname, a 409 Conflict error is returned."
+  },
+  "instructions.crypto.list": {
+    "title": "List Crypto Deposit Addresses",
+    "description": "List Crypto Deposit Addresses\n\nList all  crypto deposit instructions for a customer with pagination.\n\n**EVM Network:** The `EVM` network is a virtual network representing all EVM-compatible chains. A single EVM deposit address can receive deposits from any of the following chains: `Ethereum`, `Polygon`, `BNB Chain`, `Avalanche`, `Base`, and `Arbitrum`. In the response, default EVM wallets are displayed with `network: \"EVM\"`.\n\n**Pagination:** Use `page` (1-based) and `size` (1-100, default 10) query parameters."
+  },
+  "instructions.crypto.get": {
+    "title": "Get Crypto Deposit Address",
+    "description": "Get Crypto Deposit Address\n\nRetrieve a specific crypto deposit instruction by its ID.\n\nFor EVM wallets, the `network` field indicates whether it was created as a specific chain (e.g., `ETHEREUM`) or as the virtual `EVM` network. Default EVM wallets are displayed as `network: \"EVM\"`."
+  },
+  "auto_conversion_rules.get_by_idempotency_key": {
+    "title": "Get Auto-Conversion Rule by Idempotency Key",
+    "description": "Get Auto-Conversion Rule by Idempotency Key\n\nLook up an Auto-Conversion Rule using the idempotency key provided during creation.\n\n**Use Case:** Verify if an Auto-Conversion Rule was successfully created when network issues or timeouts occurred during the create request.\n\n**Status & Deposit Info:**\n- `PENDING`: Deposit info is being prepared. `source_deposit_info` will be `null`.\n- `ACTIVE`: Deposit info is ready. `source_deposit_info` contains bank Wire/SWIFT details for fiat source, or wallet address for crypto source."
+  },
+  "auto_conversion_rules.create": {
+    "title": "Create Auto-Conversion Rule",
+    "description": "Create Auto-Conversion Rule\n\nCreate an Auto-Conversion Rule for fiat->crypto, crypto->fiat, or crypto->crypto conversions.\n\n**Supported Assets:**\n- `USD`, `USDC`, `USDT`, `PYUSD`, `RLUSD`, `USDG`, `USDP`, `EURC`, `MXNB`\n**Supported Networks:**\n- Fiat deposit networks: `US_FEDWIRE`, `SWIFT`\n- Crypto networks: `ETHEREUM`, `POLYGON`, `BASE`, `ARBITRUM`, `AVALANCHE`, `BNBCHAIN`, `SOLANA`, `TRON`\n\n**Validation Rules:**\n- Supported pairs: fiat->crypto, crypto->fiat, and crypto->crypto; fiat->fiat is NOT supported\n- `Idempotency-Key` header is required and must be a valid UUID v4\n- Source network must match asset type (fiat asset requires fiat network, crypto asset requires crypto network)\n- For crypto withdrawal destination: `network` is required when `wallet_address` is provided\n- For fiat destination: `network` will be omitted\n\n**Withdrawal Configuration:**\n- Fiat-to-Crypto or Crypto->Crypto with withdrawal: provide `wallet_address` (external crypto wallet address)\n- Crypto-to-Fiat with withdrawal: provide `external_account_id` (bank account ID from external-accounts API)\n- Conversion-only (no withdrawal): omit both fields, converted funds remain in customer's account\n\n**Idempotency & Webhook Behavior:**\n- This endpoint creates resources asynchronously. The webhook notification may arrive **before** the HTTP response returns.\n- Use the `Idempotency-Key` to query the resource status via webhook response, enabling proper idempotency control.\n- **Recommended flow:** Instead of waiting for the HTTP response and then the webhook, clients can use the webhook arrival as the completion signal and query by `Idempotency-Key` to verify the result.\n- This approach prevents \"dangling wait\" scenarios where clients unnecessarily wait for the HTTP response when the webhook has already confirmed the outcome.\n\n**Response & Status:**\n- The response will have `status=PENDING` and `source_deposit_info=null` because deposit info is being prepared asynchronously.\n- Once deposit info is ready, the status will transition to `ACTIVE` and `source_deposit_info` will contain bank deposit details or crypto wallet address.\n- Use the retrieve endpoint or webhook to get the full details when the rule becomes `ACTIVE`."
+  },
+  "auto_conversion_rules.list": {
+    "title": "List Auto-Conversion Rules",
+    "description": "List Auto-Conversion Rules\n\nRetrieve all Auto-Conversion Rules for a customer with pagination support.\n\n**Note:** List response does not include `source_deposit_info`. Use the retrieve endpoint to get full details including deposit info.\n\n**Sub-accounts**\nSet `include_subaccounts=true` on the main account to list Auto-Conversion Rules across the main account and all sub-accounts under the same enterprise. Sub-account requests are always scoped to that sub-account. Each item carries its owning `customer_id` and `account_id`. Defaults to `false` (current customer only).\n\n**Pagination**\nTwo query parameter formats are supported:\n- Flat format (recommended): `?page=1&size=10`\n- Nested format: `?pagination=page=1&size=10`"
+  },
+  "auto_conversion_rules.get": {
+    "title": "Get Auto-Conversion Rule",
+    "description": "Get Auto-Conversion Rule\n\nRetrieve detailed Auto-Conversion Rule information.\n\n**Status & Deposit Info:**\n- `PENDING`: Deposit info is being prepared. `source_deposit_info` will be `null`.\n- `ACTIVE`: Deposit info is ready. `source_deposit_info` contains bank Wire/SWIFT details for fiat source, or wallet address for crypto source.\n\n**Deposit Info:** Use the `source_deposit_info` to fund the Auto-Conversion Rule once the status is `ACTIVE`."
+  },
+  "auto_conversion_rules.delete": {
+    "title": "Delete Auto-Conversion Rule",
+    "description": "Delete Auto-Conversion Rule\n\nDelete an Auto-Conversion Rule.\n\n**Note:** Cannot delete if there are pending orders associated with the Auto-Conversion Rule. Wait for all orders to complete or fail before deleting."
+  },
+  "auto_conversion_rules.list_orders": {
+    "title": "List Auto-Conversion Orders",
+    "description": "List Auto-Conversion Orders\n\nRetrieve the execution history (orders) for a specific Auto-Conversion Rule.\n\n## Response Structure\nEach order includes:\n- Order metadata (ID, status, timestamps)\n- Source and destination asset info\n- Fee receipt breakdown\n- **Sub-transactions array** (ordered: deposit → conversion → withdrawal)\n\n## Sub-Transaction Types\n- `DEPOSIT`: Initial fiat/crypto deposit\n- `CONVERSION`: RFQ conversion (if applicable)\n- `WITHDRAWAL`: Final fiat/crypto withdrawal (if applicable)\n\n**Pagination**\nTwo query parameter formats are supported:\n- Flat format (recommended): `?page=1&size=10`\n- Nested format: `?pagination=page=1&size=10`"
+  },
+  "auto_conversion_rules.get_order": {
+    "title": "Get Auto-Conversion Order By ID",
+    "description": "Get Auto-Conversion Order By ID\n\nGet detailed information about a specific Auto-Conversion Order.\n\n## Response Structure\nReturns complete order details including:\n- Full fee receipt (initial, developer_fee, deposit_fee, conversion_fee, withdrawal_fee)\n- **Sub-transactions array** with individual transaction details\n\n## Sub-Transaction Fields\n- `transaction_id`: Unique ID for the sub-transaction\n- `transaction_action`: DEPOSIT | CONVERSION | WITHDRAWAL\n- `status`: Current status of the sub-transaction\n- `amount`: Transaction amount with asset\n- `source` / `destination`: Source and destination details\n- `created_at`: Timestamp"
+  },
+  "simulations.simulate_transaction": {
+    "title": "Simulate Deposit",
+    "description": "Simulate Deposit\n\nSimulates a deposit transaction for testing purposes. **Only available in non-production environments.** \n\n**Asset & Network Requirements** \n\n- For token assets (USDT, USDC, MXNB), network is required and must be a wallet network (e.g., ETHEREUM).\n- For currency assets (USD), network must be a bank network (US_ACH, US_FEDWIRE, US_RTP, SWIFT, CUBIX, BANK_TRANSFER, PIX_TRANSFER).\n- **Amount Limit**: Simulation amount must be greater than zero and cannot exceed 1000.\n\n**Deposit Status Simulation** \n\nUse the `simulate_status` field to simulate different deposit states:\n\n| Value | Description |\n|-------|-------------|\n| `FAILED` | Simulates a failed deposit |\n\n**Example:** `{ \"asset\": \"USD\", \"network\": \"US_ACH\", \"amount\": \"100.00\", \"simulate_status\": \"FAILED\" }`"
+  },
+  "external_accounts.get_by_idempotency_key": {
+    "title": "Get External Account by Idempotency Key",
+    "description": "Get External Account by Idempotency Key\n\nRetrieve an external bank account using its idempotency key.\n\n**Functionality:**\n- Looks up an external account by the idempotency key provided during account creation\n- Useful for clients to check if an account was successfully created when using idempotent requests\n\n**Recipient Accounts:**\n- This endpoint can return both first-party and recipient (third-party) bank accounts\n- If the account belongs to a recipient, the response will include a `recipient` object with full recipient details"
+  },
+  "external_accounts.create": {
+    "title": "Create External Account",
+    "description": "Create External Account\n\nCreate and register a new external bank account for a specific customer.\n\n**⚠️ Important: Customer's Own Account Only**\n- This endpoint is exclusively for adding the **customer's own bank account**\n- **Do NOT use this endpoint to add third-party or recipient bank accounts**\n- For adding recipient/beneficiary bank accounts, use the Recipients API instead\n- **Incorrect account holder information may result in failed or delayed transfers**\n\n**Functionality:**\n- Registers a new external bank account that can be used for fiat withdrawals\n- Supports multiple bank networks: US Fedwire, US ACH, US RTP, and SWIFT international wires\n- Automatically assigns a unique external_account_id upon successful creation\n\n**Idempotency & Duplicate Detection:**\n- **Required**: Include an `Idempotency-Key` header with a unique UUID for each new account creation"
+  },
+  "external_accounts.list": {
+    "title": "List External Accounts",
+    "description": "List External Accounts\n\nRetrieve all external bank accounts associated with a specific customer.\n\n**Functionality:**\n- Returns a list of all external bank accounts configured for the specified customer\n- Supports filtering by currency and network type to narrow down results\n- The list is ordered by creation date (most recent first)\n\n**Recipient Accounts:**\n- By default, only the customer's own (first-party) bank accounts are returned\n- Set `include_recipient=true` to also include bank accounts belonging to recipients (third-party)\n- When included, each recipient bank account will have a `recipient` object attached with full recipient details"
+  },
+  "external_accounts.get": {
+    "title": "Get External Account",
+    "description": "Get External Account\n\nRetrieve detailed information about a specific external bank account by its unique identifier.\n\n**Recipient Accounts:**\n- This endpoint can return both first-party and recipient (third-party) bank accounts\n- If the account belongs to a recipient, the response will include a `recipient` object with full recipient details"
+  },
+  "external_accounts.remove": {
+    "title": "Remove External Account",
+    "description": "Remove External Account\n\nDelete an external bank account from a customer.\n\n- Returns 204 No Content on successful deletion (no response body)"
+  },
+  "recipients.get_by_idempotency_key": {
+    "title": "Get Recipient by Idempotency Key",
+    "description": "Get Recipient by Idempotency Key\n\nRetrieve a recipient using its idempotency key.\n\n**Functionality:**\n- Looks up a recipient by the idempotency key provided during creation\n- Useful for safely retrying create requests"
+  },
+  "recipients.create": {
+    "title": "Create Recipient",
+    "description": "Create Recipient\n\nCreate a new recipient (third-party counterparty) for a customer.\n\n**Functionality:**\n- Registers a new recipient that can receive fiat or crypto payments\n- Supports both individual and company recipient types\n- Automatically assigns a unique recipient_id upon successful creation\n\n**Required Fields:**\n- `relationship`: Recipient's relationship to the customer (e.g., VENDOR, EMPLOYEE)\n- `address`: Recipient address details\n\n**Idempotency & Duplicate Detection:**\n- **Required**: Include an `Idempotency-Key` header with a unique UUID for each new recipient creation"
+  },
+  "recipients.bank_accounts.get_by_idempotency_key": {
+    "title": "Get Recipient Bank Account by Idempotency Key",
+    "description": "Get Recipient Bank Account by Idempotency Key\n\nRetrieve a bank account using its idempotency key.\n\n**Functionality:**\n- Looks up a bank account by the idempotency key provided during creation\n- Useful for safely retrying create requests"
+  },
+  "recipients.bank_accounts.create": {
+    "title": "Add Bank Account to Recipient",
+    "description": "Add Bank Account to Recipient\n\nAdd a new bank account to an existing recipient.\n\n**⚠️ Important: Accurate Account Holder Information Required**\n- The **account_holder_name** must exactly match the name registered with the bank\n- Ensure all bank account details (account number, routing number, SWIFT code, etc.) are accurate\n- **Incorrect or mismatched information may result in failed, delayed, or returned transfers**\n- The bank may reject transfers if the beneficiary name does not match their records\n\n**Functionality:**\n- Registers a bank account that can be used for fiat withdrawals to this recipient\n- Supports US Fedwire, US ACH, and SWIFT international wires (US RTP is not supported for recipients)\n- Automatically assigns a unique bank_account_id upon successful creation\n\n**Status:**\n- Bank account is created with `PENDING` status\n- Status changes to `APPROVED` after vendor approval (async process)\n- Status changes to `FAILED` if vendor rejects the account\n- Subscribe to `external_account.approved` and `external_account.failed` webhooks for status updates\n\n**Idempotency & Duplicate Detection:**\n- **Required**: Include an `Idempotency-Key` header with a unique UUID"
+  },
+  "recipients.list": {
+    "title": "List Recipients",
+    "description": "List Recipients\n\nRetrieve all recipients for a specific customer with optional search and pagination.\n\n**Functionality:**\n- Returns recipients ordered by creation time (most recent first)\n- Supports search by name, nickname, or email"
+  },
+  "recipients.get": {
+    "title": "Get Recipient",
+    "description": "Get Recipient\n\nRetrieve detailed information about a specific recipient by their unique identifier."
+  },
+  "recipients.update": {
+    "title": "Update Recipient",
+    "description": "Update Recipient\n\nUpdate an existing recipient's information.\n\n**Functionality:**\n- Supports partial updates — only provided fields will be updated\n- Cannot change the recipient's business_type (INDIVIDUAL/COMPANY)\n- Cannot add or modify bank accounts through this endpoint"
+  },
+  "recipients.delete": {
+    "title": "Delete Recipient",
+    "description": "Delete Recipient\n\nDelete a recipient from a customer.\n\n**Note:** This is a soft delete. The recipient will be marked as deleted but data is retained."
+  },
+  "recipients.get_by_external_account": {
+    "title": "[Deprecated] Get Recipient by External Account",
+    "description": "[Deprecated] Get Recipient by External Account\n\n**⚠️ Deprecated:** This endpoint is deprecated. Use the External Accounts API instead — `GET /v1/customers/{customer_id}/external-accounts/{external_account_id}` and `GET /v1/customers/{customer_id}/external-accounts?idempotency_key=...` now include a `recipient` object in the response when the account belongs to a recipient.\n\nLook up the recipient that owns a specific external bank account.\n\n**Use case:** Given an `external_account_id` obtained from a withdrawal or transaction record, this endpoint returns the recipient that owns the bank account, enabling reconciliation flows that need to map a bank account back to a recipient.\n\n**Important:** The external account **must** belong to a recipient. Self-owned accounts (registered via the External Accounts API) are not addressable through this endpoint and will return 404."
+  },
+  "recipients.bank_accounts.list": {
+    "title": "List Recipient Bank Accounts",
+    "description": "List Recipient Bank Accounts\n\nRetrieve all bank accounts associated with a specific recipient.\n\n**Functionality:**\n- Supports filtering by currency and network type\n- The list is ordered by creation date (most recent first)"
+  },
+  "recipients.bank_accounts.update": {
+    "title": "Update Recipient Bank Account",
+    "description": "Update Recipient Bank Account\n\nUpdate a bank account associated with a recipient.\n\n**Functionality:**\n- Supports updating the nickname and reference code of a bank account\n- Only provided fields will be updated"
+  },
+  "recipients.bank_accounts.delete": {
+    "title": "Delete Recipient Bank Account",
+    "description": "Delete Recipient Bank Account\n\nRemove a bank account from a recipient.\n\n- Returns 204 No Content on successful deletion (no response body)"
+  },
+  "withdrawals.get_by_idempotency_key": {
+    "title": "Get Withdrawal Transaction by Idempotency Key",
+    "description": "Get Withdrawal Transaction by Idempotency Key\n\nRetrieve a withdrawal by idempotency_key for a customer.\n\n** Sandbox Simulation Note ** \n\nIf the withdrawal was created with a simulation suffix (e.g., `550e8400-e29b-41d4-a716-446655440000:FAILED`), you must query with the **full idempotency_key including the suffix**.\n\nUsing only the UUID part without the suffix will return 404 Not Found."
+  },
+  "withdrawals.create": {
+    "title": "Initiate Withdrawal",
+    "description": "Initiate Withdrawal\n\nCreate a withdrawal to an external bank account.\n\n**Withdrawal Types:**\n- **Withdraw to Self**: Use `external_account_id` from the External Accounts API\n- **Send to Others**: Use `external_account_id` from a Recipient's bank account\n\nThe system automatically detects whether the bank account belongs to the customer or a recipient based on the `external_account_id`.\n\nIf destination_address_id is an External Account ID, then the asset, network,\nand country_code here should remain consistent with the External Account ID.\n\n**Sandbox Simulation** \n\nIn sandbox environments, you can simulate different withdrawal states by appending a suffix to the `Idempotency-Key` header:\n\n| Suffix | Simulated State | Description |\n|--------|-----------------|-------------|\n| `:FAILED` | FAILED | Transaction failed |\n| `:PENDING` | PENDING | Transaction is held for risk review |\n\n**Example:**\n- Normal: `Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000`\n- Simulate failure: `Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000:FAILED`\n- Simulate pending: `Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000:PENDING`\n\n**Important:** When querying by `idempotency_key`, you must use the **full key including the suffix**. For example, if you created a withdrawal with `550e8400-e29b-41d4-a716-446655440000:FAILED`, you must query with the same full key. Using only the UUID part will return 404 Not Found.\n\nNote: Simulation suffixes are only available in sandbox environments and will be ignored in production."
+  },
+  "withdrawals.get": {
+    "title": "Get Withdrawal Transaction",
+    "description": "Get Withdrawal Transaction\n\nRetrieve a specific withdrawal by ID for a customer"
+  },
+  "transfers.get_by_idempotency_key": {
+    "title": "Get Internal Transfer by Idempotency Key",
+    "description": "Get Internal Transfer by Idempotency Key\n\nRetrieve an internal transfer by idempotency_key for a customer"
+  },
+  "transfers.create": {
+    "title": "Initiate Internal Transfer",
+    "description": "Initiate Internal Transfer\n\nCreate an internal transfer between customers on the platform.\n\nTransfer assets from the source customer to a target customer specified by `target_customer_id`.\n\n**Note**: Cross-entity transfers are supported. The target customer can belong to a different entity."
+  },
+  "transfers.get": {
+    "title": "Get Internal Transfer",
+    "description": "Get Internal Transfer\n\nRetrieve a specific internal transfer by transaction ID for a customer"
+  },
+  "conversions.create_quote": {
+    "title": "Create Quote",
+    "description": "Create Quote\n\nCreate a quote for converting between assets in a specific customer"
+  },
+  "conversions.create_hedge": {
+    "title": "Execute Quote",
+    "description": "Execute Quote\n\nCreate a hedge for a conversion quote in a specific customer"
+  },
+  "conversions.get_order": {
+    "title": "Get Conversion",
+    "description": "Get Conversion\n\nRetrieve a conversion hedge by transaction_id for a customer"
+  },
+  "assets.list": {
+    "title": "Get Balances",
+    "description": "Get Balances\n\nRetrieve assets for a specific Customer"
+  },
+  "transactions.list": {
+    "title": "List Transactions",
+    "description": "List Transactions\n\nRetrieve a list of transactions for a specific customer.\n\n**Transaction Types**\n- `DEPOSIT`: Fiat or crypto deposit\n- `WITHDRAWAL`: Fiat or crypto withdrawal\n- `CONVERSION`: Asset conversion (buy/sell/convert)\n- `AUTO_CONVERSION`: Auto-conversion rule execution\n- `TRANSFER`: Internal transfer between customers\n\n**TRANSFER Response**\nFor TRANSFER transactions:\n- **Sender** sees a `TRANSFER` transaction with `transaction_action: TRANSFER`\n- **Receiver** also sees the transfer in their transaction history\n- Cross-entity transfers are supported\n\n**AUTO_CONVERSION Response**\nFor AUTO_CONVERSION transactions, the response includes a `sub_transactions` array containing individual transaction steps, ordered as:\n1. **DEPOSIT** - Initial fiat/crypto deposit\n2. **CONVERSION** - Asset conversion (if applicable)\n3. **WITHDRAWAL** - Final fiat/crypto withdrawal (if applicable)\n\n**Note**:\nFor SWIFT withdrawals, UETR is populated in the reference field.\n\n**Pagination**\nTwo query parameter formats are supported:\n- Flat format (recommended): `?page=1&size=10`\n- Nested format: `?pagination=page=1&size=10`"
+  },
+  "transactions.get": {
+    "title": "Get Transaction",
+    "description": "Get Transaction\n\nRetrieve a specific transaction by ID for a customer.\n\n**Transaction Types**\n- `DEPOSIT`: Fiat or crypto deposit\n- `WITHDRAWAL`: Fiat or crypto withdrawal\n- `CONVERSION`: Asset conversion (buy/sell/convert)\n- `AUTO_CONVERSION`: Auto-conversion rule execution\n- `TRANSFER`: Internal transfer between customers\n\n**TRANSFER Response**\nFor TRANSFER transactions:\n- `transaction_action`: `TRANSFER`\n- `amount` / `asset`: Transfer amount and asset\n- No transaction fee (transfers are fee-free)\n- Both sender and receiver can query their respective transaction records\n\n**AUTO_CONVERSION Response**\nFor AUTO_CONVERSION transactions, the response includes:\n- Main transaction metadata (ID, status, source/destination assets)\n- `sub_transactions` array with individual steps:\n- `transaction_id`: Sub-transaction ID\n- `transaction_action`: DEPOSIT | CONVERSION | WITHDRAWAL\n- `status`: Current status of the sub-transaction\n- `amount` / `asset`: Transaction amount and asset\n- `to_amount` / `to_asset`: Target amount and asset (for conversion)\n- `created_at`: Timestamp\n\n**Note**:\nFor SWIFT withdrawals, UETR is populated in the reference field."
+  },
+  "fees.estimate": {
+    "title": "Estimate Transaction Fees",
+    "description": "Estimate Transaction Fees\n\nGet estimated fees before executing a transaction.\n\n**Actions:**\n\n- `DEPOSIT`: Deposit of assets\n- `WITHDRAWAL`: Withdrawal of assets\n- `CONVERSION`: **Not supported** - use `/conversions/quote` instead\n\n**Fee Calculation:**\n\nThe fee is determined by combining `action` + `asset`:\n- DEPOSIT + Crypto asset (USDC, USDT, etc.) → No fee\n- DEPOSIT + Fiat currency (USD, EUR, MXN) → Fiat deposit fee\n- WITHDRAWAL + Crypto asset → Crypto withdrawal fee (includes gas)\n- WITHDRAWAL + Fiat currency → Fiat withdrawal fee\n\n**Notes:**\n\n- Crypto withdrawal fees include network gas fees and may fluctuate\n- Fiat fees are fixed rate + percentage\n\n**Networks:**\n\n- Crypto: ETHEREUM, POLYGON, ARBITRUM, AVALANCHE, BASE, BNBCHAIN, SOLANA, TRON\n- Fiat: US_ACH, US_FEDWIRE, US_RTP, SWIFT, CUBIX, BANK_TRANSFER, PIX_TRANSFER"
+  },
+  "partner_fees.list": {
+    "title": "List Partner Fees",
+    "description": "List Partner Fees\n\nList partner fees for an account.\n\n- On a **main account**: returns its default fees. Set `include_sub_accounts=true` to also include fees configured on its sub-accounts.\n- On a **sub-account**: returns that sub-account's fees.\n\nProvide the `external_id` query parameter to look up a single fee by the `external_id` used when it was created (other filters are ignored)."
+  },
+  "partner_fees.create": {
+    "title": "Create Partner Fee",
+    "description": "Create Partner Fee\n\nCreate a partner fee charged to your customers, under the given account.\n\n**Scope:**\n\n- Create on the **main account** to set a default fee that applies to all sub-accounts.\n- Create on a **sub-account** to set a fee that applies only to that sub-account.\n\n**Fee matching:** when a transaction occurs, a sub-account fee takes priority over the main-account default, and the most targeted fee wins.\n\n**external_id:** required valid UUID in the request body, unique to this create request. Reusing an existing value returns a conflict. If a previous create timed out, look it up via the list endpoint with the `external_id` query parameter instead of replaying the create request."
+  },
+  "partner_fees.get": {
+    "title": "Get Partner Fee",
+    "description": "Get Partner Fee\n\nRetrieve a partner fee by its ID, within the given account's scope."
+  },
+  "partner_fees.delete": {
+    "title": "Delete Partner Fee",
+    "description": "Delete Partner Fee\n\nDelete a partner fee. The fee stops applying to new transactions immediately."
+  },
+  "partner_fees.update": {
+    "title": "Update Partner Fee",
+    "description": "Update Partner Fee\n\nPartially update a partner fee. Only rate fields (`rate`, `fixed`, `reverse_rate`) can be changed; omitted fields are left unchanged. The `fee_type` and scope (currency, payment rail, token, network, asset pair) are fixed — delete the fee and create a new one to change those."
+  },
+  "customer.associated_persons.create": {
+    "title": "customer.associated_persons.create",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "customer.associated_persons.delete": {
+    "title": "customer.associated_persons.delete",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "customer.associated_persons.get": {
+    "title": "customer.associated_persons.get",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "customer.associated_persons.list": {
+    "title": "customer.associated_persons.list",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "customer.associated_persons.update": {
+    "title": "customer.associated_persons.update",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "customer.create": {
+    "title": "customer.create",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "customer.create_tos_link": {
+    "title": "customer.create_tos_link",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "customer.get": {
+    "title": "customer.get",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "customer.intermediaries.create": {
+    "title": "customer.intermediaries.create",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "customer.intermediaries.delete": {
+    "title": "customer.intermediaries.delete",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "customer.intermediaries.get": {
+    "title": "customer.intermediaries.get",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "customer.intermediaries.list": {
+    "title": "customer.intermediaries.list",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "customer.intermediaries.update": {
+    "title": "customer.intermediaries.update",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "customer.lightweight.create": {
+    "title": "customer.lightweight.create",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "customer.lightweight.get": {
+    "title": "customer.lightweight.get",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "customer.lightweight.get_by_idempotency_key": {
+    "title": "customer.lightweight.get_by_idempotency_key",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "customer.list": {
+    "title": "customer.list",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "customer.onboarding_grants.create": {
+    "title": "customer.onboarding_grants.create",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "customer.onboarding_links.create": {
+    "title": "customer.onboarding_links.create",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "customer.sign_tos_agreement": {
+    "title": "customer.sign_tos_agreement",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "customer.update": {
+    "title": "customer.update",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "echo.get": {
+    "title": "echo.get",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  },
+  "echo.post": {
+    "title": "echo.post",
+    "description": "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface."
+  }
+}

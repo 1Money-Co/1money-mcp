@@ -28,18 +28,24 @@ type RequestQueryValue = string | number | boolean | null | undefined;
 type RequestInput = {
   request?: Record<string, unknown>;
   params?: Record<string, RequestQueryValue>;
+  account_id?: string;
   customer_id?: string;
+  id?: string;
   recipient_id?: string;
   bank_account_id?: string;
   session_token?: string;
   associated_person_id?: string;
+  controller_id?: string;
+  document_type?: string;
   external_account_id?: string;
+  fee_id?: string;
   intermediary_id?: string;
   auto_conversion_rule_id?: string;
   deposit_instruction_id?: string;
   idempotency_key?: string;
   order_id?: string;
   transaction_id?: string;
+  type?: string;
 };
 
 const isApiError = (error: unknown): error is ApiError => error instanceof ApiError;
@@ -92,7 +98,46 @@ const extractIdempotency = (request?: Record<string, unknown>) => {
   return { body, headers };
 };
 
+const idempotencyHeaders = (idempotencyKey?: unknown) =>
+  idempotencyKey
+    ? { "Idempotency-Key": String(idempotencyKey) }
+    : undefined;
+
+const headerSafeFilename = (filename: string) =>
+  filename.replace(/["\\\r\n]/g, "_");
+
+const extractBinaryUpload = (request?: Record<string, unknown>) => {
+  const contentBase64 = request?.content_base64;
+  const contentType = request?.content_type;
+  const contentDisposition = request?.content_disposition;
+  const filename = request?.filename;
+
+  if (typeof contentBase64 !== "string" || contentBase64.length === 0) {
+    throw new Error("request.content_base64 is required for document upload.");
+  }
+  if (typeof contentType !== "string" || contentType.length === 0) {
+    throw new Error("request.content_type is required for document upload.");
+  }
+  if (
+    (typeof contentDisposition !== "string" || contentDisposition.length === 0) &&
+    (typeof filename !== "string" || filename.length === 0)
+  ) {
+    throw new Error("request.filename or request.content_disposition is required for document upload.");
+  }
+
+  const headers = {
+    "Content-Type": contentType,
+    "Content-Disposition": typeof contentDisposition === "string" && contentDisposition.length > 0
+      ? contentDisposition
+      : `attachment; filename="${headerSafeFilename(String(filename))}"`,
+  };
+
+  return { body: Buffer.from(contentBase64, "base64"), headers };
+};
+
 const buildCustomerPath = (customerId: string) => `/v1/customers/${customerId}`;
+const buildAccountPath = (accountId: string) => `/v1/accounts/${accountId}`;
+const buildV2AccountPath = (accountId: string) => `/v2/accounts/${accountId}`;
 const buildRecipientPath = (customerId: string, recipientId: string) =>
   `${buildCustomerPath(customerId)}/recipients/${recipientId}`;
 
@@ -100,6 +145,220 @@ const buildRecipientPath = (customerId: string, recipientId: string) =>
  * Builds the MCP tool handler map backed by the 1money client.
  */
 export const createHandlers = (client: OneMoneyClient): Record<ToolName, ToolHandler> => ({
+  "business_onboarding.list": (input) =>
+    runTool("business_onboarding.list", async () => {
+      const { account_id, params } = input as RequestInput;
+      return client.get(`${buildV2AccountPath(account_id!)}/businesses`, params);
+    }),
+  "business_onboarding.create": (input) =>
+    runTool("business_onboarding.create", async () => {
+      const { account_id, request } = input as RequestInput;
+      return client.post(`${buildV2AccountPath(account_id!)}/businesses`, request);
+    }),
+  "business_onboarding.get": (input) =>
+    runTool("business_onboarding.get", async () => {
+      const { account_id, id } = input as RequestInput;
+      return client.get(`${buildV2AccountPath(account_id!)}/businesses/${id}`);
+    }),
+  "business_onboarding.update": (input) =>
+    runTool("business_onboarding.update", async () => {
+      const { account_id, id, request } = input as RequestInput;
+      return client.patch(`${buildV2AccountPath(account_id!)}/businesses/${id}`, request);
+    }),
+  "business_onboarding.onboarding_sessions.create": (input) =>
+    runTool("business_onboarding.onboarding_sessions.create", async () => {
+      const { account_id, request } = input as RequestInput;
+      const { body, headers } = extractIdempotency(request);
+      return client.post(
+        `${buildV2AccountPath(account_id!)}/businesses/onboarding-sessions`,
+        body,
+        headers,
+      );
+    }),
+  "business_onboarding.documents.upload": (input) =>
+    runTool("business_onboarding.documents.upload", async () => {
+      const { account_id, id, document_type, request } = input as RequestInput;
+      const { body, headers } = extractBinaryUpload(request);
+      return client.putRaw(
+        `${buildV2AccountPath(account_id!)}/businesses/${id}/documents/${document_type}`,
+        body,
+        headers,
+      );
+    }),
+  "business_onboarding.controllers.documents.upload": (input) =>
+    runTool("business_onboarding.controllers.documents.upload", async () => {
+      const { account_id, id, controller_id, document_type, request } = input as RequestInput;
+      const { body, headers } = extractBinaryUpload(request);
+      return client.putRaw(
+        `${buildV2AccountPath(account_id!)}/businesses/${id}/controllers/${controller_id}/documents/${document_type}`,
+        body,
+        headers,
+      );
+    }),
+  "business_onboarding.submit": (input) =>
+    runTool("business_onboarding.submit", async () => {
+      const { account_id, id, request } = input as RequestInput;
+      return client.post(`${buildV2AccountPath(account_id!)}/businesses/${id}/submit`, request);
+    }),
+  "business_onboarding.sandbox.set_status": (input) =>
+    runTool("business_onboarding.sandbox.set_status", async () => {
+      const { account_id, id, request } = input as RequestInput;
+      return client.post(
+        `${buildV2AccountPath(account_id!)}/businesses/${id}/sandbox/status`,
+        request,
+      );
+    }),
+  "terms.signatures.create": (input) =>
+    runTool("terms.signatures.create", async () => {
+      const { type, request } = input as RequestInput;
+      return client.post(`/v2/terms/${type}/signatures`, request);
+    }),
+  "individual_onboarding.list": (input) =>
+    runTool("individual_onboarding.list", async () => {
+      const { account_id, params } = input as RequestInput;
+      return client.get(`${buildV2AccountPath(account_id!)}/individuals`, params);
+    }),
+  "individual_onboarding.create": (input) =>
+    runTool("individual_onboarding.create", async () => {
+      const { account_id, request } = input as RequestInput;
+      const { body, headers } = extractIdempotency(request);
+      return client.post(`${buildV2AccountPath(account_id!)}/individuals`, body, headers);
+    }),
+  "individual_onboarding.get": (input) =>
+    runTool("individual_onboarding.get", async () => {
+      const { account_id, id } = input as RequestInput;
+      return client.get(`${buildV2AccountPath(account_id!)}/individuals/${id}`);
+    }),
+  "individual_onboarding.update": (input) =>
+    runTool("individual_onboarding.update", async () => {
+      const { account_id, id, request } = input as RequestInput;
+      return client.patch(`${buildV2AccountPath(account_id!)}/individuals/${id}`, request);
+    }),
+  "individual_onboarding.documents.upload": (input) =>
+    runTool("individual_onboarding.documents.upload", async () => {
+      const { account_id, id, document_type, request } = input as RequestInput;
+      const { body, headers } = extractBinaryUpload(request);
+      return client.putRaw(
+        `${buildV2AccountPath(account_id!)}/individuals/${id}/documents/${document_type}`,
+        body,
+        headers,
+      );
+    }),
+  "individual_onboarding.submit": (input) =>
+    runTool("individual_onboarding.submit", async () => {
+      const { account_id, id, request } = input as RequestInput;
+      return client.post(`${buildV2AccountPath(account_id!)}/individuals/${id}/submit`, request);
+    }),
+  "individual_onboarding.limits.get": (input) =>
+    runTool("individual_onboarding.limits.get", async () => {
+      const { account_id, id } = input as RequestInput;
+      return client.get(`${buildV2AccountPath(account_id!)}/individuals/${id}/limits`);
+    }),
+  "individual_onboarding.limits.review": (input) =>
+    runTool("individual_onboarding.limits.review", async () => {
+      const { account_id, id, request } = input as RequestInput;
+      return client.post(
+        `${buildV2AccountPath(account_id!)}/individuals/${id}/review-limits`,
+        request,
+      );
+    }),
+  "individual_onboarding.sandbox.set_status": (input) =>
+    runTool("individual_onboarding.sandbox.set_status", async () => {
+      const { account_id, id, request } = input as RequestInput;
+      return client.post(
+        `${buildV2AccountPath(account_id!)}/individuals/${id}/sandbox/status`,
+        request,
+      );
+    }),
+  "individual_applications.list": (input) =>
+    runTool("individual_applications.list", async () => {
+      const { params } = input as RequestInput;
+      return client.get("/v1/individuals/applications", params);
+    }),
+  "individual_applications.create": (input) =>
+    runTool("individual_applications.create", async () => {
+      const { request } = input as RequestInput;
+      const { body, headers } = extractIdempotency(request);
+      return client.post("/v1/individuals/applications", body, headers);
+    }),
+  "individual_applications.documents.upload": (input) =>
+    runTool("individual_applications.documents.upload", async () => {
+      const { customer_id, request } = input as RequestInput;
+      return client.put(`/v1/individuals/applications/${customer_id}/documents`, request);
+    }),
+  "individual_applications.submit": (input) =>
+    runTool("individual_applications.submit", async () => {
+      const { customer_id, idempotency_key } = input as RequestInput;
+      return client.post(
+        `/v1/individuals/applications/${customer_id}/submit`,
+        null,
+        idempotencyHeaders(idempotency_key),
+      );
+    }),
+  "individual_applications.get": (input) =>
+    runTool("individual_applications.get", async () => {
+      const { customer_id } = input as RequestInput;
+      return client.get(`/v1/individuals/applications/${customer_id}`);
+    }),
+  "individual_applications.update": (input) =>
+    runTool("individual_applications.update", async () => {
+      const { customer_id, request } = input as RequestInput;
+      return client.patch(`/v1/individuals/applications/${customer_id}`, request);
+    }),
+  "individual_applications.upgrade": (input) =>
+    runTool("individual_applications.upgrade", async () => {
+      const { customer_id, idempotency_key } = input as RequestInput;
+      return client.post(
+        `/v1/individuals/applications/${customer_id}/upgrade`,
+        null,
+        idempotencyHeaders(idempotency_key),
+      );
+    }),
+  "individual_accounts.get": (input) =>
+    runTool("individual_accounts.get", async () => {
+      const { customer_id } = input as RequestInput;
+      return client.get(buildAccountPath(customer_id!));
+    }),
+  "individual_accounts.get_limits": (input) =>
+    runTool("individual_accounts.get_limits", async () => {
+      const { customer_id } = input as RequestInput;
+      return client.get(`${buildAccountPath(customer_id!)}/limits`);
+    }),
+  "individual_tos_sessions.create": (input) =>
+    runTool("individual_tos_sessions.create", async () => {
+      const { request } = input as RequestInput;
+      return client.post("/v1/individuals/tos/sessions", request);
+    }),
+  "individual_tos_sessions.sign": (input) =>
+    runTool("individual_tos_sessions.sign", async () => {
+      const { session_token } = input as RequestInput;
+      return client.post(`/v1/individuals/tos/sessions/${session_token}/sign`, null);
+    }),
+  "partner_fees.list": (input) =>
+    runTool("partner_fees.list", async () => {
+      const { account_id, params } = input as RequestInput;
+      return client.get(`${buildAccountPath(account_id!)}/partner-fees`, params);
+    }),
+  "partner_fees.create": (input) =>
+    runTool("partner_fees.create", async () => {
+      const { account_id, request } = input as RequestInput;
+      return client.post(`${buildAccountPath(account_id!)}/partner-fees`, request);
+    }),
+  "partner_fees.get": (input) =>
+    runTool("partner_fees.get", async () => {
+      const { account_id, fee_id } = input as RequestInput;
+      return client.get(`${buildAccountPath(account_id!)}/partner-fees/${fee_id}`);
+    }),
+  "partner_fees.update": (input) =>
+    runTool("partner_fees.update", async () => {
+      const { account_id, fee_id, request } = input as RequestInput;
+      return client.patch(`${buildAccountPath(account_id!)}/partner-fees/${fee_id}`, request);
+    }),
+  "partner_fees.delete": (input) =>
+    runTool("partner_fees.delete", async () => {
+      const { account_id, fee_id } = input as RequestInput;
+      return client.delete(`${buildAccountPath(account_id!)}/partner-fees/${fee_id}`);
+    }),
   "assets.list": (input) =>
     runTool("assets.list", async () => {
       const { customer_id, params } = input as RequestInput;

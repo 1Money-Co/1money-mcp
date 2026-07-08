@@ -21,6 +21,7 @@ import { buildAuthorizationHeader, getOmDateTimestamp } from "./auth.js";
 type RequestOptions = {
   query?: Record<string, string | number | boolean | null | undefined>;
   body?: unknown;
+  rawBody?: Buffer;
   headers?: Record<string, string>;
 };
 
@@ -73,6 +74,20 @@ export class OneMoneyClient {
   }
 
   /**
+   * Issues an authenticated PUT request with a raw body.
+   */
+  async putRaw(path: string, rawBody: Buffer, headers?: RequestOptions["headers"]) {
+    return this.request("PUT", path, { rawBody, headers });
+  }
+
+  /**
+   * Issues an authenticated PATCH request.
+   */
+  async patch(path: string, body?: RequestOptions["body"], headers?: RequestOptions["headers"]) {
+    return this.request("PATCH", path, { body, headers });
+  }
+
+  /**
    * Issues an authenticated DELETE request.
    */
   async delete(path: string, query?: RequestOptions["query"], headers?: RequestOptions["headers"]) {
@@ -84,7 +99,12 @@ export class OneMoneyClient {
       throw new Error("OneMoney MCP not configured. Please set ONEMONEY_ACCESS_KEY or create a credentials file.");
     }
 
-    const bodyBytes = options.body ? Buffer.from(JSON.stringify(options.body)) : Buffer.alloc(0);
+    const hasJsonBody = options.body !== undefined && options.body !== null;
+    const bodyBytes = options.rawBody
+      ? options.rawBody
+      : hasJsonBody
+        ? Buffer.from(JSON.stringify(options.body))
+        : Buffer.alloc(0);
     const timestamp = getOmDateTimestamp();
     const authHeader = buildAuthorizationHeader({
       accessKey: this.accessKey,
@@ -102,12 +122,18 @@ export class OneMoneyClient {
       ...options.headers,
     };
 
-    if (bodyBytes.length > 0) {
+    if (bodyBytes.length > 0 && !options.rawBody) {
       headers["Content-Type"] = "application/json";
     }
 
     const queryString = options.query ? buildQueryString(options.query) : "";
     const url = `${this.baseUrl}${path}${queryString}`;
+    const requestBody = bodyBytes.length > 0
+      ? bodyBytes.buffer.slice(
+          bodyBytes.byteOffset,
+          bodyBytes.byteOffset + bodyBytes.byteLength,
+        ) as ArrayBuffer
+      : undefined;
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), this.timeoutMs);
@@ -116,7 +142,7 @@ export class OneMoneyClient {
       const response = await fetch(url, {
         method,
         headers,
-        body: bodyBytes.length > 0 ? bodyBytes : undefined,
+        body: requestBody,
         signal: controller.signal,
       });
 
