@@ -185,6 +185,9 @@ const ensureStrictObject = (schema) => {
   return schema;
 };
 
+const buildIdempotencyField = (headerParam) =>
+  addSchemaDescription({ type: "string" }, headerParam.description);
+
 const injectIdempotencyField = (toolName, requestSchema, parameters) => {
   const headerParam = findHeaderParameter(parameters, "Idempotency-Key");
   if (!headerParam || !requestSchema) {
@@ -192,7 +195,7 @@ const injectIdempotencyField = (toolName, requestSchema, parameters) => {
   }
 
   const isRequired = headerParam.required === true;
-  const field = { type: "string" };
+  const field = buildIdempotencyField(headerParam);
 
   if (requestSchema.type === "object" || requestSchema.properties) {
     const nextSchema = {
@@ -226,7 +229,7 @@ const addTopLevelIdempotencyField = (topLevelSchema, required, parameters, hasJs
     return;
   }
 
-  topLevelSchema.properties.idempotency_key = { type: "string" };
+  topLevelSchema.properties.idempotency_key = buildIdempotencyField(headerParam);
   if (headerParam.required) {
     required.push("idempotency_key");
   }

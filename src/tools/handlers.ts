@@ -103,8 +103,71 @@ const idempotencyHeaders = (idempotencyKey?: unknown) =>
     ? { "Idempotency-Key": String(idempotencyKey) }
     : undefined;
 
+const MAX_BINARY_UPLOAD_BYTES = 4 * 1024 * 1024;
+
 const headerSafeFilename = (filename: string) =>
   filename.replace(/["\\\r\n]/g, "_");
+
+const isBase64Character = (character: string) =>
+  (character >= "A" && character <= "Z") ||
+  (character >= "a" && character <= "z") ||
+  (character >= "0" && character <= "9") ||
+  character === "+" ||
+  character === "/";
+
+const isValidBase64 = (contentBase64: string) => {
+  if (contentBase64.length % 4 !== 0) {
+    return false;
+  }
+
+  let padding = 0;
+  for (let index = 0; index < contentBase64.length; index += 1) {
+    const character = contentBase64[index];
+    if (character === "=") {
+      padding += 1;
+      if (padding > 2 || index < contentBase64.length - 2) {
+        return false;
+      }
+      continue;
+    }
+
+    if (padding > 0 || !isBase64Character(character)) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+const decodedBase64Size = (contentBase64: string) => {
+  const padding = contentBase64.endsWith("==")
+    ? 2
+    : contentBase64.endsWith("=")
+      ? 1
+      : 0;
+  return (contentBase64.length / 4) * 3 - padding;
+};
+
+const decodeDocumentContent = (contentBase64: string) => {
+  const normalized = contentBase64.trim();
+  if (normalized.length === 0) {
+    throw new Error("request.content_base64 is required for document upload.");
+  }
+  if (normalized.length % 4 !== 0) {
+    throw new Error("request.content_base64 must be valid base64 for document upload.");
+  }
+
+  const decodedSize = decodedBase64Size(normalized);
+  if (decodedSize > MAX_BINARY_UPLOAD_BYTES) {
+    throw new Error("request.content_base64 must decode to 4 MB or less for document upload.");
+  }
+
+  if (!isValidBase64(normalized)) {
+    throw new Error("request.content_base64 must be valid base64 for document upload.");
+  }
+
+  return Buffer.from(normalized, "base64");
+};
 
 const extractBinaryUpload = (request?: Record<string, unknown>) => {
   const contentBase64 = request?.content_base64;
@@ -118,21 +181,19 @@ const extractBinaryUpload = (request?: Record<string, unknown>) => {
   if (typeof contentType !== "string" || contentType.length === 0) {
     throw new Error("request.content_type is required for document upload.");
   }
-  if (
-    (typeof contentDisposition !== "string" || contentDisposition.length === 0) &&
-    (typeof filename !== "string" || filename.length === 0)
-  ) {
-    throw new Error("request.filename or request.content_disposition is required for document upload.");
+  if (typeof filename !== "string" || filename.length === 0) {
+    throw new Error("request.filename is required for document upload.");
   }
 
+  const body = decodeDocumentContent(contentBase64);
   const headers = {
     "Content-Type": contentType,
     "Content-Disposition": typeof contentDisposition === "string" && contentDisposition.length > 0
       ? contentDisposition
-      : `attachment; filename="${headerSafeFilename(String(filename))}"`,
+      : `attachment; filename="${headerSafeFilename(filename)}"`,
   };
 
-  return { body: Buffer.from(contentBase64, "base64"), headers };
+  return { body, headers };
 };
 
 const buildCustomerPath = (customerId: string) => `/v1/customers/${customerId}`;
