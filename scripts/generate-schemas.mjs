@@ -8,11 +8,15 @@ const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "..");
 const schemaPath = path.join(rootDir, "schemas", "tools.json");
 const responseSchemaPath = path.join(rootDir, "schemas", "tool-responses.json");
+const metadataPath = path.join(rootDir, "schemas", "tool-metadata.json");
 const outputPath = path.join(rootDir, "src", "schemas", "zod.ts");
 
 const raw = JSON.parse(fs.readFileSync(schemaPath, "utf8"));
 const responseRaw = fs.existsSync(responseSchemaPath)
   ? JSON.parse(fs.readFileSync(responseSchemaPath, "utf8"))
+  : {};
+const metadataRaw = fs.existsSync(metadataPath)
+  ? JSON.parse(fs.readFileSync(metadataPath, "utf8"))
   : {};
 
 const toSchemaName = (toolName, suffix = "") =>
@@ -33,6 +37,7 @@ const toSchemaName = (toolName, suffix = "") =>
 let output = "import { z } from \"zod\";\n\n";
 output += "export const toolSchemas = {} as Record<string, z.ZodTypeAny>;\n\n";
 output += "export const toolResponseSchemas = {} as Record<string, z.ZodTypeAny>;\n\n";
+output += `export const toolMetadata = ${JSON.stringify(metadataRaw, null, 2)} as const;\n\n`;
 
 for (const [toolName, schema] of Object.entries(raw)) {
   const schemaName = toSchemaName(toolName);

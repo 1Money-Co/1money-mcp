@@ -2,11 +2,11 @@
 <img src="./public/logo.png" alt="1Money Logo" width="200"/>
 
 
-MCP (stdio) for the 1Money API, aligned to the current OpenAPI surface and exposed as grouped MCP tools.
+MCP (stdio) for the 1Money API, aligned to the 1Money OpenAPI 2.0.0 surface and exposed as grouped MCP tools.
 
 ## What This MCP Server Does
 
-- Exposes 1Money API operations as MCP tools (assets, customers, conversions, withdrawals, transactions, and more).
+- Exposes 1Money API operations as MCP tools (onboarding, assets, recipients, conversions, withdrawals, transactions, partner fees, and more).
 - Standardizes request inputs so MCP clients can call tools without SDK-specific glue code.
 - Handles auth and sandbox configuration via environment variables or `~/.onemoney/credentials`.
 - Ships a JSON Schema (`schemas/tools.json`) for tool discovery, validation, and client generation.
@@ -105,7 +105,42 @@ The server also reads `~/.onemoney/credentials` with lower priority than env var
 ### assets
 - "List USD assets for customer cus_123 on US_ACH."
 
-### customer
+### business_onboarding
+- "List business accounts under main account BZ-ABCD-1234."
+- "Create a business account under BZ-ABCD-1234."
+- "Upload a certificate of incorporation document for business BZ-CDEF-5678."
+- "Submit business account BZ-CDEF-5678 for review."
+
+### terms.signatures
+- "Create a hosted BUSINESS_ONBOARDING terms signature URL."
+
+### individual_onboarding
+- "Create an individual account under main account BZ-ABCD-1234."
+- "Upload an ID front document for individual IN-ABCD-1234."
+- "Submit individual account IN-ABCD-1234 for KYC review."
+- "Get limits for individual account IN-ABCD-1234."
+
+### individual_applications
+- "Create an individual application with idempotency key app-001."
+- "Upload documents for individual application cus_123."
+- "Submit individual application cus_123."
+- "Upgrade individual application cus_123."
+
+### individual_accounts
+- "Get individual account cus_123."
+- "Get transaction limits for individual account cus_123."
+
+### individual_tos_sessions
+- "Create an individual TOS session."
+- "Simulate signing individual TOS session tok_123."
+
+### partner_fees
+- "Create a partner fee on account BZ-ABCD-1234."
+- "List partner fees including sub-accounts."
+- "Update partner fee fee_123."
+- "Delete partner fee fee_123."
+
+### customer (legacy)
 - "Create a TOS link for customer cus_123 and return the session token."
 - "Sign the TOS agreement for customer cus_123 using session token tok_123."
 - "Create a customer named Jane Doe with email jane@example.com."
@@ -196,13 +231,30 @@ The server also reads `~/.onemoney/credentials` with lower priority than env var
 - Query params are placed under `params`
 - Request bodies are placed under `request`
 - Create flows that support idempotency pass it as `request.idempotency_key`, which is converted to `Idempotency-Key`
+- Header-only idempotent flows without a JSON body use top-level `idempotency_key`
+- Binary document upload tools use `request.content_base64`, `request.content_type`, and `request.filename`
 - `*.get_by_idempotency_key` tools keep `idempotency_key` at the top level
 - `conversions.get_order` uses top-level `transaction_id`
 
 ### Tools
 
+- business_onboarding: `list`, `create`, `get`, `update`, `submit`
+- business_onboarding.onboarding_sessions: `create`
+- business_onboarding.documents: `upload`
+- business_onboarding.controllers.documents: `upload`
+- business_onboarding.sandbox: `set_status`
+- terms.signatures: `create`
+- individual_onboarding: `list`, `create`, `get`, `update`, `submit`
+- individual_onboarding.documents: `upload`
+- individual_onboarding.limits: `get`, `review`
+- individual_onboarding.sandbox: `set_status`
+- individual_applications: `list`, `create`, `get`, `update`, `submit`, `upgrade`
+- individual_applications.documents: `upload`
+- individual_accounts: `get`, `get_limits`
+- individual_tos_sessions: `create`, `sign`
+- partner_fees: `list`, `create`, `get`, `update`, `delete`
 - assets: `assets.list`
-- customer: `customer.create_tos_link`, `customer.sign_tos_agreement`, `customer.create`, `customer.list`, `customer.get`, `customer.update`
+- customer (legacy): `customer.create_tos_link`, `customer.sign_tos_agreement`, `customer.create`, `customer.list`, `customer.get`, `customer.update`
 - customer.associated_persons: `create`, `list`, `get`, `update`, `delete`
 - customer.intermediaries: `list`, `create`, `get`, `update`, `delete`
 - customer.lightweight: `get_by_idempotency_key`, `create`, `get`
@@ -226,6 +278,13 @@ The server also reads `~/.onemoney/credentials` with lower priority than env var
 
 - `schemas/tools.json` is the source JSON Schema for tool inputs.
 - `schemas/tool-responses.json` is the source JSON Schema for tool responses.
+- `schemas/tool-metadata.json` is the generated MCP tool title and description metadata.
+
+## OpenAPI Sync
+
+The canonical source is `scp-public-docs/reference/openapi.json`. When `scp-core` and public docs differ, public docs take precedence for MCP tool exposure. Legacy `customer.*` tools are preserved for compatibility even though they are no longer part of the public OpenAPI 2.0.0 surface.
+
+OpenAPI `summary` and `description` fields are synced into MCP tool metadata. Parameter, request, and response schema `description` fields are preserved in JSON Schema and emitted as Zod `.describe(...)` metadata for MCP clients.
 
 ## Examples
 
@@ -260,7 +319,7 @@ The server also reads `~/.onemoney/credentials` with lower priority than env var
 
 ## Schema generation
 
-`schemas/tools.json` and `schemas/tool-responses.json` are the JSON Schema sources. Use `json-schema-to-zod` to regenerate `src/schemas/zod.ts`:
+`schemas/tools.json`, `schemas/tool-responses.json`, and `schemas/tool-metadata.json` are the generated schema and metadata sources. Use `json-schema-to-zod` to regenerate `src/schemas/zod.ts`:
 
 ```bash
 npm run generate-schemas

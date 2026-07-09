@@ -43,6 +43,7 @@ test("build-openapi-tool-map groups a fixture OAS into MCP tool names", () => {
   const report = JSON.parse(result.stdout);
   assert.equal(report.operation_count, 4);
   assert.equal(report.oas_version, "fixture-v1");
+  assert.equal(report.target_tool_count, 27);
   assert.deepEqual(
     report.mapping.map((entry: { tool: string }) => entry.tool),
     [
@@ -52,11 +53,10 @@ test("build-openapi-tool-map groups a fixture OAS into MCP tool names", () => {
       "fees.estimate",
     ],
   );
-  assert.deepEqual(report.legacy_kept, [
-    "customer.sign_tos_agreement",
-    "echo.get",
-    "echo.post",
-  ]);
+  assert.equal(report.legacy_kept.length, 23);
+  assert.ok(report.legacy_kept.includes("customer.create"));
+  assert.ok(report.legacy_kept.includes("customer.sign_tos_agreement"));
+  assert.ok(report.legacy_kept.includes("echo.get"));
 });
 
 test("build-openapi-tool-map reports the full supplied OAS shape when present", (t) => {
@@ -83,15 +83,22 @@ test("build-openapi-tool-map reports the full supplied OAS shape when present", 
   assert.equal(result.status, 0, result.stderr || result.stdout);
 
   const report = JSON.parse(result.stdout);
-  assert.equal(report.operation_count, 63);
-  assert.equal(report.target_tool_count, 66);
+  assert.equal(report.operation_count, 78);
+  assert.equal(report.target_tool_count, 101);
   assert.equal(
     report.renamed["simulations.simulate_deposit"],
     "simulations.simulate_transaction",
   );
-  assert.deepEqual(report.legacy_kept, [
-    "customer.sign_tos_agreement",
-    "echo.get",
-    "echo.post",
-  ]);
+  assert.equal(report.added.length, 0);
+  assert.equal(report.removed.length, 0);
+  assert.ok(
+    report.mapping.some(
+      (entry: { key: string; tool: string }) =>
+        entry.key === "PATCH /v1/accounts/{account_id}/partner-fees/{fee_id}" &&
+        entry.tool === "partner_fees.update",
+    ),
+  );
+  assert.equal(report.legacy_kept.length, 23);
+  assert.ok(report.legacy_kept.includes("customer.create"));
+  assert.ok(report.legacy_kept.includes("echo.post"));
 });

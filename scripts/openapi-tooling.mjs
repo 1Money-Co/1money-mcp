@@ -1,5 +1,25 @@
 const legacyKept = [
+  "customer.associated_persons.create",
+  "customer.associated_persons.delete",
+  "customer.associated_persons.get",
+  "customer.associated_persons.list",
+  "customer.associated_persons.update",
+  "customer.create",
+  "customer.create_tos_link",
+  "customer.get",
+  "customer.intermediaries.create",
+  "customer.intermediaries.delete",
+  "customer.intermediaries.get",
+  "customer.intermediaries.list",
+  "customer.intermediaries.update",
+  "customer.lightweight.create",
+  "customer.lightweight.get",
+  "customer.lightweight.get_by_idempotency_key",
+  "customer.list",
+  "customer.onboarding_grants.create",
+  "customer.onboarding_links.create",
   "customer.sign_tos_agreement",
+  "customer.update",
   "echo.get",
   "echo.post",
 ];
@@ -9,6 +29,71 @@ const renamed = {
 };
 
 const groupedToolNames = new Map([
+  ["GET /v2/accounts/{account_id}/businesses", "business_onboarding.list"],
+  ["POST /v2/accounts/{account_id}/businesses", "business_onboarding.create"],
+  ["GET /v2/accounts/{account_id}/businesses/{id}", "business_onboarding.get"],
+  ["PATCH /v2/accounts/{account_id}/businesses/{id}", "business_onboarding.update"],
+  [
+    "POST /v2/accounts/{account_id}/businesses/onboarding-sessions",
+    "business_onboarding.onboarding_sessions.create",
+  ],
+  [
+    "PUT /v2/accounts/{account_id}/businesses/{id}/documents/{document_type}",
+    "business_onboarding.documents.upload",
+  ],
+  [
+    "PUT /v2/accounts/{account_id}/businesses/{id}/controllers/{controller_id}/documents/{document_type}",
+    "business_onboarding.controllers.documents.upload",
+  ],
+  ["POST /v2/accounts/{account_id}/businesses/{id}/submit", "business_onboarding.submit"],
+  [
+    "POST /v2/accounts/{account_id}/businesses/{id}/sandbox/status",
+    "business_onboarding.sandbox.set_status",
+  ],
+  ["POST /v2/terms/{type}/signatures", "terms.signatures.create"],
+  ["GET /v2/accounts/{account_id}/individuals", "individual_onboarding.list"],
+  ["POST /v2/accounts/{account_id}/individuals", "individual_onboarding.create"],
+  ["GET /v2/accounts/{account_id}/individuals/{id}", "individual_onboarding.get"],
+  ["PATCH /v2/accounts/{account_id}/individuals/{id}", "individual_onboarding.update"],
+  [
+    "PUT /v2/accounts/{account_id}/individuals/{id}/documents/{document_type}",
+    "individual_onboarding.documents.upload",
+  ],
+  ["POST /v2/accounts/{account_id}/individuals/{id}/submit", "individual_onboarding.submit"],
+  [
+    "GET /v2/accounts/{account_id}/individuals/{id}/limits",
+    "individual_onboarding.limits.get",
+  ],
+  [
+    "POST /v2/accounts/{account_id}/individuals/{id}/review-limits",
+    "individual_onboarding.limits.review",
+  ],
+  [
+    "POST /v2/accounts/{account_id}/individuals/{id}/sandbox/status",
+    "individual_onboarding.sandbox.set_status",
+  ],
+  ["GET /v1/individuals/applications", "individual_applications.list"],
+  ["POST /v1/individuals/applications", "individual_applications.create"],
+  [
+    "PUT /v1/individuals/applications/{customer_id}/documents",
+    "individual_applications.documents.upload",
+  ],
+  ["POST /v1/individuals/applications/{customer_id}/submit", "individual_applications.submit"],
+  ["GET /v1/individuals/applications/{customer_id}", "individual_applications.get"],
+  ["PATCH /v1/individuals/applications/{customer_id}", "individual_applications.update"],
+  ["POST /v1/individuals/applications/{customer_id}/upgrade", "individual_applications.upgrade"],
+  ["GET /v1/accounts/{customer_id}", "individual_accounts.get"],
+  ["GET /v1/accounts/{customer_id}/limits", "individual_accounts.get_limits"],
+  ["POST /v1/individuals/tos/sessions", "individual_tos_sessions.create"],
+  [
+    "POST /v1/individuals/tos/sessions/{session_token}/sign",
+    "individual_tos_sessions.sign",
+  ],
+  ["GET /v1/accounts/{account_id}/partner-fees", "partner_fees.list"],
+  ["POST /v1/accounts/{account_id}/partner-fees", "partner_fees.create"],
+  ["GET /v1/accounts/{account_id}/partner-fees/{fee_id}", "partner_fees.get"],
+  ["DELETE /v1/accounts/{account_id}/partner-fees/{fee_id}", "partner_fees.delete"],
+  ["PATCH /v1/accounts/{account_id}/partner-fees/{fee_id}", "partner_fees.update"],
   ["GET /v1/customers", "customer.list"],
   ["POST /v1/customers", "customer.create"],
   ["GET /v1/customers/{customer_id}", "customer.get"],
@@ -74,9 +159,8 @@ const groupedToolNames = new Map([
   ["DELETE /v1/customers/{customer_id}/recipients/{recipient_id}/bank_accounts/{bank_account_id}", "recipients.bank_accounts.delete"],
 ]);
 
-const operationMethods = new Set(["get", "post", "put", "delete"]);
+const operationMethods = new Set(["get", "post", "put", "patch", "delete"]);
 const schemaMetadataKeys = new Set([
-  "description",
   "title",
   "examples",
   "example",

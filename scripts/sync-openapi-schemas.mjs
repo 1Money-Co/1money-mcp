@@ -12,8 +12,10 @@ const parseArgs = (argv) => {
   const options = {
     toolsOut: path.resolve("schemas/tools.json"),
     responsesOut: path.resolve("schemas/tool-responses.json"),
+    metadataOut: path.resolve("schemas/tool-metadata.json"),
     currentTools: path.resolve("schemas/tools.json"),
     currentResponses: path.resolve("schemas/tool-responses.json"),
+    currentMetadata: path.resolve("schemas/tool-metadata.json"),
   };
 
   let oasPath;
@@ -40,11 +42,17 @@ const parseArgs = (argv) => {
       case "--responses-out":
         options.responsesOut = path.resolve(value);
         break;
+      case "--metadata-out":
+        options.metadataOut = path.resolve(value);
+        break;
       case "--current-tools":
         options.currentTools = path.resolve(value);
         break;
       case "--current-responses":
         options.currentResponses = path.resolve(value);
+        break;
+      case "--current-metadata":
+        options.currentMetadata = path.resolve(value);
         break;
       default:
         throw new Error(`Unknown option: ${arg}`);
@@ -53,7 +61,7 @@ const parseArgs = (argv) => {
 
   if (!oasPath) {
     throw new Error(
-      "Usage: node scripts/sync-openapi-schemas.mjs <oas-path> [--tools-out path] [--responses-out path] [--current-tools path] [--current-responses path]",
+      "Usage: node scripts/sync-openapi-schemas.mjs <oas-path> [--tools-out path] [--responses-out path] [--metadata-out path] [--current-tools path] [--current-responses path] [--current-metadata path]",
     );
   }
 
@@ -61,6 +69,9 @@ const parseArgs = (argv) => {
 };
 
 const loadJson = (filePath) => JSON.parse(fs.readFileSync(filePath, "utf8"));
+
+const loadJsonIfExists = (filePath) =>
+  fs.existsSync(filePath) ? loadJson(filePath) : {};
 
 const isTopLevelQueryParam = (toolName, parameterName) =>
   (parameterName === "idempotency_key" && toolName.endsWith(".get_by_idempotency_key")) ||
@@ -72,6 +83,23 @@ const requestCompatibilityFields = {
     idempotency_key: { schema: { type: "string" }, required: true },
   },
 };
+
+const binaryUploadRequestSchema = {
+  type: "object",
+  additionalProperties: false,
+  properties: {
+    content_base64: { type: "string" },
+    content_type: { type: "string" },
+    filename: { type: "string" },
+    content_disposition: { type: "string" },
+  },
+  required: ["content_base64", "content_type", "filename"],
+};
+
+const findHeaderParameter = (parameters, headerName) =>
+  (parameters || []).find(
+    (p) => p.in === "header" && p.name.toLowerCase() === headerName.toLowerCase(),
+  );
 
 const applyPaginationFieldCompatibilityOverrides = (fieldName, schema) => {
   if (!schema || typeof schema !== "object" || Array.isArray(schema)) {
@@ -130,6 +158,21 @@ const applyRequestCompatibilityOverrides = (toolName, requestSchema) => {
 const normalizeSchema = (schema, root) =>
   stripSchemaMetadata(resolveSchemaRefs(schema, root));
 
+const addSchemaDescription = (schema, description) => {
+  if (!description || !schema || typeof schema !== "object" || Array.isArray(schema)) {
+    return schema;
+  }
+
+  if (typeof schema.description === "string" && schema.description.length > 0) {
+    return schema;
+  }
+
+  return { ...schema, description };
+};
+
+const normalizeParameterSchema = (parameter, root) =>
+  addSchemaDescription(normalizeSchema(parameter.schema, root), parameter.description);
+
 const ensureStrictObject = (schema) => {
   if (!schema || typeof schema !== "object" || Array.isArray(schema)) {
     return schema;
@@ -142,16 +185,17 @@ const ensureStrictObject = (schema) => {
   return schema;
 };
 
+const buildIdempotencyField = (headerParam) =>
+  addSchemaDescription({ type: "string" }, headerParam.description);
+
 const injectIdempotencyField = (toolName, requestSchema, parameters) => {
-  const headerParam = (parameters || []).find(
-    (p) => p.name === "Idempotency-Key" && p.in === "header",
-  );
+  const headerParam = findHeaderParameter(parameters, "Idempotency-Key");
   if (!headerParam || !requestSchema) {
     return requestSchema;
   }
 
   const isRequired = headerParam.required === true;
-  const field = { type: "string" };
+  const field = buildIdempotencyField(headerParam);
 
   if (requestSchema.type === "object" || requestSchema.properties) {
     const nextSchema = {
@@ -179,6 +223,18 @@ const injectIdempotencyField = (toolName, requestSchema, parameters) => {
   return requestSchema;
 };
 
+const addTopLevelIdempotencyField = (topLevelSchema, required, parameters, hasJsonRequest) => {
+  const headerParam = findHeaderParameter(parameters, "Idempotency-Key");
+  if (!headerParam || hasJsonRequest) {
+    return;
+  }
+
+  topLevelSchema.properties.idempotency_key = buildIdempotencyField(headerParam);
+  if (headerParam.required) {
+    required.push("idempotency_key");
+  }
+};
+
 const buildParamsSchema = (parameters, toolName, root) => {
   const properties = {};
   const required = [];
@@ -187,7 +243,7 @@ const buildParamsSchema = (parameters, toolName, root) => {
   for (const parameter of parameters) {
     const schema = applyQueryParameterCompatibilityOverrides(
       parameter,
-      normalizeSchema(parameter.schema, root),
+      normalizeParameterSchema(parameter, root),
     );
 
     if (
@@ -250,7 +306,7 @@ const buildToolInputSchema = (toolName, operation, root) => {
 
   for (const parameter of parameters.filter((parameter) => parameter.in === "path")) {
     topLevelSchema.properties[parameter.name] = ensureStrictObject(
-      normalizeSchema(parameter.schema, root),
+      normalizeParameterSchema(parameter, root),
     );
     if (parameter.required) {
       required.push(parameter.name);
@@ -265,7 +321,7 @@ const buildToolInputSchema = (toolName, operation, root) => {
     topLevelSchema.properties[parameter.name] = ensureStrictObject(
       applyQueryParameterCompatibilityOverrides(
         parameter,
-        normalizeSchema(parameter.schema, root),
+        normalizeParameterSchema(parameter, root),
       ),
     );
     if (parameter.required) {
@@ -285,7 +341,8 @@ const buildToolInputSchema = (toolName, operation, root) => {
     }
   }
 
-  const requestSchema = operation.requestBody?.content?.["application/json"]?.schema;
+  const requestContent = operation.requestBody?.content || {};
+  const requestSchema = requestContent["application/json"]?.schema;
   if (requestSchema) {
     let resolvedRequest = ensureStrictObject(normalizeSchema(requestSchema, root));
     resolvedRequest = injectIdempotencyField(toolName, resolvedRequest, parameters);
@@ -294,14 +351,44 @@ const buildToolInputSchema = (toolName, operation, root) => {
     if (operation.requestBody.required) {
       required.push("request");
     }
+  } else if (requestContent["application/octet-stream"]?.schema) {
+    topLevelSchema.properties.request = binaryUploadRequestSchema;
+    if (operation.requestBody.required) {
+      required.push("request");
+    }
   }
+
+  addTopLevelIdempotencyField(topLevelSchema, required, parameters, Boolean(requestSchema));
 
   if (required.length > 0) {
     topLevelSchema.required = [...new Set(required)];
   }
 
+  const description = buildOperationDescription(operation);
+  if (description) {
+    topLevelSchema.description = description;
+  }
+
   return topLevelSchema;
 };
+
+const buildOperationDescription = (operation) =>
+  [operation.summary, operation.description]
+    .filter((value) => typeof value === "string" && value.trim().length > 0)
+    .map((value) => value.trim())
+    .join("\n\n");
+
+const buildToolMetadata = (toolName, operation) => ({
+  title: operation.summary || toolName,
+  description: buildOperationDescription(operation) || operation.operationId || toolName,
+});
+
+const buildLegacyToolMetadata = (toolName, currentMetadata) =>
+  currentMetadata[toolName] || {
+    title: toolName,
+    description:
+      "Legacy 1Money MCP tool preserved for compatibility. This tool is not part of the current public OpenAPI 2.0.0 surface.",
+  };
 
 const emptyResponseSchema = {
   oneOf: [
@@ -344,13 +431,16 @@ const main = () => {
     oasPath,
     toolsOut,
     responsesOut,
+    metadataOut,
     currentTools,
     currentResponses,
+    currentMetadata,
   } = parseArgs(process.argv.slice(2));
 
   const oas = loadJson(oasPath);
   const currentToolSchemas = loadJson(currentTools);
   const currentResponseSchemas = loadJson(currentResponses);
+  const currentToolMetadata = loadJsonIfExists(currentMetadata);
   const report = buildMappingReport({
     oas,
     currentTools: Object.keys(currentToolSchemas),
@@ -358,6 +448,7 @@ const main = () => {
 
   const toolSchemas = {};
   const responseSchemas = {};
+  const toolMetadata = {};
 
   for (const mappingEntry of report.mapping) {
     toolSchemas[mappingEntry.tool] = buildToolInputSchema(
@@ -370,6 +461,10 @@ const main = () => {
       mappingEntry.operation,
       oas,
       currentResponseSchemas,
+    );
+    toolMetadata[mappingEntry.tool] = buildToolMetadata(
+      mappingEntry.tool,
+      mappingEntry.operation,
     );
   }
 
@@ -386,10 +481,12 @@ const main = () => {
 
     toolSchemas[toolName] = toolSchema;
     responseSchemas[toolName] = responseSchema;
+    toolMetadata[toolName] = buildLegacyToolMetadata(toolName, currentToolMetadata);
   }
 
   writeJson(toolsOut, toolSchemas);
   writeJson(responsesOut, responseSchemas);
+  writeJson(metadataOut, toolMetadata);
 
   console.log(
     JSON.stringify(
@@ -397,6 +494,7 @@ const main = () => {
         ...report,
         tools_out: toolsOut,
         responses_out: responsesOut,
+        metadata_out: metadataOut,
       },
       null,
       2,
