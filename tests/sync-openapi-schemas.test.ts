@@ -283,105 +283,109 @@ test("sync-openapi-schemas rewrites key MCP input contracts from the supplied OA
 
 test("sync-openapi-schemas preserves injected idempotency header descriptions", () => {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "1money-mcp-sync-"));
-  const fixturePath = path.join(tempDir, "openapi.json");
-  const toolsOut = path.join(tempDir, "tools.json");
-  const responsesOut = path.join(tempDir, "tool-responses.json");
-  const metadataOut = path.join(tempDir, "tool-metadata.json");
-  const fixture = {
-    openapi: "3.1.0",
-    info: { title: "fixture", version: "fixture-v1" },
-    paths: {
-      "/v1/customers/{customer_id}/withdrawals": {
-        post: {
-          summary: "Create withdrawal",
-          parameters: [
-            {
-              name: "customer_id",
-              in: "path",
+  try {
+    const fixturePath = path.join(tempDir, "openapi.json");
+    const toolsOut = path.join(tempDir, "tools.json");
+    const responsesOut = path.join(tempDir, "tool-responses.json");
+    const metadataOut = path.join(tempDir, "tool-metadata.json");
+    const fixture = {
+      openapi: "3.1.0",
+      info: { title: "fixture", version: "fixture-v1" },
+      paths: {
+        "/v1/customers/{customer_id}/withdrawals": {
+          post: {
+            summary: "Create withdrawal",
+            parameters: [
+              {
+                name: "customer_id",
+                in: "path",
+                required: true,
+                schema: { type: "string" },
+              },
+              {
+                name: "Idempotency-Key",
+                in: "header",
+                required: true,
+                description: "Prevents duplicate withdrawal creation.",
+                schema: { type: "string" },
+              },
+            ],
+            requestBody: {
               required: true,
-              schema: { type: "string" },
-            },
-            {
-              name: "Idempotency-Key",
-              in: "header",
-              required: true,
-              description: "Prevents duplicate withdrawal creation.",
-              schema: { type: "string" },
-            },
-          ],
-          requestBody: {
-            required: true,
-            content: {
-              "application/json": {
-                schema: {
-                  type: "object",
-                  properties: {
-                    amount: { type: "string" },
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      amount: { type: "string" },
+                    },
+                    required: ["amount"],
                   },
-                  required: ["amount"],
                 },
               },
             },
+            responses: { "200": { description: "OK" } },
           },
-          responses: { "200": { description: "OK" } },
+        },
+        "/v1/individuals/applications/{customer_id}/submit": {
+          post: {
+            summary: "Submit application",
+            parameters: [
+              {
+                name: "customer_id",
+                in: "path",
+                required: true,
+                schema: { type: "string" },
+              },
+              {
+                name: "Idempotency-Key",
+                in: "header",
+                required: false,
+                description: "Correlates submit webhooks.",
+                schema: { type: "string" },
+              },
+            ],
+            responses: { "202": { description: "Accepted" } },
+          },
         },
       },
-      "/v1/individuals/applications/{customer_id}/submit": {
-        post: {
-          summary: "Submit application",
-          parameters: [
-            {
-              name: "customer_id",
-              in: "path",
-              required: true,
-              schema: { type: "string" },
-            },
-            {
-              name: "Idempotency-Key",
-              in: "header",
-              required: false,
-              description: "Correlates submit webhooks.",
-              schema: { type: "string" },
-            },
-          ],
-          responses: { "202": { description: "Accepted" } },
-        },
+    };
+
+    fs.writeFileSync(fixturePath, JSON.stringify(fixture), "utf8");
+
+    const result = spawnSync(
+      process.execPath,
+      [
+        "scripts/sync-openapi-schemas.mjs",
+        fixturePath,
+        "--tools-out",
+        toolsOut,
+        "--responses-out",
+        responsesOut,
+        "--metadata-out",
+        metadataOut,
+      ],
+      {
+        cwd: repoRoot,
+        encoding: "utf8",
       },
-    },
-  };
+    );
 
-  fs.writeFileSync(fixturePath, JSON.stringify(fixture), "utf8");
+    assert.equal(result.status, 0, result.stderr || result.stdout);
 
-  const result = spawnSync(
-    process.execPath,
-    [
-      "scripts/sync-openapi-schemas.mjs",
-      fixturePath,
-      "--tools-out",
-      toolsOut,
-      "--responses-out",
-      responsesOut,
-      "--metadata-out",
-      metadataOut,
-    ],
-    {
-      cwd: repoRoot,
-      encoding: "utf8",
-    },
-  );
-
-  assert.equal(result.status, 0, result.stderr || result.stdout);
-
-  const toolSchemas = JSON.parse(fs.readFileSync(toolsOut, "utf8"));
-  assert.equal(
-    findRequestProperty(
-      toolSchemas["withdrawals.create"].properties.request,
-      "idempotency_key",
-    )?.description,
-    "Prevents duplicate withdrawal creation.",
-  );
-  assert.equal(
-    toolSchemas["individual_applications.submit"].properties.idempotency_key.description,
-    "Correlates submit webhooks.",
-  );
+    const toolSchemas = JSON.parse(fs.readFileSync(toolsOut, "utf8"));
+    assert.equal(
+      findRequestProperty(
+        toolSchemas["withdrawals.create"].properties.request,
+        "idempotency_key",
+      )?.description,
+      "Prevents duplicate withdrawal creation.",
+    );
+    assert.equal(
+      toolSchemas["individual_applications.submit"].properties.idempotency_key.description,
+      "Correlates submit webhooks.",
+    );
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
 });
