@@ -189,13 +189,14 @@ const safeJsonParse = (value: string) => {
 };
 
 const buildQueryString = (params: Record<string, string | number | boolean | null | undefined>) => {
-  const entries = Object.entries(params)
-    .filter(([, value]) => value !== undefined && value !== null)
-    .map(([key, value]) => `${key}=${String(value)}`);
+  const searchParams = new URLSearchParams();
 
-  if (entries.length === 0) {
-    return "";
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== null) {
+      searchParams.append(key, String(value));
+    }
   }
 
-  return `?${entries.join("&")}`;
+  const queryString = searchParams.toString();
+  return queryString ? `?${queryString}` : "";
 };
