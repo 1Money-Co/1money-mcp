@@ -44,11 +44,22 @@ export const getOmDateTimestamp = (date = new Date()) => {
   );
 };
 
-export const calculateSignature = (secretKey: string, stringToSign: string) =>
-  crypto
+export const calculateSignature = (secretKey: string, stringToSign: string) => {
+  // `Buffer.from(x, "base64url")` silently drops invalid
+  // characters, so a mistyped or plain-text secret would
+  // produce a valid-looking but wrong HMAC key (two
+  // different secrets can even collide). Validate the
+  // round-trip so malformed secrets fail fast with a
+  // clear message instead of opaque "invalid signature"
+  // API errors later.
+  if (Buffer.from(secretKey, "base64url").toString("base64url") !== secretKey) {
+    throw new Error("ONEMONEY_SECRET_KEY must be base64url-encoded");
+  }
+  return crypto
     .createHmac("sha256", Buffer.from(secretKey, "base64url"))
     .update(stringToSign)
     .digest("hex");
+};
 
 export const buildAuthorizationHeader = ({
   accessKey,

@@ -26,7 +26,9 @@ const main = async () => {
 
   const server = new McpServer({
     name: "1money-mcp",
-    version: "0.3.1",
+    // Kept in sync with package.json so MCP clients see
+    // the real released version.
+    version: "0.4.0",
   });
 
   registerTools(server, client);
